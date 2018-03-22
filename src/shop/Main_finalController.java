@@ -143,14 +143,14 @@ public class Main_finalController implements Initializable {
         initTableProd();
         addCategory.setVisible(false);
         prepareSlideMenuAnimation();
-        fillTableProd();
+       /* fillTableProd();
         try {
             root = FXMLLoader.load(getClass().getResource("prodPhoto.fxml"));
         } catch (IOException ex) {
             Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
         }
         photoList.getChildren().add(root);
-        
+        */
     }
 
     
