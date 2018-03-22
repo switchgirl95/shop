@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+  <!-- Unite de persistence [1] -->
+  <persistence-unit name="ShopDBPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <!-- Entites [5] -->
+    <class>Modele.Categorie</class>
+    <class>Modele.Facture</class>
+    <class>Modele.Gestionnaire</class>
+    <class>Modele.GestionStock</class>
+    <class>Modele.ListeFacture</class>
+    <class>Modele.Photo</class>
+    <class>Modele.Produit</class>
+    <properties>
+      <!-- Login et password [4] -->
+      <property name="javax.persistence.jdbc.password" value="7858"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
+      <!-- MySQL [2] -->
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <!-- Adresse [3] -->
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/SHOPDB"/>
+      <property name="eclipselink.logging.level" value="INFO"/>
+    </properties>
+  </persistence-unit>
+</persistence>

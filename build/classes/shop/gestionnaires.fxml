@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane fx:id="stack" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="1079.0" style="-fx-background-color: #E8E8E8;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shop.GestionnairesController">
+   <children>
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="366.0" prefHeight="646.0" prefWidth="1087.0" style="-fx-background-color: #E8E8E8;">
+         <children>
+            <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <center>
+                  <AnchorPane prefHeight="477.0" prefWidth="1067.0" style="-fx-background-color: #E8E8E8;" BorderPane.alignment="CENTER">
+                     <children>
+                        <GridPane style="-fx-background-color: #E8E8E8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane prefHeight="73.0" prefWidth="1079.0" style="-fx-background-color: #F2F2F2;">
+                                 <children>
+                                    <StackPane prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <HBox fx:id="catSearch" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" visible="false">
+                                             <children>
+                                                <JFXTextField focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="216.0" promptText="Search" />
+                                                <JFXButton style="-fx-background-color: #00e48f;" text="Search" />
+                                             </children>
+                                          </HBox>
+                                          <HBox fx:id="typesProd" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                                             <children>
+                                                <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Id" />
+                                                <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Nom " />
+                                                <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Description" />
+                                                <JFXComboBox focusColor="#00e48f" promptText="Category" />
+                                                <Button fx:id="test" mnemonicParsing="false" text="Test2" />
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                             </padding>
+                                          </HBox>
+                                       </children>
+                                    </StackPane>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E8E8E8;" GridPane.rowIndex="1">
+                                 <children>
+                                    <VBox fx:id="vbox" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #E8E8E8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <StackPane prefHeight="83.0" prefWidth="1039.0">
+                                             <children>
+                                                <HBox fx:id="addCategory" alignment="CENTER" prefHeight="76.0" prefWidth="1079.0" visible="false">
+                                                   <children>
+                                                      <JFXTextField focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="413.0" promptText="Add Category" />
+                                                      <JFXButton prefHeight="51.0" prefWidth="83.0" style="-fx-background-color: #00e48f;" text="Add" textFill="WHITE" />
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                                                   </padding>
+                                                </HBox>
+                                                <HBox fx:id="sortProduit" alignment="CENTER_RIGHT" prefHeight="76.0" prefWidth="1079.0">
+                                                   <children>
+                                                      <JFXRadioButton selected="true" text="id" textFill="#4d4d4d">
+                                                         <toggleGroup>
+                                                            <ToggleGroup fx:id="sortby" />
+                                                         </toggleGroup>
+                                                         <HBox.margin>
+                                                            <Insets right="30.0" />
+                                                         </HBox.margin>
+                                                      </JFXRadioButton>
+                                                      <JFXRadioButton text="Nom" textFill="#4d4d4d" toggleGroup="$sortby">
+                                                         <HBox.margin>
+                                                            <Insets right="30.0" />
+                                                         </HBox.margin>
+                                                      </JFXRadioButton>
+                                                      <JFXRadioButton text="Prix" textFill="#4d4d4d" toggleGroup="$sortby">
+                                                         <HBox.margin>
+                                                            <Insets right="50.0" />
+                                                         </HBox.margin>
+                                                      </JFXRadioButton>
+                                                      <Text fill="#4d4d4d" strokeType="OUTSIDE" strokeWidth="0.0" text="Asc" />
+                                                      <JFXToggleButton text="Desc" />
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </StackPane>
+                                          <StackPane prefHeight="365.0" prefWidth="1079.0" VBox.vgrow="ALWAYS">
+                                             <children>
+                                                <TableView fx:id="table3" prefHeight="275.0" prefWidth="1039.0" />
+                                             </children>
+                                          </StackPane>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                       </padding>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints maxHeight="70.0" minHeight="-Infinity" prefHeight="61.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="448.0" minHeight="10.0" prefHeight="442.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+               </center>
+               <top>
+                  <AnchorPane prefHeight="135.0" prefWidth="800.0" scaleZ="5.0" style="-fx-background-color: #2F2F32;" BorderPane.alignment="CENTER">
+                     <children>
+                        <AnchorPane layoutX="3.0" layoutY="130.0" prefHeight="5.0" prefWidth="200.0">
+                           <children>
+                              <Pane layoutX="30.0" layoutY="1.0" prefHeight="4.0" prefWidth="140.0" style="-fx-background-color: #00E48F;" AnchorPane.bottomAnchor="0.0" />
+                           </children>
+                           <padding>
+                              <Insets left="60.0" />
+                           </padding>
+                        </AnchorPane>
+                        <HBox layoutX="2.0" layoutY="92.0" prefHeight="43.0" prefWidth="366.0" spacing="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="92.0">
+                           <children>
+                              <StackPane onMouseClicked="#changeToPdt" prefHeight="43.0" prefWidth="140.0">
+                                 <children>
+                                    <Text fill="#00e48f" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionnaires">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </StackPane>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" />
+                           </padding>
+                        </HBox>
+                        <GridPane layoutX="3.0" layoutY="38.0" minWidth="0.0" prefHeight="30.0" prefWidth="793.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="NOM PAGE" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1">
+                                 <children>
+                                    <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                                    <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="RIGHT" />
+                                 </children>
+                              </HBox>
+                           </children>
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <padding>
+                              <Insets left="30.0" right="30.0" />
+                           </padding>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+               </top>
+            </BorderPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="blackout" opacity="0.53" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" visible="false" />
+      <AnchorPane fx:id="menu" maxHeight="1.7976931348623157E308" onMouseClicked="#exitMenu" prefHeight="648.0" prefWidth="1145.0" visible="false">
+         <children>
+            <VBox fx:id="mendisp" alignment="CENTER" maxHeight="657.0" minHeight="0.0" prefHeight="0.0" prefWidth="529.0" spacing="30.0" style="-fx-background-color: white;" translateX="-529.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionnaire - ID">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Text>
+                  <JFXTextField editable="false" labelFloat="true" promptText="Id" text="jhiu" />
+                  <JFXTextField fx:id="usrnm" labelFloat="true" promptText="Nom d'utilisateur" />
+                  <JFXTextField fx:id="name" labelFloat="true" promptText="Nom" />
+                  <JFXTextField fx:id="mdp" labelFloat="true" promptText="Mot de passe" />
+                  <JFXTextField fx:id="email" labelFloat="true" promptText="Email" />
+                  <JFXTextField fx:id="phone" labelFloat="true" prefHeight="25.0" prefWidth="364.0" promptText="Telephone" />
+                  <HBox prefHeight="39.0" prefWidth="389.0">
+                     <children>
+                        <VBox alignment="CENTER_LEFT" prefHeight="67.0" prefWidth="279.0" spacing="10.0">
+                           <children>
+                              <JFXComboBox fx:id="type" prefHeight="25.0" prefWidth="175.0" promptText="Type" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Passif" />
+                        <JFXToggleButton fx:id="active" prefHeight="21.0" prefWidth="151.0" text="Actif" unToggleColor="#fc7d7d" unToggleLineColor="#f80b0b" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                     <children>
+                        <JFXButton fx:id="save" onAction="#addObj" prefHeight="47.0" prefWidth="116.0" text="Save" />
+                        <JFXButton fx:id="delet" onAction="#addObj" prefHeight="48.0" prefWidth="116.0" text="Delete" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="-30.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="70.0" left="70.0" right="70.0" top="70.0" />
+               </padding>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>
