@@ -6,18 +6,8 @@
 package shop;
 
 import Modele.Gestionnaire;
-import Modele.PersistenceManager;
 import Modele.Produit;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialogLayout;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXToggleButton;
-import java.net.URL;
-import java.sql.Connection;
-import java.util.List;
-import java.util.ResourceBundle;
+import com.jfoenix.controls.*;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,6 +27,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import static shop.Shop.pm;
 
 /**
  * FXML Controller class
@@ -62,7 +58,7 @@ public class GestionnairesController implements Initializable {
     @FXML
     private ToggleGroup sortby;
     @FXML
-    private TableView<Produit> table3;
+    private TableView<?> table3;
     @FXML
     private AnchorPane blackout;
     @FXML
@@ -83,10 +79,7 @@ public class GestionnairesController implements Initializable {
     /**
      * Initializes the controller class.
      */
-    
-    Connection connection = null;
-    final String PERSISTENCE_UNIT_NAME = "ShopDBPU";
-    PersistenceManager pm = null;
+
     @FXML
     private VBox mendisp;
     @FXML
@@ -101,6 +94,8 @@ public class GestionnairesController implements Initializable {
     private JFXTextField phone;
     @FXML
     private JFXComboBox<?> type;
+
+    private Gestionnaire gest;
     
     
     /**
@@ -108,14 +103,11 @@ public class GestionnairesController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-                pm = new PersistenceManager(PERSISTENCE_UNIT_NAME);
         //table = tl.products();
         table3.getColumns().addAll(code,nom,codeFournisseur,quantite,price,categoryC);
         List<Produit> all = pm.getAll(Produit.class);
-        
-        ObservableList<Produit> table = FXCollections.observableArrayList(all);
-        //table.addAll(all);
+        ObservableList table = FXCollections.observableArrayList();
+        table.addAll(all);
         
         code.setCellValueFactory(new PropertyValueFactory<>("CODEPRODUIT"));
         nom.setCellValueFactory(new PropertyValueFactory<>("NOM"));
@@ -124,13 +116,12 @@ public class GestionnairesController implements Initializable {
         price.setCellValueFactory(new PropertyValueFactory<>("PRIX"));
         categoryC.setCellValueFactory(new PropertyValueFactory<>("CATEGORIE"));
         
-        System.out.println(all.get(0).getNom());
+        System.out.println(table.toString());
         System.out.println("testons");        
         table3.setItems(table);
         //table.setItems(listProd);
         //addCategory.setVisible(false);
         prepareSlideMenuAnimation();
-        pm.stop();
     }    
 
     @FXML
@@ -157,9 +148,7 @@ public class GestionnairesController implements Initializable {
         else
             actif = false;
         Gestionnaire gest = new Gestionnaire(nme,tpe,username,password,actif,phn,mail);
-        pm = new PersistenceManager(PERSISTENCE_UNIT_NAME);
         pm.insert(gest);
-        pm.stop();
     }
 
     @FXML
@@ -213,6 +202,10 @@ public class GestionnairesController implements Initializable {
                 
         });
         
+    }
+
+    void setGestionnaire(Gestionnaire gest) {
+        this.gest = gest;
     }
     
 }

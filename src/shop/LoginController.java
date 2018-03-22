@@ -7,34 +7,28 @@ package shop;
 
 import Modele.Gestionnaire;
 import Modele.PersistenceManager;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialogLayout;
-import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.controls.JFXTextField;
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.jfoenix.controls.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.AnchorPane;
+
+import static shop.Shop.pm;
 
 /**
  * FXML Controller class
@@ -55,10 +49,7 @@ public class LoginController implements Initializable {
     private StackPane stack;
     @FXML
     private AnchorPane base;
-    
-     Connection connection = null;
-        final String PERSISTENCE_UNIT_NAME = "ShopDBPU";
-        PersistenceManager pm = null;
+
     /**
      * Initializes the controller class.
      */
@@ -71,38 +62,33 @@ public class LoginController implements Initializable {
     @FXML
     private void checkId(ActionEvent event) throws IOException {
         Gestionnaire gest = null;
-        pm = new PersistenceManager(PERSISTENCE_UNIT_NAME);
-        
         
         if(isRoot(con_nom.getText(), con_mdp.getText())){
             base.getChildren().clear();
-        StackPane stack = FXMLLoader.load(getClass().getResource("main_final.fxml"));
-         AnchorPane.setTopAnchor(stack, 0.0);
-       AnchorPane.setLeftAnchor(stack, 0.0);
-       AnchorPane.setRightAnchor(stack, 0.0);
-       AnchorPane.setBottomAnchor(stack, 0.0);
-        base.getChildren().add(stack);
-        pm.stop();
-        }
-        
-        else{
+            StackPane stack = FXMLLoader.load(getClass().getResource("main_final.fxml"));
+             AnchorPane.setTopAnchor(stack, 0.0);
+           AnchorPane.setLeftAnchor(stack, 0.0);
+           AnchorPane.setRightAnchor(stack, 0.0);
+           AnchorPane.setBottomAnchor(stack, 0.0);
+            base.getChildren().add(stack);
+        } else {
             try {
-                gest = pm.getByAttributes(Gestionnaire.class, new PersistenceManager.KeyValue("USERNAME",con_nom.getText()),new PersistenceManager.KeyValue("PASSWORD",con_mdp.getText()));
-            } catch (Exception ex) {
-                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            if(gest != null){
+                gest = pm.getByAttributes(Gestionnaire.class, new PersistenceManager.KeyValue("username",con_nom.getText()),new PersistenceManager.KeyValue("password",con_mdp.getText()));
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                        gest.isTypeGest() ? "gestionnaires.fxml" : "cashier1.fxml"));
+                stack = loader.load();
+                if (gest.isTypeGest()) ((GestionnairesController) loader.getController()).setGestionnaire(gest);
+                else ((Cashier1Controller) loader.getController()).setCassier(gest);
                 base.getChildren().clear();
-                StackPane stack = FXMLLoader.load(getClass().getResource("main_final.fxml"));
                 AnchorPane.setTopAnchor(stack, 0.0);
                 AnchorPane.setLeftAnchor(stack, 0.0);
                 AnchorPane.setRightAnchor(stack, 0.0);
                 AnchorPane.setBottomAnchor(stack, 0.0);
                 base.getChildren().add(stack);
-            }
-            else{
-        errorMessage();
-        
+            } catch (Exception ex) {
+                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                errorMessage();
             }
         }       
            
