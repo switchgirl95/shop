@@ -7,6 +7,7 @@ package shop;
 
 import Modele.Gestionnaire;
 import Modele.ListeFacture;
+import Modele.PersistenceManager;
 import Modele.Produit;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
@@ -16,17 +17,24 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static shop.Shop.pm;
 
 /**
  * FXML Controller class
@@ -35,6 +43,7 @@ import java.util.ResourceBundle;
  */
 public class Cashier1Controller implements Initializable {
 
+    public HBox bar;
     @FXML
     private StackPane stack;
     @FXML
@@ -60,6 +69,8 @@ public class Cashier1Controller implements Initializable {
     @FXML
     private TextField remise;
     @FXML
+    private TableView<Produit> tableProd;
+    @FXML
     private TableColumn tableCode;
     @FXML
     private TableColumn tableNom;
@@ -74,6 +85,51 @@ public class Cashier1Controller implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        /*produits = new ArrayList<>();
+
+        TableColumn code = new TableColumn("Code");
+        TableColumn nom = new TableColumn("Nom");
+        TableColumn codeFournisseur = new TableColumn("Code Fourn");
+        TableColumn quantite = new TableColumn("Quantité");
+        TableColumn price = new TableColumn("Prix");
+        TableColumn categoryC = new TableColumn("Categorie");
+        TableColumn desc = new TableColumn("Description");
+        tableProd.getColumns().addAll(code,nom,codeFournisseur,quantite,price,categoryC,desc);
+
+        code.setCellValueFactory(new PropertyValueFactory<>("codeProduit"));
+        nom.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        codeFournisseur.setCellValueFactory(new PropertyValueFactory<>("codeFournisseur"));
+        quantite.setCellValueFactory(new PropertyValueFactory<>("quantite"));
+        price.setCellValueFactory(new PropertyValueFactory<>("prix"));
+        categoryC.setCellValueFactory(new PropertyValueFactory<>("categorie"));
+        desc.setCellValueFactory(new PropertyValueFactory<>("descriptions"));
+
+        ObservableList<Produit> items = FXCollections.observableArrayList();
+        items.addAll(pm.getAll(Produit.class));
+        tableProd.setItems(items);
+
+        tableProd.setRowFactory(produitTableView -> {
+            TableRow<Produit> row = new TableRow<>();
+            row.setOnMouseClicked(mouseEvent -> {
+                if (mouseEvent.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    Produit prod = row.getItem();
+                    *//*Produit p = null;
+                    try {
+                        p = pm.get(Produit.class, );
+                    } catch (Exception ex) {
+                        Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
+                    }*//*
+                    addToCart(prod, 2);
+                }
+            });
+
+            return row;
+        });
+
+        tableFacture.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("codeProduit"));
+        tableFacture.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("prix"));
+        tableFacture.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("quantite"));*/
+
         /*tableFacture.getColumns().addAll(tableCode, tableNom, tableQuantite);
         tableCode.setCellValueFactory(new PropertyValueFactory<>("Code"));
         tableNom.setCellValueFactory(new PropertyValueFactory<>("Nom"));
@@ -83,12 +139,6 @@ public class Cashier1Controller implements Initializable {
     private void onShow() {
         caissier.setText(gest.getUsername());
         date.setText(invertDate(parseCalendar(Calendar.getInstance())));
-    }
-
-    private void fillTable() {
-        ObservableList<ListeFacture> table = FXCollections.observableArrayList();
-        table.addAll(produits);
-        tableFacture.setItems(table);
     }
 
     @FXML
@@ -128,6 +178,13 @@ public class Cashier1Controller implements Initializable {
     private void addToCart(Produit produit, int quantite) {
         ListeFacture lf = new ListeFacture(produit.getCodeProduit(), 0, quantite, produit.getPrix());
         produits.add(lf);
+        fillTableFact();
+    }
+
+    private void fillTableFact() {
+        ObservableList<ListeFacture> table = FXCollections.observableArrayList();
+        table.addAll(produits);
+        tableFacture.setItems(table);
     }
 
     private double calculeMontant() {

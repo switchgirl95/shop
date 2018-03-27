@@ -1,9 +1,6 @@
 package Modele;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity(name = "LISTE_FACTURE")
@@ -11,7 +8,9 @@ import java.io.Serializable;
 public class ListeFacture
 {
     @Id
-    @Column(name = "CODEPRODUIT") private int codeProduit;
+    @OneToMany
+    @JoinColumn(name = "CODEPRODUIT") private Produit produit;
+    //int codeProduit;
     @Id
     @Column(name = "IDFACTURE") private int idFacture;
     @Column(name = "QUANTITE") private int quantite;
@@ -20,12 +19,12 @@ public class ListeFacture
     //Constructeurs
     //**********************************
     public ListeFacture() {
-        this.codeProduit =0;
+        //this.codeProduit =0;
         this.idFacture =0;
     }
 
     public ListeFacture(int codeProduit, int idFacture, int quantite, double prix) {
-        this.codeProduit = codeProduit;
+        //this.codeProduit = codeProduit;
         this.idFacture = idFacture;
         this.quantite = quantite;
         this.prix = prix;
@@ -33,9 +32,9 @@ public class ListeFacture
 
     //Getters et Setters
     //***********************************
-    public int getCodeProduit() {
+    /*public int getCodeProduit() {
         return codeProduit;
-    }
+    }*/
 
     public int getIdFacture() {
         return idFacture;
