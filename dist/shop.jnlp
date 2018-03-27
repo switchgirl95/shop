@@ -23,7 +23,7 @@
     <jar href="lib/jboss-transaction-api_1.2_spec-1.0.1.Final.jar" size="28352" download="eager" />
     <jar href="lib/jfoenix-8.0.1.jar" size="2405715" download="eager" />
     <jar href="lib/mysql-connector-java-5.1.45-bin.jar" size="999810" download="eager" />
-    <jar href="shop.jar" size="57060" download="eager" />
+    <jar href="shop.jar" size="59042" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="shop" >
     <param name="requiredFXVersion" value="8.0+"/>

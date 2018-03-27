@@ -96,6 +96,7 @@ public class Cashier1Controller implements Initializable {
         System.out.println(Double.toString(stack.getHeight()));
         TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
         closeNav.setToY(stack.getHeight());
+         AnchorPane.setBottomAnchor(mendisp,null);
             closeNav.play();
             closeNav.setOnFinished(new EventHandler<ActionEvent>() {
 
@@ -110,14 +111,18 @@ public class Cashier1Controller implements Initializable {
     private void openMenu(ActionEvent event) {
         System.out.println(Double.toString(stack.getHeight()-mendisp.getHeight()));
         TranslateTransition openNav=new TranslateTransition(new Duration(350), mendisp);
-        openNav.setToY(stack.getHeight()-mendisp.getHeight());
-        TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
-        
-        test.setOnAction((ActionEvent evt)->{
-                menu.setVisible(true);
+        openNav.setToY(0);
+       // TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
+        menu.setVisible(true);
                 openNav.play();
-                
-        });
+                openNav.setOnFinished(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                AnchorPane.setBottomAnchor(mendisp,0.0);
+            }
+                });
+        
     }
 
     private void addToCart(Produit produit, int quantite) {

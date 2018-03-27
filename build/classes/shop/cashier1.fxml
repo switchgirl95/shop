@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
 <?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXRadioButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <StackPane fx:id="stack" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="1079.0" style="-fx-background-color: #E8E8E8;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shop.Cashier1Controller">
    <children>
@@ -16,7 +36,7 @@
                <center>
                   <AnchorPane prefHeight="477.0" prefWidth="1067.0" BorderPane.alignment="CENTER">
                      <children>
-                        <GridPane style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <GridPane style="-fx-background-color: blue;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane prefHeight="73.0" prefWidth="1079.0" style="-fx-background-color: #F2F2F2;">
                                  <children>
@@ -34,7 +54,7 @@
                                     </HBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E8E8E8;" GridPane.rowIndex="1">
+                              <AnchorPane maxHeight="1.7976931348623157E308" prefWidth="200.0" style="-fx-background-color: #E8E8E8;" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #E8E8E8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
@@ -83,7 +103,7 @@
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints maxHeight="70.0" minHeight="-Infinity" prefHeight="61.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="448.0" minHeight="10.0" prefHeight="442.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="442.0" vgrow="ALWAYS" />
                            </rowConstraints>
                         </GridPane>
                      </children>
@@ -147,14 +167,15 @@
          </children>
       </AnchorPane>
       <AnchorPane fx:id="blackout" opacity="0.53" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" visible="false" />
-      <AnchorPane fx:id="menu" onMouseClicked="#exitMenu" prefHeight="200.0" prefWidth="200.0" visible="false">
+      <AnchorPane fx:id="menu" onMouseClicked="#exitMenu" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <VBox fx:id="mendisp" alignment="CENTER" prefHeight="486.0" prefWidth="1079.0" style="-fx-background-color: white;" translateY="649.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <VBox fx:id="mendisp" alignment="CENTER" prefHeight="507.0" prefWidth="1079.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <TableView prefHeight="277.0" prefWidth="1079.0">
+                  <TableView fx:id="tableFacture" prefHeight="342.0" prefWidth="1039.0">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="C1" />
-                      <TableColumn prefWidth="75.0" text="C2" />
+                      <TableColumn fx:id="tableCode" prefWidth="75.0" text="Code" />
+                      <TableColumn fx:id="tableNom" prefWidth="75.0" text="nom Produit" />
+                        <TableColumn fx:id="tableQuantite" prefWidth="75.0" text="Quantité" />
                     </columns>
                   </TableView>
                   <GridPane prefHeight="184.0" prefWidth="1079.0">
@@ -172,15 +193,43 @@
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Montant" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Remise" GridPane.rowIndex="1" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Caisiere" GridPane.rowIndex="2" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Caissier" GridPane.rowIndex="2" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Date" GridPane.rowIndex="3" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Type" GridPane.rowIndex="4" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" GridPane.columnIndex="1" />
-                        <JFXTextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Text fx:id="montant" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1">
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin></Text>
+                        <JFXTextField fx:id="remise" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <padding>
+                              <Insets left="15.0" right="15.0" />
+                           </padding>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin></JFXTextField>
+                        <Text fx:id="caissier" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin>
+                        </Text>
+                        <Text fx:id="date" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin>
+                        </Text>
+                        <Text fx:id="type" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin>
+                        </Text>
                      </children>
                   </GridPane>
                   <JFXButton text="Save" />
-               </children></VBox>
+               </children>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding></VBox>
+            <HBox fx:id="bar" prefHeight="48.0" prefWidth="435.0" style="-fx-background-color: black;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
          </children>
       </AnchorPane>
    </children>
