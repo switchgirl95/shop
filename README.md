@@ -1,5 +1,5 @@
 # Shop Manager
-Un application JavaFX qui gere un magazin
+Une application JavaFX qui gère un magasin
 
 
 #Comment compiler sur Netbeans
