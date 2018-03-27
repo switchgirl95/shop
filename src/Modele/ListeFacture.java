@@ -69,7 +69,6 @@ public class ListeFacture
         @Override
         public boolean equals(Object obj) {
             return obj instanceof Key && produit.getCodeProduit() == ((Key) obj).produit.getCodeProduit() && idFacture == ((Key) obj).idFacture;
-            //return obj instanceof Key && codeProduit == ((Key) obj).codeProduit && idFacture == ((Key) obj).idFacture;
         }
 
         @Override
