@@ -25,6 +25,13 @@ public class ListeFacture
         this.idFacture =0;
     }
 
+    public ListeFacture(Produit produit, int idFacture, int quantite) {
+        this.produit = produit;
+        this.idFacture = idFacture;
+        this.quantite = quantite;
+        this.prix = produit.getPrix();
+    }
+
     public ListeFacture(int codeProduit, int idFacture, int quantite, double prix) {
         //this.codeProduit = codeProduit;
         this.idFacture = idFacture;
@@ -61,6 +68,28 @@ public class ListeFacture
 
     public void setProduit(Produit produit) {
         this.produit = produit;
+    }
+
+    public int getCodeProduit() {
+        return produit.getCodeProduit();
+    }
+
+    public String getNomProduit() {
+        return produit.getNom();
+    }
+
+    public double getPrixTotal() {
+        return prix * quantite;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * idFacture + getCodeProduit();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof ListeFacture && this.idFacture == ((ListeFacture) o).getIdFacture() && this.getCodeProduit() == ((ListeFacture) o).getCodeProduit();
     }
 
     protected class Key implements Serializable {

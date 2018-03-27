@@ -22,7 +22,7 @@ public class Shop extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("cashier1.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
         
         Scene scene = new Scene(root);
         
@@ -36,7 +36,6 @@ public class Shop extends Application {
     public static void main(String[] args) {
         try {
             pm = new PersistenceManager(PERSISTENCE_UNIT_NAME);
-            System.out.println("allo");
             launch(args);
             pm.stop();
         } catch (Exception e) {

@@ -123,7 +123,7 @@ public class LoginController implements Initializable {
     
     try {
 
-	File fXmlFile = new File("xmlPrueba.xml");
+	File fXmlFile = new File("../xmlPrueba.xml");
 	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 	Document doc = dBuilder.parse(fXmlFile);
