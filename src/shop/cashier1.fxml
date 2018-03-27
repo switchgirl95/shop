@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXRadioButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
 <StackPane fx:id="stack" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="1079.0" style="-fx-background-color: #E8E8E8;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shop.Cashier1Controller">
    <children>
       <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="366.0" prefHeight="646.0" prefWidth="1087.0">
@@ -64,7 +87,7 @@
                                           </HBox>
                                           <StackPane prefHeight="365.0" prefWidth="1079.0" VBox.vgrow="ALWAYS">
                                              <children>
-                                                <TableView fx:id="tableProd" prefHeight="275.0" prefWidth="1039.0" />
+                                                <TableView prefHeight="275.0" prefWidth="1039.0" />
                                              </children>
                                           </StackPane>
                                        </children>
@@ -143,10 +166,10 @@
             </BorderPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="blackout" opacity="0.53" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" visible="false" />
+      <AnchorPane fx:id="blackout" opacity="0.54" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" visible="false" />
       <AnchorPane fx:id="menu" onMouseClicked="#exitMenu" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <VBox fx:id="mendisp" alignment="CENTER" prefHeight="507.0" prefWidth="1079.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <VBox fx:id="mendisp" alignment="CENTER" prefHeight="507.0" prefWidth="1079.0" style="-fx-background-color: white;" translateY="648.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
                   <TableView fx:id="tableFacture" prefHeight="342.0" prefWidth="1039.0">
                     <columns>
