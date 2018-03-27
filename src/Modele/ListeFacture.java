@@ -1,5 +1,6 @@
 package Modele;
 
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -8,9 +9,10 @@ import java.io.Serializable;
 public class ListeFacture
 {
     @Id
-    @OneToMany
-    @JoinColumn(name = "CODEPRODUIT") private Produit produit;
-    //int codeProduit;
+    //@Column(name = "CODEPRODUIT") private int codeProduit;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "CODEPRODUIT")
+    private Produit produit;
     @Id
     @Column(name = "IDFACTURE") private int idFacture;
     @Column(name = "QUANTITE") private int quantite;
@@ -58,19 +60,21 @@ public class ListeFacture
 
     protected class Key implements Serializable {
         // used to define the LISTE_FACTURE table composite key
-        int codeProduit;
+        //int codeProduit;
+        Produit produit;
         int idFacture;
 
         public Key() {}
 
         @Override
         public boolean equals(Object obj) {
-            return obj instanceof Key && codeProduit == ((Key) obj).codeProduit && idFacture == ((Key) obj).idFacture;
+            return obj instanceof Key && produit.getCodeProduit() == ((Key) obj).produit.getCodeProduit() && idFacture == ((Key) obj).idFacture;
+            //return obj instanceof Key && codeProduit == ((Key) obj).codeProduit && idFacture == ((Key) obj).idFacture;
         }
 
         @Override
         public int hashCode() {
-            return 31 * codeProduit + idFacture;
+            return 31 * produit.getCodeProduit() + idFacture;
         }
     }
 }
