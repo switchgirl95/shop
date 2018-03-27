@@ -30,7 +30,6 @@ public class PersistenceManager {
     public void insert (Object o) {
         EntityTransaction et = em.getTransaction();
         et.begin();
-
         em.persist(o);
         et.commit();
         em.flush();
