@@ -25,10 +25,12 @@ public class PersistenceManager {
         em.close();
         emf.close();
     }
+
     //@Transactional
     public void insert (Object o) {
         EntityTransaction et = em.getTransaction();
         et.begin();
+
         em.persist(o);
         et.commit();
         em.flush();
