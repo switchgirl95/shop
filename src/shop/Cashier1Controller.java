@@ -94,7 +94,10 @@ public class Cashier1Controller implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         produits = new ArrayList<>();
         initMenu();
+        initTables();
+    }
 
+    private void initTables() {
         ObservableList<Categorie> cats = FXCollections.observableArrayList();
         cats.addAll(pm.getAll(Categorie.class));
         category.setItems(cats);
