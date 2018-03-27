@@ -40,12 +40,12 @@
                            <children>
                               <AnchorPane prefHeight="73.0" prefWidth="1079.0" style="-fx-background-color: #F2F2F2;">
                                  <children>
-                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <HBox fx:id="idProd" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Id" />
-                                          <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Nom " />
-                                          <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Description" />
-                                          <JFXComboBox fx:id="category" focusColor="#00e48f" promptText="Category" />
+                                          <JFXTextField focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="104.0" promptText="Id" />
+                                          <JFXTextField fx:id="nomProd" focusColor="#00e48f" labelFloat="true" promptText="Nom " />
+                                          <JFXTextField fx:id="qteProd" focusColor="#00e48f" labelFloat="true" promptText="Quantite" />
+                                          <JFXButton text="Ajouter" />
                                           <Button fx:id="test" mnemonicParsing="false" onAction="#openMenu" text="Test2" />
                                        </children>
                                        <padding>
@@ -58,33 +58,6 @@
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #E8E8E8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <HBox alignment="CENTER_RIGHT" prefHeight="76.0" prefWidth="1079.0">
-                                             <children>
-                                                <JFXRadioButton selected="true" text="id" textFill="#4d4d4d">
-                                                   <toggleGroup>
-                                                      <ToggleGroup fx:id="sortby" />
-                                                   </toggleGroup>
-                                                   <HBox.margin>
-                                                      <Insets right="30.0" />
-                                                   </HBox.margin>
-                                                </JFXRadioButton>
-                                                <JFXRadioButton text="Nom" textFill="#4d4d4d" toggleGroup="$sortby">
-                                                   <HBox.margin>
-                                                      <Insets right="30.0" />
-                                                   </HBox.margin>
-                                                </JFXRadioButton>
-                                                <JFXRadioButton text="Prix" textFill="#4d4d4d" toggleGroup="$sortby">
-                                                   <HBox.margin>
-                                                      <Insets right="50.0" />
-                                                   </HBox.margin>
-                                                </JFXRadioButton>
-                                                <Text fill="#4d4d4d" strokeType="OUTSIDE" strokeWidth="0.0" text="Asc" />
-                                                <JFXToggleButton text="Desc" />
-                                             </children>
-                                             <VBox.margin>
-                                                <Insets />
-                                             </VBox.margin>
-                                          </HBox>
                                           <StackPane prefHeight="365.0" prefWidth="1079.0" VBox.vgrow="ALWAYS">
                                              <children>
                                                 <TableView fx:id="tableProduits" prefHeight="275.0" prefWidth="1039.0">
@@ -174,7 +147,7 @@
          </children>
       </AnchorPane>
       <AnchorPane fx:id="blackout" opacity="0.54" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" visible="false" />
-      <AnchorPane fx:id="menu" onMouseClicked="#exitMenu" prefHeight="200.0" prefWidth="200.0">
+      <AnchorPane fx:id="menu" onMouseClicked="#exitMenu" prefHeight="200.0" prefWidth="200.0" visible="false">
          <children>
             <VBox fx:id="mendisp" alignment="CENTER" prefHeight="507.0" prefWidth="1079.0" style="-fx-background-color: white;" translateY="648.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>

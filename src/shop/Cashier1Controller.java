@@ -10,6 +10,7 @@ import Modele.Gestionnaire;
 import Modele.ListeFacture;
 import Modele.Produit;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextField;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.scene.layout.HBox;
 
 import static shop.Shop.pm;
 
@@ -44,13 +46,10 @@ public class Cashier1Controller implements Initializable {
     @FXML
     private StackPane stack;
     @FXML
-    private ToggleGroup sortby;
-    @FXML
     private AnchorPane blackout;
     @FXML
     private VBox mendisp;
-    @FXML
-    private JFXComboBox<Categorie> category;
+    //private JFXComboBox<Categorie> category;
     @FXML
     private Button test;
     @FXML
@@ -86,6 +85,14 @@ public class Cashier1Controller implements Initializable {
 
     private List<ListeFacture> produits;
     private Gestionnaire gest;
+    @FXML
+    private HBox idProd;
+    @FXML
+    private JFXTextField nomProd;
+    @FXML
+    private JFXTextField qteProd;
+    @FXML
+    private HBox bar;
 
     /**
      * Initializes the controller class.
@@ -98,7 +105,7 @@ public class Cashier1Controller implements Initializable {
     }
 
     private void initTables() {
-        ObservableList<Categorie> cats = FXCollections.observableArrayList();
+      /*  ObservableList<Categorie> cats = FXCollections.observableArrayList();
         cats.addAll(pm.getAll(Categorie.class));
         category.setItems(cats);
 
@@ -113,7 +120,7 @@ public class Cashier1Controller implements Initializable {
         tableFCode.setCellValueFactory(new PropertyValueFactory<>("codeProduit"));
         tableFNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
         tableFQuantite.setCellValueFactory(new PropertyValueFactory<>("quantite"));
-        //tableFPrix.setCellValueFactory(new PropertyValueFactory<>("PRIX"));
+        //tableFPrix.setCellValueFactory(new PropertyValueFactory<>("PRIX"));*/
     }
 
     @FXML
