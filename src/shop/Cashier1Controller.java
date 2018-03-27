@@ -5,9 +5,11 @@
  */
 package shop;
 
+import Modele.Categorie;
 import Modele.Gestionnaire;
 import Modele.ListeFacture;
 import Modele.Produit;
+import com.jfoenix.controls.JFXComboBox;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +18,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
@@ -24,9 +27,12 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static shop.Shop.pm;
 
 /**
  * FXML Controller class
@@ -44,9 +50,21 @@ public class Cashier1Controller implements Initializable {
     @FXML
     private VBox mendisp;
     @FXML
+    private JFXComboBox<Categorie> category;
+    @FXML
     private Button test;
     @FXML
     private AnchorPane menu;
+    @FXML
+    private TableView<Produit> tableProduits;
+    @FXML
+    private TableColumn tablePCode;
+    @FXML
+    private TableColumn tablePNom;
+    @FXML
+    private TableColumn tablePQuantite;
+    @FXML
+    private TableColumn tablePPrix;
     @FXML
     private TableView<ListeFacture> tableFacture;
     @FXML
@@ -60,11 +78,11 @@ public class Cashier1Controller implements Initializable {
     @FXML
     private TextField remise;
     @FXML
-    private TableColumn tableCode;
+    private TableColumn tableFCode;
     @FXML
-    private TableColumn tableNom;
+    private TableColumn tableFNom;
     @FXML
-    private TableColumn tableQuantite;
+    private TableColumn tableFQuantite;
 
     private List<ListeFacture> produits;
     private Gestionnaire gest;
@@ -74,7 +92,25 @@ public class Cashier1Controller implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        produits = new ArrayList<>();
         initMenu();
+
+        ObservableList<Categorie> cats = FXCollections.observableArrayList();
+        cats.addAll(pm.getAll(Categorie.class));
+        category.setItems(cats);
+
+        tablePCode.setCellValueFactory(new PropertyValueFactory<>("codeProduit"));
+        tablePNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        tablePQuantite.setCellValueFactory(new PropertyValueFactory<>("quantite"));
+        tablePPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
+        ObservableList<Produit> tableP = FXCollections.observableArrayList();
+        tableP.addAll(pm.getAll(Produit.class));
+        tableProduits.setItems(tableP);
+
+        tableFCode.setCellValueFactory(new PropertyValueFactory<>("codeProduit"));
+        tableFNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        tableFQuantite.setCellValueFactory(new PropertyValueFactory<>("quantite"));
+        //tableFPrix.setCellValueFactory(new PropertyValueFactory<>("PRIX"));
     }
 
     @FXML
@@ -102,18 +138,27 @@ public class Cashier1Controller implements Initializable {
        // TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
         menu.setVisible(true);
         blackout.setVisible(true);
-                openNav.play();
-                openNav.setOnFinished(new EventHandler<ActionEvent>() {
+        openNav.play();
+        openNav.setOnFinished(event1 -> AnchorPane.setBottomAnchor(mendisp,0.0));
+    }
+
+    private void initMenu(){
+        TranslateTransition closeNav=new TranslateTransition(new Duration(0), mendisp);
+        closeNav.setToY(stack.getHeight());
+        AnchorPane.setBottomAnchor(mendisp,null);
+        closeNav.play();
+        closeNav.setOnFinished(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                AnchorPane.setBottomAnchor(mendisp,0.0);
+                menu.setVisible(false);
             }
-                });
-        
-    }    
+        });
 
-    private void fillTable() {
+    }
+
+
+    private void fillTableF() {
         ObservableList<ListeFacture> table = FXCollections.observableArrayList();
         table.addAll(produits);
         tableFacture.setItems(table);
@@ -123,31 +168,6 @@ public class Cashier1Controller implements Initializable {
         caissier.setText(gest.getUsername());
         date.setText(invertDate(parseCalendar(Calendar.getInstance())));
     }
-
-
-
-
-
-
-   
-    private void initMenu(){
-    TranslateTransition closeNav=new TranslateTransition(new Duration(0), mendisp);
-        closeNav.setToY(stack.getHeight());
-         AnchorPane.setBottomAnchor(mendisp,null);
-            closeNav.play();
-            closeNav.setOnFinished(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                menu.setVisible(false);
-            }
-        });
-    
-    }
-    
-   
-    
-    
 
     private double calculeMontant() {
         double montant = 0;

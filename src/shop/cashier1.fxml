@@ -45,7 +45,7 @@
                                           <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Id" />
                                           <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Nom " />
                                           <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Description" />
-                                          <JFXComboBox focusColor="#00e48f" promptText="Category" />
+                                          <JFXComboBox fx:id="category" focusColor="#00e48f" promptText="Category" />
                                           <Button fx:id="test" mnemonicParsing="false" onAction="#openMenu" text="Test2" />
                                        </children>
                                        <padding>
@@ -87,7 +87,14 @@
                                           </HBox>
                                           <StackPane prefHeight="365.0" prefWidth="1079.0" VBox.vgrow="ALWAYS">
                                              <children>
-                                                <TableView prefHeight="275.0" prefWidth="1039.0" />
+                                                <TableView fx:id="tableProduits" prefHeight="275.0" prefWidth="1039.0">
+                                                   <columns>
+                                                      <TableColumn fx:id="tablePCode" prefWidth="75.0" text="Code" />
+                                                      <TableColumn fx:id="tablePNom" prefWidth="75.0" text="nom Produit" />
+                                                      <TableColumn fx:id="tablePQuantite" prefWidth="75.0" text="Quantité" />
+                                                      <TableColumn fx:id="tablePPrix" prefWidth="75.0" text="Prix" />
+                                                   </columns>
+                                                </TableView>
                                              </children>
                                           </StackPane>
                                        </children>
@@ -173,9 +180,9 @@
                <children>
                   <TableView fx:id="tableFacture" prefHeight="342.0" prefWidth="1039.0">
                     <columns>
-                      <TableColumn fx:id="tableCode" prefWidth="75.0" text="Code" />
-                      <TableColumn fx:id="tableNom" prefWidth="75.0" text="nom Produit" />
-                        <TableColumn fx:id="tableQuantite" prefWidth="75.0" text="Quantité" />
+                      <TableColumn fx:id="tableFCode" prefWidth="75.0" text="Code" />
+                      <TableColumn fx:id="tableFNom" prefWidth="75.0" text="nom Produit" />
+                        <TableColumn fx:id="tableFQuantite" prefWidth="75.0" text="Quantité" />
                     </columns>
                   </TableView>
                   <GridPane prefHeight="184.0" prefWidth="1079.0">

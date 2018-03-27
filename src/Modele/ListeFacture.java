@@ -34,9 +34,6 @@ public class ListeFacture
 
     //Getters et Setters
     //***********************************
-    /*public int getCodeProduit() {
-        return codeProduit;
-    }*/
 
     public int getIdFacture() {
         return idFacture;
@@ -56,6 +53,14 @@ public class ListeFacture
 
     public void setPrix(double prix) {
         this.prix = prix;
+    }
+
+    public Produit getProduit() {
+        return produit;
+    }
+
+    public void setProduit(Produit produit) {
+        this.produit = produit;
     }
 
     protected class Key implements Serializable {
