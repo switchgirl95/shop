@@ -40,12 +40,12 @@
                            <children>
                               <AnchorPane prefHeight="73.0" prefWidth="1079.0" style="-fx-background-color: #F2F2F2;">
                                  <children>
-                                    <HBox fx:id="idProd" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <HBox fx:id="HBProd" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <JFXTextField focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="104.0" promptText="Id" />
-                                          <JFXTextField fx:id="nomProd" focusColor="#00e48f" labelFloat="true" promptText="Nom " />
+                                          <JFXTextField fx:id="idProd" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="104.0" promptText="Id" editable="false"/>
+                                          <JFXTextField fx:id="nomProd" focusColor="#00e48f" labelFloat="true" promptText="Nom " editable="false"/>
                                           <JFXTextField fx:id="qteProd" focusColor="#00e48f" labelFloat="true" promptText="Quantite" />
-                                          <JFXButton text="Ajouter" />
+                                          <JFXButton onAction="#addToCart" text="Ajouter"/>
                                           <Button fx:id="test" mnemonicParsing="false" onAction="#openMenu" text="Test2" />
                                        </children>
                                        <padding>
@@ -155,7 +155,9 @@
                     <columns>
                       <TableColumn fx:id="tableFCode" prefWidth="75.0" text="Code" />
                       <TableColumn fx:id="tableFNom" prefWidth="75.0" text="nom Produit" />
-                        <TableColumn fx:id="tableFQuantite" prefWidth="75.0" text="Quantité" />
+                       <TableColumn fx:id="tableFPrixU" prefWidth="75.0" text="Prix unitaire" />
+                       <TableColumn fx:id="tableFQuantite" prefWidth="75.0" text="Quantité" />
+                       <TableColumn fx:id="tableFPrixT" prefWidth="75.0" text="Prix total" />
                     </columns>
                   </TableView>
                   <GridPane prefHeight="184.0" prefWidth="1079.0">

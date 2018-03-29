@@ -417,12 +417,13 @@ public class Main_finalController implements Initializable {
         pm.insert(prod);
         fillTableProd();
         
-       // for(Node prodPhoto : prodPhotos){
-        //    if(prodPhoto instanceof photoProdBase){
-        //Photo photo = new Photo(prod.getCodeProduit(),((photoProdBase) prodPhoto).getLien());
-       // pm.insert(photo);
-        //}
-       // }
+        for(Node prodPhoto : prodPhotos){
+            if(prodPhoto instanceof photoProdBase){
+        Photo photo = new Photo(prod.getCodeProduit(),((photoProdBase) prodPhoto).getLien());
+               System.out.println("!!");
+        pm.insert(photo);
+        }
+        }
         exit();
     }
     
