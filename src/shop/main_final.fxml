@@ -240,10 +240,13 @@
                               <Insets />
                            </HBox.margin>
                            <content>
-                              <VBox fx:id="photoList" prefHeight="640.0" prefWidth="230.0" spacing="20.0">
+                              <VBox fx:id="photoList" alignment="TOP_CENTER" prefHeight="640.0" prefWidth="230.0" spacing="20.0">
                                  <padding>
                                     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                                  </padding>
+                                 <children>
+                                    <JFXButton fx:id="addPhoto" onAction="#addPhoto" text="Add +" />
+                                 </children>
                               </VBox>
                            </content>
                         </ScrollPane>

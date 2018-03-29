@@ -7,8 +7,12 @@ package shop;
 
 import Modele.Categorie;
 import Modele.PersistenceManager;
+import Modele.Photo;
 import com.jfoenix.controls.*;
 import Modele.Produit;
+import Modele.photoProdBase;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
@@ -36,8 +40,14 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Window;
 import net.bytebuddy.matcher.FilterableList;
 
 import static shop.Shop.pm;
@@ -134,23 +144,25 @@ public class Main_finalController implements Initializable {
     private VBox photoList;
     
     Parent root = null;
+    @FXML
+    private JFXButton addPhoto;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         //table = tl.products();
-        initTableCat();
-        initTableProd();
-        addCategory.setVisible(false);
-        prepareSlideMenuAnimation();
-        fillTableProd();
-       /*  try {
+            initTableCat();
+            initTableProd();
+            addCategory.setVisible(false);
+            prepareSlideMenuAnimation();
+            fillTableProd();
+            /*  try {
             root = FXMLLoader.load(getClass().getResource("prodPhoto.fxml"));
-        } catch (IOException ex) {
+            } catch (IOException ex) {
             Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        photoList.getChildren().add(root);
-        */
+            }
+            photoList.getChildren().add(root);
+            */
+            
     }
 
     
@@ -298,7 +310,8 @@ public class Main_finalController implements Initializable {
         TableColumn categoryC = new TableColumn("Categorie");
         TableColumn desc = new TableColumn("Description");
         TableColumn act = new TableColumn("Actif?");
-        tableProd.getColumns().addAll(code,nom,codeFournisseur,quantite,price,categoryC,desc,act);
+        TableColumn photo = new TableColumn("Photo");
+        tableProd.getColumns().addAll(code,nom,codeFournisseur,quantite,price,categoryC,desc,act,photo);
         
         code.setCellValueFactory(new PropertyValueFactory<>("codeProduit"));
         nom.setCellValueFactory(new PropertyValueFactory<>("nom"));
@@ -308,6 +321,7 @@ public class Main_finalController implements Initializable {
         categoryC.setCellValueFactory(new PropertyValueFactory<>("categorie"));
         desc.setCellValueFactory(new PropertyValueFactory<>("descriptions"));
         act.setCellValueFactory(new PropertyValueFactory<>("actif"));
+
         
         
         tableProd.setRowFactory(tv -> {
@@ -322,7 +336,11 @@ public class Main_finalController implements Initializable {
                     }
                     rowIndex = row.getIndex();
                     
-                    fillProdEdit(rowData);
+                    try {
+                        fillProdEdit(rowData);
+                    } catch (Exception ex) {
+                        Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     System.out.println("Double click on: "+rowData.getNom());
                     TranslateTransition openNav=new TranslateTransition(new Duration(350), mendisp);
                     blackout.setVisible(true);
@@ -338,7 +356,7 @@ public class Main_finalController implements Initializable {
         });
 
     }
-    public void fillProdEdit(Produit prod){
+    public void fillProdEdit(Produit prod) throws Exception{
         idProd.setText(Integer.toString(prod.getCodeProduit()));
         nomProd.setText(prod.getNom());
         prixProd.setText(Integer.toString(prod.getPrix()));
@@ -349,7 +367,11 @@ public class Main_finalController implements Initializable {
             active.setSelected(true);
         else
             active.setSelected(false);
+        
+         List<Photo> photos = pm.getAll(Photo.class);
+         loadImages2(photos);
     }
+   
 
     @FXML
     private void editProd(ActionEvent event) {
@@ -382,15 +404,24 @@ public class Main_finalController implements Initializable {
 
     @FXML
     private void addProd(ActionEvent event) {
+        List<Node> prodPhotos = photoList.getChildren();
         Categorie cat = category.getValue();
-        int ppd =Integer.parseInt( prixProd.getText());
+        int ppd =Integer.parseInt(prixProd.getText());
         int qpd = Integer.parseInt(qteProd.getText());
         String des = description.getText();
         String npd = nomProd.getText();
         String cfo = codeFourn.getText();
+        System.out.println("??");
         Produit prod = new Produit(cat, ppd, qpd, des, npd, cfo, active.isSelected());//new Produit(cat,ppd,qpd,des,npd,cfo,actif);
         pm.insert(prod);
         fillTableProd();
+        
+       // for(Node prodPhoto : prodPhotos){
+        //    if(prodPhoto instanceof photoProdBase){
+        //Photo photo = new Photo(prod.getCodeProduit(),((photoProdBase) prodPhoto).getLien());
+       // pm.insert(photo);
+        //}
+       // }
         exit();
     }
     
@@ -406,5 +437,42 @@ public class Main_finalController implements Initializable {
                 menu.setVisible(false);
             }
         });
+    }
+    private void loadImages1(List<File> files) throws FileNotFoundException{
+        for (File f : files){
+        StackPane file = new photoProdBase(f);
+        photoList.getChildren().add(file);
+        }
+        
+        //photoList.getChildren().add(rori);
+        //photoList.getChildren().addAll(rori,rori2);
+    
+    }
+    private void loadImages2(List<Photo> photos) throws FileNotFoundException{
+        for (Photo f : photos){
+        StackPane file = new photoProdBase(f);
+        photoList.getChildren().add(file);
+        }
+    }
+
+    @FXML
+    private void addPhoto(ActionEvent event) throws FileNotFoundException {
+        Window theStage = menu.getParent().getScene().getWindow();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Image files");
+        //fileChooser.setInitialDirectory(new File("X:\\testdir\\two"));
+        fileChooser.getExtensionFilters().addAll(
+        new ExtensionFilter("image files", "*.jpg"));
+
+    List<File> selectedFiles = fileChooser.showOpenMultipleDialog(theStage);
+
+if (selectedFiles != null) {
+    
+    loadImages1(selectedFiles);
+    }
+
+else {
+    //actionStatus.setText("PDF file selection cancelled.");
+}
     }
 }

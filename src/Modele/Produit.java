@@ -2,6 +2,7 @@ package Modele;
 
 import javax.persistence.*;
 import java.util.List;
+import javafx.scene.image.Image;
 
 @Entity(name = "PRODUIT")
 public class Produit
@@ -20,6 +21,7 @@ public class Produit
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "CODEPRODUIT")
     private List<Photo> photos;
+    
 
     //Constructeurs
     //************************************
@@ -112,4 +114,12 @@ public class Produit
     public void setPhotos(List<Photo> photos) {
         this.photos = photos;
     }
+    
+    //public Image getPrimPhoto(){
+    //    return this.primPhoto;
+    //}
+    
+    //public void setPrimPhoto(String photo){
+        //this.primPhoto = photo;
+    //}
 }
