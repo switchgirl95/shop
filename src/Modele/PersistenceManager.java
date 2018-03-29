@@ -25,20 +25,15 @@ public class PersistenceManager {
         emf.close();
     }
 
-    public void insert (Object o) {
+    public <T> T insert (T o) {
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(o);
+        em.flush();
+//        em.refresh(o);
         et.commit();
+        return o;
     }
-
-    /*public void delete (int key, int... oKeys) {
-        if (oKeys.length == 0) {
-
-        } else {
-
-        }
-    }*/
 
     public void delete (Object o) {
         EntityTransaction et = em.getTransaction();

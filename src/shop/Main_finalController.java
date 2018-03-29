@@ -193,9 +193,6 @@ public class Main_finalController implements Initializable {
         TranslateTransition openNav=new TranslateTransition(new Duration(350), mendisp);
         openNav.setToX(0);
         TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
-        ObservableList<Categorie> cats = FXCollections.observableArrayList();
-        cats.addAll(pm.getAll(Categorie.class));
-        category.setItems(cats);
         test.setOnAction((ActionEvent evt)->{
                 blackout.setVisible(true);
                 menu.setVisible(true);
@@ -211,6 +208,18 @@ public class Main_finalController implements Initializable {
                 closeNav.setOnFinished(event -> menu.setVisible(false));
                 
         });*/
+
+        // On initialise tous les champs
+        idProd.setText("#");
+        nomProd.setText("");
+        prixProd.setText("");
+        qteProd.setText("");
+        codeFourn.setText("");
+        description.setText("");
+        photoList.getChildren().clear();
+        ObservableList<Categorie> cats = FXCollections.observableArrayList();
+        cats.addAll(pm.getAll(Categorie.class));
+        category.setItems(cats);
         
     }
 
@@ -331,7 +340,7 @@ public class Main_finalController implements Initializable {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     Produit prod = row.getItem();
                     try {
-                        rowData = pm.getByAttributes(Produit.class, new PersistenceManager.KeyValue("codeProduit",prod.getCodeProduit()));
+                        rowData = pm.get(Produit.class, prod.getCodeProduit());
                     } catch (Exception ex) {
                         Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -364,13 +373,11 @@ public class Main_finalController implements Initializable {
         qteProd.setText(Integer.toString(prod.getQuantite()));
         codeFourn.setText(prod.getCodeFournisseur());
         description.setText(prod.getDescriptions());
-        if (prod.isActif() == true)
-            active.setSelected(true);
-        else
-            active.setSelected(false);
+        active.setSelected(prod.isActif());
+        category.getSelectionModel().select(prod.getCategorie());
         
-         List<Photo> photos = pm.getAll(Photo.class);
-         loadImages2(photos);
+        List<Photo> photos = pm.getAll(Photo.class);
+        loadImages2(photos);
     }
    
 
@@ -383,17 +390,12 @@ public class Main_finalController implements Initializable {
         rowData.setDescriptions(description.getText());
         rowData.setNom(nomProd.getText());
         rowData.setCodeFournisseur(codeFourn.getText());
-        if(active.isSelected()){
-            rowData.setActif(true);}
-        else{
-            rowData.setActif(false);}
-        
-        pm.insert(rowData);
-        //pm.flush();
+        rowData.setActif(active.isSelected());
+        rowData = pm.insert(rowData);
+        System.out.println("pr = " + rowData.getCodeProduit());
+        savePhotos(rowData.getCodeProduit());
         fillTableProd();
         exit();
-        //Produit prod = new Produit(cat, ppd, qpd, des, npd, cfo, active.isSelected());//new Produit(cat,ppd,qpd,des,npd,cfo,actif);
-        //pm.insert(prod);
     }
 
     @FXML
@@ -405,7 +407,6 @@ public class Main_finalController implements Initializable {
 
     @FXML
     private void addProd(ActionEvent event) {
-        List<Node> prodPhotos = photoList.getChildren();
         Categorie cat = category.getValue();
         int ppd =Integer.parseInt(prixProd.getText());
         int qpd = Integer.parseInt(qteProd.getText());
@@ -414,17 +415,23 @@ public class Main_finalController implements Initializable {
         String cfo = codeFourn.getText();
         System.out.println("??");
         Produit prod = new Produit(cat, ppd, qpd, des, npd, cfo, active.isSelected());//new Produit(cat,ppd,qpd,des,npd,cfo,actif);
-        pm.insert(prod);
+        prod = pm.insert(prod);
+        System.out.println("pr = " + prod.getCodeProduit());
+        savePhotos(prod.getCodeProduit());
+
         fillTableProd();
-        
-        for(Node prodPhoto : prodPhotos){
-            if(prodPhoto instanceof photoProdBase){
-        Photo photo = new Photo(prod.getCodeProduit(),((photoProdBase) prodPhoto).getLien());
-               System.out.println("!!");
-        pm.insert(photo);
-        }
-        }
         exit();
+    }
+
+    private void savePhotos(int codeProduit) {
+        List<Node> prodPhotos = photoList.getChildren();
+        for(Node prodPhoto : prodPhotos) {
+            if (prodPhoto instanceof photoProdBase) {
+                Photo photo = new Photo(codeProduit,((photoProdBase) prodPhoto).getLien());
+                System.out.println(" co = " + photo.getCodeProduit() + ", li = " + photo.getLien());
+                pm.insert(photo);
+            }
+        }
     }
     
     private void exit(){

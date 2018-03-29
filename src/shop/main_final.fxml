@@ -194,7 +194,7 @@
                               <JFXTextField fx:id="idProd" editable="false" labelFloat="true" promptText="Id" text="#" />
                               <JFXTextField fx:id="nomProd" labelFloat="true" promptText="Nom" />
                               <JFXTextField fx:id="prixProd" labelFloat="true" promptText="Prix" />
-                              <JFXTextField fx:id="qteProd" labelFloat="true" text="Quantite" />
+                              <JFXTextField fx:id="qteProd" labelFloat="true" promptText="Quantite" />
                               <JFXTextField fx:id="codeFourn" labelFloat="true" prefHeight="25.0" prefWidth="364.0" promptText="Code Fournisseur" />
                               <HBox prefHeight="100.0" prefWidth="200.0">
                                  <children>
