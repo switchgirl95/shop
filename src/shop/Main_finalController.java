@@ -266,8 +266,8 @@ public class Main_finalController implements Initializable {
         table.addAll(all);
         tableProd.setItems(table);
         tableProd.toFront();
-        //pm.stop();
     }
+
     private void fillTableCat(){
         
         List<Categorie> all = pm.getAll(Categorie.class);
