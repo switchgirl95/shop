@@ -172,7 +172,7 @@
                         <Font size="18.0" />
                      </font>
                   </Text>
-                  <JFXTextField editable="false" labelFloat="true" promptText="Id" text="jhiu" />
+                  <JFXTextField editable="false" labelFloat="true" promptText="Id" text="#" />
                   <JFXTextField fx:id="usrnm" labelFloat="true" promptText="Nom d'utilisateur" />
                   <JFXTextField fx:id="name" labelFloat="true" promptText="Nom" />
                   <JFXTextField fx:id="mdp" labelFloat="true" promptText="Mot de passe" />

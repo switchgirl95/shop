@@ -68,7 +68,8 @@ public class Main_finalController implements Initializable {
     @FXML
     private StackPane stack;
     @FXML
-   private ScrollPane mendisp;
+    private ScrollPane mendisp;
+    @FXML
     private JFXButton save;
     @FXML
     private JFXButton addCat;

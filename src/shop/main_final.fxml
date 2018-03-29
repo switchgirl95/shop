@@ -191,7 +191,7 @@
                      <children>
                         <VBox alignment="TOP_CENTER" maxHeight="657.0" minHeight="0.0" prefHeight="646.0" prefWidth="284.0" spacing="30.0" style="-fx-background-color: white;" HBox.hgrow="ALWAYS">
                            <children>
-                              <JFXTextField fx:id="idProd" editable="false" labelFloat="true" promptText="Id" text="jhiu" />
+                              <JFXTextField fx:id="idProd" editable="false" labelFloat="true" promptText="Id" text="#" />
                               <JFXTextField fx:id="nomProd" labelFloat="true" promptText="Nom" />
                               <JFXTextField fx:id="prixProd" labelFloat="true" promptText="Prix" />
                               <JFXTextField fx:id="qteProd" labelFloat="true" text="Quantite" />

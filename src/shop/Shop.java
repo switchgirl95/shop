@@ -36,7 +36,6 @@ public class Shop extends Application {
     public static void main(String[] args) {
         try {
             pm = new PersistenceManager(PERSISTENCE_UNIT_NAME);
-            System.out.println("allo");
             launch(args);
             pm.stop();
         } catch (Exception e) {
