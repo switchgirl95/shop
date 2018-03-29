@@ -42,11 +42,11 @@
                                  <children>
                                     <HBox fx:id="HBProd" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <JFXTextField fx:id="idProd" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="104.0" promptText="Id" editable="false"/>
-                                          <JFXTextField fx:id="nomProd" focusColor="#00e48f" labelFloat="true" promptText="Nom " editable="false"/>
+                                          <JFXTextField fx:id="idProd" editable="false" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="104.0" promptText="Id" />
+                                          <JFXTextField fx:id="nomProd" editable="false" focusColor="#00e48f" labelFloat="true" promptText="Nom " />
                                           <JFXTextField fx:id="qteProd" focusColor="#00e48f" labelFloat="true" promptText="Quantite" />
-                                          <JFXButton onAction="#addToCart" text="Ajouter"/>
-                                          <Button fx:id="test" mnemonicParsing="false" onAction="#openMenu" text="Test2" />
+                                          <JFXButton onAction="#addToCart" text="Ajouter" />
+                                          <JFXButton fx:id="test" onAction="#openMenu" style="-fx-background-color: #2F2F32;" text="Voir Panier" textFill="WHITE" />
                                        </children>
                                        <padding>
                                           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -67,6 +67,9 @@
                                                       <TableColumn fx:id="tablePQuantite" prefWidth="75.0" text="Quantité" />
                                                       <TableColumn fx:id="tablePPrix" prefWidth="75.0" text="Prix" />
                                                    </columns>
+                                                   <columnResizePolicy>
+                                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                   </columnResizePolicy>
                                                 </TableView>
                                              </children>
                                           </StackPane>

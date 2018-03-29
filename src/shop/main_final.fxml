@@ -183,7 +183,7 @@
          </children>
       </AnchorPane>
       <AnchorPane fx:id="blackout" opacity="0.53" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" visible="false" />
-      <AnchorPane fx:id="menu" maxHeight="1.7976931348623157E308" onMouseClicked="#exitMenu" prefWidth="200.0">
+      <AnchorPane fx:id="menu" maxHeight="1.7976931348623157E308" onMouseClicked="#exitMenu" prefWidth="200.0" visible="false">
          <children>
             <ScrollPane fx:id="mendisp" fitToHeight="true" prefHeight="648.0" prefWidth="635.0" translateX="-635.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
                <content>

@@ -29,7 +29,6 @@ public class PersistenceManager {
         et.begin();
         em.persist(o);
         et.commit();
-        em.flush();
         
     }
 
