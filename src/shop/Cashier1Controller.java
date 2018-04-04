@@ -227,7 +227,8 @@ public class Cashier1Controller implements Initializable {
     }
 
     private boolean imprimeFacture(Facture facture) {
-        /*List<ListeFacture> listeFactures = facture.getListeFacture();
+        /*Gestionnaire gest = facture.getGestionnaire();
+        List<ListeFacture> listeFactures = facture.getListeFacture();
         for (ListeFacture lf : listeFactures)
             lf.getProduit();*/
 

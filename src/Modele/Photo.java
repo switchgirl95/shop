@@ -1,13 +1,12 @@
 package Modele;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity(name = "PHOTO")
 public class Photo
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDPHOTO") private int idPhoto;
     @Column(name = "CODEPRODUIT") private int codeProduit;
     @Column(name = "LIEN") private String lien;

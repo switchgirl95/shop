@@ -1,8 +1,6 @@
 package Modele;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by arnold on 06/03/18.
@@ -11,6 +9,7 @@ import javax.persistence.Id;
 @Entity(name = "GESTIONNAIRE")
 public class Gestionnaire {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDGEST") private int idGest;
     @Column(name = "NOM") private String nom;
     @Column(name = "TYPEGEST") private boolean typeGest;

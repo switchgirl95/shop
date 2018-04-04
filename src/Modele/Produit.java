@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 public class Produit
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CODEPRODUIT") private int codeProduit;
     @ManyToOne
     @JoinColumn(name="IDCATEGORIE", nullable=false)

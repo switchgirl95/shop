@@ -9,8 +9,12 @@ import java.util.List;
 @Entity(name = "FACTURE")
 public class Facture {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDFACTURE") private int idFacture;
-    @Column(name = "IDGEST") private int idGest;
+    @ManyToOne
+    @JoinColumn(name="IDGEST", nullable=false)
+    private Gestionnaire gestionnaire;
+    /*@Column(name = "IDGEST") private int idGest;*/
     @Column(name = "DATEFACTURE") private String dateFacture;
     @Column(name = "REMISE") private double remise;
     @Column(name = "MONTANT") private double montant;
@@ -23,16 +27,16 @@ public class Facture {
         idFacture = 0;
     }
 
-    public Facture(int idGest, String dateFacture, double remise, double montant, boolean typeFact) {
-        this.idGest = idGest;
+    public Facture(Gestionnaire gest, String dateFacture, double remise, double montant, boolean typeFact) {
+        this.gestionnaire = gest;
         this.dateFacture = dateFacture;
         this.remise = remise;
         this.montant = montant;
         this.typeFact = typeFact;
     }
 
-    public Facture(int idFacture, int idGest, String dateFacture, double remise, double montant, boolean typeFact) {
-        this(idGest, dateFacture, remise, montant, typeFact);
+    public Facture(int idFacture, Gestionnaire gest, String dateFacture, double remise, double montant, boolean typeFact) {
+        this(gest, dateFacture, remise, montant, typeFact);
         this.idFacture = idFacture;
     }
 
@@ -40,12 +44,20 @@ public class Facture {
         return idFacture;
     }
 
-    public int getIdGest() {
+    /*public int getIdGest() {
         return idGest;
     }
 
     public void setIdGest(int idGest) {
         this.idGest = idGest;
+    }*/
+
+    public Gestionnaire getGestionnaire() {
+        return gestionnaire;
+    }
+
+    public void setGestionnaire(Gestionnaire gestionnaire) {
+        this.gestionnaire = gestionnaire;
     }
 
     public String getDateFacture() {

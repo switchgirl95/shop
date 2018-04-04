@@ -30,7 +30,7 @@ public class PersistenceManager {
         et.begin();
         em.persist(o);
         em.flush();
-//        em.refresh(o);
+        em.refresh(o);
         et.commit();
         return o;
     }
