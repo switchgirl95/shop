@@ -5,6 +5,7 @@
  */
 package shop;
 
+import Modele.Facture;
 import Modele.Gestionnaire;
 import Modele.ListeFacture;
 import Modele.Produit;
@@ -223,6 +224,14 @@ public class Cashier1Controller implements Initializable {
             montant += lf.getPrix() * lf.getQuantite();
 
         return montant;
+    }
+
+    private boolean imprimeFacture(Facture facture) {
+        /*List<ListeFacture> listeFactures = facture.getListeFacture();
+        for (ListeFacture lf : listeFactures)
+            lf.getProduit();*/
+
+        return true;
     }
 
     void setCassier(Gestionnaire gest) {

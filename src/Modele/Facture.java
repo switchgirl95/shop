@@ -1,8 +1,7 @@
 package Modele;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by arnold on 06/03/18.
@@ -16,6 +15,9 @@ public class Facture {
     @Column(name = "REMISE") private double remise;
     @Column(name = "MONTANT") private double montant;
     @Column(name = "TYPEFACT") private boolean typeFact;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "IDFACTURE")
+    private List<ListeFacture> listeFactures;
 
     public Facture() {
         idFacture = 0;
@@ -76,5 +78,10 @@ public class Facture {
 
     public void setTypeFact(boolean typeFact) {
         this.typeFact = typeFact;
+    }
+
+
+    public List<ListeFacture> getListeFacture() {
+        return listeFactures;
     }
 }
