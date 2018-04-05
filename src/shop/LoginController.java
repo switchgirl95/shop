@@ -95,48 +95,48 @@ public class LoginController implements Initializable {
     }
     
     
-    private void errorMessage(){
-    String title = "Error!" ; 
-    String content = "Wrong username password combination";
-    JFXDialogLayout dialogContent = new JFXDialogLayout();    
-    dialogContent.setHeading(new Text(title));   
-    dialogContent.setBody(new Text(content));    
-    JFXButton close = new JFXButton("Close");   
-    close.setButtonType(JFXButton.ButtonType.RAISED);    
-    close.setStyle("-fx-background-color: #00bfff;");
-    
-    //close.getStyleClass().add("JFXButton");
-    dialogContent.setActions(close);
-    
-    JFXDialog dialog = new JFXDialog(stack, dialogContent, JFXDialog.DialogTransition.BOTTOM);
-    
-    close.setOnAction(new EventHandler<ActionEvent>() {
-        @Override
-        public void handle(ActionEvent __) {
-            dialog.close();
-        }
-    });
-    dialog.show();
+    private void errorMessage() {
+        String title = "Error!" ;
+        String content = "Wrong username password combination";
+        JFXDialogLayout dialogContent = new JFXDialogLayout();
+        dialogContent.setHeading(new Text(title));
+        dialogContent.setBody(new Text(content));
+        JFXButton close = new JFXButton("Close");
+        close.setButtonType(JFXButton.ButtonType.RAISED);
+        close.setStyle("-fx-background-color: #00bfff;");
+
+        //close.getStyleClass().add("JFXButton");
+        dialogContent.setActions(close);
+
+        JFXDialog dialog = new JFXDialog(stack, dialogContent, JFXDialog.DialogTransition.BOTTOM);
+
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent __) {
+                dialog.close();
+            }
+        });
+        dialog.show();
     }
     
     boolean isRoot(String username, String password){
     
     try {
 
-	File fXmlFile = new File("../xmlPrueba.xml");
-	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-	Document doc = dBuilder.parse(fXmlFile);
+        File fXmlFile = new File("../xmlPrueba.xml");
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(fXmlFile);
 
-	
-	doc.getDocumentElement().normalize();
 
-	String usernameR = doc.getElementsByTagName("username").item(0).getTextContent();
+        doc.getDocumentElement().normalize();
+
+        String usernameR = doc.getElementsByTagName("username").item(0).getTextContent();
         String passwordR = doc.getElementsByTagName("password").item(0).getTextContent();
         return (usernameR.equals(username)&&passwordR.equals(password));
 
     } catch (Exception e) {
-	e.printStackTrace();
+        e.printStackTrace();
     }
         return false;
     }
