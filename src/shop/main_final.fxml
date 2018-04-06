@@ -33,7 +33,7 @@
                                                 <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Id" />
                                                 <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Nom " />
                                                 <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Description" />
-                                                <JFXComboBox focusColor="#00e48f" promptText="Category" />
+                                                <JFXComboBox focusColor="#00e48f" promptText="Categorie" />
                                                 <JFXButton fx:id="test" buttonType="RAISED" prefHeight="46.0" prefWidth="121.0" style="-fx-background-color: #00e48f;" text="Add Product" textFill="WHITE" />
                                              </children>
                                              <padding>
@@ -157,7 +157,7 @@
                         </HBox>
                         <GridPane layoutX="3.0" layoutY="38.0" minWidth="0.0" prefHeight="30.0" prefWidth="793.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <children>
-                              <Text fx:id="nompage" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="NOM PAGE" />
+                              <Text fx:id="nompage" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Logo" />
                               <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1">
                                  <children>
                                     <Text fx:id="greeting" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello, ..." />
@@ -183,69 +183,93 @@
          </children>
       </AnchorPane>
       <AnchorPane fx:id="blackout" opacity="0.53" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" visible="false" />
-      <AnchorPane fx:id="menu" maxHeight="1.7976931348623157E308" onMouseClicked="#exitMenu" prefWidth="200.0" visible="false">
+      <AnchorPane fx:id="menu" maxHeight="1.7976931348623157E308" prefWidth="200.0" visible="false">
          <children>
-            <ScrollPane fx:id="mendisp" fitToHeight="true" prefHeight="648.0" prefWidth="635.0" translateX="-635.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <content>
-                  <HBox prefHeight="646.0" prefWidth="633.0">
+            <StackPane fx:id="mendisp1" prefHeight="150.0" prefWidth="635.0" style="-fx-background-color: e7e7e7;" translateX="-635.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <VBox prefHeight="646.0" prefWidth="633.0">
                      <children>
-                        <VBox alignment="TOP_CENTER" maxHeight="657.0" minHeight="0.0" prefHeight="646.0" prefWidth="284.0" spacing="30.0" style="-fx-background-color: white;" HBox.hgrow="ALWAYS">
+                        <GridPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="45.0" prefWidth="635.0" style="-fx-background-color: #2F2F32;" VBox.vgrow="NEVER">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
                            <children>
-                              <JFXTextField fx:id="idProd" editable="false" labelFloat="true" promptText="Id" text="#" />
-                              <JFXTextField fx:id="nomProd" labelFloat="true" promptText="Nom" />
-                              <JFXTextField fx:id="prixProd" labelFloat="true" promptText="Prix" />
-                              <JFXTextField fx:id="qteProd" labelFloat="true" text="Quantite" />
-                              <JFXTextField fx:id="codeFourn" labelFloat="true" prefHeight="25.0" prefWidth="364.0" promptText="Code Fournisseur" />
-                              <HBox prefHeight="100.0" prefWidth="200.0">
+                              <JFXButton fx:id="exitMenu" onAction="#exitMenu" prefHeight="30.0" prefWidth="33.0" style="-fx-background-color: #F44336;" text="x" textFill="WHITE" GridPane.columnIndex="1" />
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets bottom="5.0" right="20.0" top="5.0" />
+                           </padding>
+                        </GridPane>
+                        <HBox prefHeight="646.0" prefWidth="633.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <VBox alignment="TOP_CENTER" maxHeight="657.0" minHeight="0.0" prefHeight="646.0" prefWidth="284.0" spacing="30.0" style="-fx-background-color: white;" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <VBox alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="279.0" spacing="10.0">
+                                    <JFXTextField fx:id="idProd" editable="false" labelFloat="true" promptText="Id" text="#" />
+                                    <JFXTextField fx:id="nomProd" labelFloat="true" promptText="Nom" />
+                                    <JFXTextField fx:id="prixProd" labelFloat="true" promptText="Prix" />
+                                    <JFXTextField fx:id="qteProd" labelFloat="true" promptText="Quantite" />
+                                    <JFXTextField fx:id="codeFourn" labelFloat="true" prefHeight="25.0" prefWidth="364.0" promptText="Code Fournisseur" />
+                                    <HBox prefHeight="100.0" prefWidth="200.0">
                                        <children>
-                                          <JFXComboBox fx:id="category" prefHeight="25.0" prefWidth="175.0" promptText="Categories" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </HBox>
-                              <JFXTextArea fx:id="description" labelFloat="true" prefHeight="72.0" prefWidth="259.0" promptText="Description" />
-                              <JFXToggleButton fx:id="active" text="Active">
-                                 <VBox.margin>
-                                    <Insets bottom="-30.0" />
-                                 </VBox.margin>
-                              </JFXToggleButton>
-                              <StackPane prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <HBox fx:id="ModifyProd" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
-                                       <children>
-                                          <JFXButton fx:id="editProd" buttonType="RAISED" onAction="#editProd" prefHeight="47.0" prefWidth="116.0" style="-fx-background-color: #00e48f;" text="Save" />
-                                          <JFXButton fx:id="deleteProd" buttonType="RAISED" onAction="#deleteProd" prefHeight="48.0" prefWidth="116.0" style="-fx-background-color: #f80b0b;" text="Delete" />
+                                          <VBox alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="279.0" spacing="10.0">
+                                             <children>
+                                                <JFXComboBox fx:id="category" prefHeight="25.0" prefWidth="175.0" promptText="Categories" />
+                                             </children>
+                                          </VBox>
                                        </children>
                                     </HBox>
-                                    <JFXButton fx:id="addProd" buttonType="RAISED" onAction="#addProd" prefHeight="47.0" prefWidth="116.0" style="-fx-background-color: #00e48f;" text="Add" />
+                                    <JFXTextArea fx:id="description" labelFloat="true" prefHeight="72.0" prefWidth="259.0" promptText="Description" />
+                                    <JFXToggleButton fx:id="active" text="Active">
+                                       <VBox.margin>
+                                          <Insets bottom="-30.0" />
+                                       </VBox.margin>
+                                    </JFXToggleButton>
+                                    <StackPane prefHeight="150.0" prefWidth="200.0">
+                                       <children>
+                                          <HBox fx:id="ModifyProd" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                                             <children>
+                                                <JFXButton fx:id="editProd" buttonType="RAISED" onAction="#editProd" prefHeight="47.0" prefWidth="116.0" style="-fx-background-color: #00e48f;" text="Sauvegarder" textFill="WHITE" />
+                                                <JFXButton fx:id="deleteProd" buttonType="RAISED" onAction="#deleteProd" prefHeight="48.0" prefWidth="116.0" style="-fx-background-color: #F44336;" text="Supprimer" textFill="WHITE" />
+                                             </children>
+                                          </HBox>
+                                          <JFXButton fx:id="addProd" buttonType="RAISED" onAction="#addProd" prefHeight="47.0" prefWidth="116.0" style="-fx-background-color: #00e48f;" text="Ajouter" textFill="WHITE" />
+                                       </children>
+                                    </StackPane>
                                  </children>
-                              </StackPane>
-                           </children>
-                           <padding>
-                              <Insets bottom="30.0" left="70.0" right="70.0" top="50.0" />
-                           </padding>
-                        </VBox>
-                        <ScrollPane prefHeight="646.0" prefWidth="234.0">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <content>
-                              <VBox fx:id="photoList" alignment="TOP_CENTER" prefHeight="640.0" prefWidth="230.0" spacing="20.0">
                                  <padding>
-                                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                    <Insets bottom="30.0" left="70.0" right="70.0" top="50.0" />
                                  </padding>
-                                 <children>
-                                    <JFXButton fx:id="addPhoto" onAction="#addPhoto" text="Add +" />
-                                 </children>
                               </VBox>
-                           </content>
-                        </ScrollPane>
+                              <VBox alignment="CENTER" prefHeight="603.0" prefWidth="264.0" spacing="10.0" style="-fx-background-color: white;">
+                                 <children>
+                                    <JFXButton fx:id="addPhoto" buttonType="RAISED" onAction="#addPhoto" style="-fx-background-color: #00e48f;" text="Ajouter Photo +" textFill="WHITE" />
+                                    <ScrollPane hbarPolicy="NEVER" prefHeight="563.0" prefWidth="254.0" VBox.vgrow="ALWAYS">
+                                       <content>
+                                          <VBox fx:id="photoList" alignment="TOP_CENTER" prefHeight="616.0" prefWidth="230.0" spacing="20.0">
+                                             <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                             </padding>
+                                          </VBox>
+                                       </content>
+                                    </ScrollPane>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="20.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                        </HBox>
                      </children>
-                  </HBox>
-               </content>
-            </ScrollPane>
+                  </VBox>
+               </children>
+            </StackPane>
          </children>
       </AnchorPane>
    </children>

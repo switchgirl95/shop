@@ -1,8 +1,7 @@
 package Modele;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by arnold on 06/03/18.
@@ -10,27 +9,34 @@ import javax.persistence.Id;
 @Entity(name = "FACTURE")
 public class Facture {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDFACTURE") private int idFacture;
-    @Column(name = "IDGEST") private int idGest;
+    @ManyToOne
+    @JoinColumn(name="IDGEST", nullable=false)
+    private Gestionnaire gestionnaire;
+    /*@Column(name = "IDGEST") private int idGest;*/
     @Column(name = "DATEFACTURE") private String dateFacture;
     @Column(name = "REMISE") private double remise;
     @Column(name = "MONTANT") private double montant;
     @Column(name = "TYPEFACT") private boolean typeFact;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "IDFACTURE")
+    private List<ListeFacture> listeFactures;
 
     public Facture() {
         idFacture = 0;
     }
 
-    public Facture(int idGest, String dateFacture, double remise, double montant, boolean typeFact) {
-        this.idGest = idGest;
+    public Facture(Gestionnaire gest, String dateFacture, double remise, double montant, boolean typeFact) {
+        this.gestionnaire = gest;
         this.dateFacture = dateFacture;
         this.remise = remise;
         this.montant = montant;
         this.typeFact = typeFact;
     }
 
-    public Facture(int idFacture, int idGest, String dateFacture, double remise, double montant, boolean typeFact) {
-        this(idGest, dateFacture, remise, montant, typeFact);
+    public Facture(int idFacture, Gestionnaire gest, String dateFacture, double remise, double montant, boolean typeFact) {
+        this(gest, dateFacture, remise, montant, typeFact);
         this.idFacture = idFacture;
     }
 
@@ -38,12 +44,20 @@ public class Facture {
         return idFacture;
     }
 
-    public int getIdGest() {
+    /*public int getIdGest() {
         return idGest;
     }
 
     public void setIdGest(int idGest) {
         this.idGest = idGest;
+    }*/
+
+    public Gestionnaire getGestionnaire() {
+        return gestionnaire;
+    }
+
+    public void setGestionnaire(Gestionnaire gestionnaire) {
+        this.gestionnaire = gestionnaire;
     }
 
     public String getDateFacture() {
@@ -76,5 +90,10 @@ public class Facture {
 
     public void setTypeFact(boolean typeFact) {
         this.typeFact = typeFact;
+    }
+
+
+    public List<ListeFacture> getListeFacture() {
+        return listeFactures;
     }
 }

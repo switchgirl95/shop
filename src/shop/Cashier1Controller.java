@@ -5,9 +5,12 @@
  */
 package shop;
 
+import Modele.Facture;
+import Modele.FactureT;
 import Modele.Gestionnaire;
 import Modele.ListeFacture;
 import Modele.Produit;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
@@ -29,6 +32,7 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 
 import javafx.scene.layout.HBox;
 
@@ -65,12 +69,8 @@ public class Cashier1Controller implements Initializable {
     private TableView<ListeFacture> tableFacture;
     @FXML
     private Text montant;
-    @FXML
     private Text caissier;
-    @FXML
     private Text date;
-    @FXML
-    private Text type;
     @FXML
     private TextField remise;
     @FXML
@@ -89,12 +89,22 @@ public class Cashier1Controller implements Initializable {
     private JFXTextField nomProd;
     @FXML
     private JFXTextField qteProd;
-    @FXML
-    private HBox bar;
 
     private HashSet<ListeFacture> panier;
     private Gestionnaire gest;
-
+    @FXML
+    private HBox HBProd;
+    @FXML
+    private JFXTextField montant2;
+    @FXML
+    private JFXButton closeMenu;
+    @FXML
+    private JFXButton sauvegarder;
+    @FXML
+    private JFXButton annuler;
+    @FXML
+    private TableColumn<ListeFacture, ListeFacture> tableFSupp;
+    ObservableList<ListeFacture> table = FXCollections.observableArrayList();
     /**
      * Initializes the controller class.
      */
@@ -132,24 +142,32 @@ public class Cashier1Controller implements Initializable {
         tableFPrixU.setCellValueFactory(new PropertyValueFactory<>("prix"));
         tableFPrixT.setCellValueFactory(new PropertyValueFactory<>("prixTotal"));
         //tableFPrix.setCellValueFactory(new PropertyValueFactory<>("PRIX"));
-    }
-
-    @FXML
-    private void exitMenu(MouseEvent event) {
-        System.out.println(Double.toString(stack.getHeight()));
-        TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
-        closeNav.setToY(stack.getHeight());
-         AnchorPane.setBottomAnchor(mendisp,null);
-            closeNav.play();
-            closeNav.setOnFinished(new EventHandler<ActionEvent>() {
+        
+        //TableColumn<Person, Person> tableFSupp = new TableColumn<>("Anti-social");
+        //tableFSupp.setMinWidth(40);
+        //tableFSupp.setMinWidth(40);
+        tableFSupp.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+        tableFSupp.setCellFactory(param -> new TableCell<ListeFacture, ListeFacture>() {
+            private final Button deleteButton = new Button("Unfriend");
 
             @Override
-            public void handle(ActionEvent event) {
-                menu.setVisible(false);
-                blackout.setVisible(false);
+            protected void updateItem(ListeFacture fac, boolean empty) {
+                super.updateItem(fac, empty);
+
+                if (fac == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                setGraphic(deleteButton);
+                
+                deleteButton.setOnAction(event -> table.remove(fac));
             }
         });
+
+
     }
+
     
     @FXML
     private void openMenu(ActionEvent event) {
@@ -162,7 +180,7 @@ public class Cashier1Controller implements Initializable {
         openNav.play();
         openNav.setOnFinished(event1 -> AnchorPane.setBottomAnchor(mendisp,0.0));
         fillTableF();
-        montant.setText(calculeMontant() + "");
+        montant2.setText(calculeMontant() + "");
     }
 
     @FXML
@@ -207,7 +225,7 @@ public class Cashier1Controller implements Initializable {
 
 
     private void fillTableF() {
-        ObservableList<ListeFacture> table = FXCollections.observableArrayList();
+        
         table.addAll(panier);
         tableFacture.setItems(table);
     }
@@ -223,6 +241,15 @@ public class Cashier1Controller implements Initializable {
             montant += lf.getPrix() * lf.getQuantite();
 
         return montant;
+    }
+
+    private boolean imprimeFacture(Facture facture) {
+        /*Gestionnaire gest = facture.getGestionnaire();
+        List<ListeFacture> listeFactures = facture.getListeFacture();
+        for (ListeFacture lf : listeFactures)
+            lf.getProduit();*/
+
+        return true;
     }
 
     void setCassier(Gestionnaire gest) {
@@ -245,5 +272,23 @@ public class Cashier1Controller implements Initializable {
         else // format YYYY-MM-DD
             return s.substring(8, 10) + "-" + s.substring(5, 7) + "-" + s.substring(0, 4);
     }
+
+    @FXML
+    private void exitMenu(ActionEvent event) {
+                System.out.println(Double.toString(stack.getHeight()));
+        TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
+        closeNav.setToY(stack.getHeight());
+         AnchorPane.setBottomAnchor(mendisp,null);
+            closeNav.play();
+            closeNav.setOnFinished(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                menu.setVisible(false);
+                blackout.setVisible(false);
+            }
+        });
+    }
     
 }
+

@@ -1,5 +1,6 @@
 package Modele;
 
+import Modele.Photo;
 import com.jfoenix.controls.*;
 import java.io.File;
 import java.io.FileInputStream;

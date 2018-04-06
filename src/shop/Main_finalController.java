@@ -40,6 +40,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
@@ -49,6 +50,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
 import net.bytebuddy.matcher.FilterableList;
+import org.controlsfx.control.Notifications;
 
 import static shop.Shop.pm;
 
@@ -67,16 +69,7 @@ public class Main_finalController implements Initializable {
     private AnchorPane menu;
     @FXML
     private StackPane stack;
-    @FXML
     private ScrollPane mendisp;
-    @FXML
-    private JFXButton save;
-    @FXML
-    private JFXButton addCat;
-    @FXML
-    private JFXTextField catetext;
-    @FXML
-    private JFXButton cancelAdd;
     @FXML
     private JFXTextField prixProd;
     @FXML
@@ -147,39 +140,32 @@ public class Main_finalController implements Initializable {
     Parent root = null;
     @FXML
     private JFXButton addPhoto;
+    @FXML
+    private StackPane mendisp1;
+    @FXML
+    private JFXButton exitMenu;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //table = tl.products();
             initTableCat();
             initTableProd();
             addCategory.setVisible(false);
             prepareSlideMenuAnimation();
             fillTableProd();
-            /*  try {
-            root = FXMLLoader.load(getClass().getResource("prodPhoto.fxml"));
-            } catch (IOException ex) {
-            Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            photoList.getChildren().add(root);
-            */
-            
-    }
+}
 
-    
-    private void errorMessage(){
+    private void errorMessage(String title, String content){
 
-        String title = "Error!" ; 
-        String content = "Wrong username password combination";
+        //String title = "Error!" ; 
+        //String content = "Wrong username password combination";
         JFXDialogLayout dialogContent = new JFXDialogLayout();
         dialogContent.setHeading(new Text(title));
         dialogContent.setBody(new Text(content));
         JFXButton close = new JFXButton("Close");
         close.setButtonType(JFXButton.ButtonType.RAISED);
         close.setStyle("-fx-background-color: #00bfff;");
-        //close.getStyleClass().add("JFXButton");
         dialogContent.setActions(close);
-        JFXDialog dialog = new JFXDialog(stack, dialogContent, JFXDialog.DialogTransition.BOTTOM);
+        JFXDialog dialog = new JFXDialog(mendisp1, dialogContent, JFXDialog.DialogTransition.BOTTOM);
         close.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent __) {
@@ -189,45 +175,58 @@ public class Main_finalController implements Initializable {
         dialog.show();
     }
     
+    private void notifSuccess(String title, String content){
+         Notifications notificationBuilder = Notifications.create()
+                        .title(title)
+                        .text(content)
+                        .hideAfter(Duration.seconds(5))
+                        .position(Pos.TOP_RIGHT)
+                        .darkStyle()
+                        .onAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                System.out.println("click");
+                        }
+                        });
+                
+                notificationBuilder.show();
+                    
+    }
+    
     private void prepareSlideMenuAnimation() {
-        TranslateTransition openNav=new TranslateTransition(new Duration(350), mendisp);
+        TranslateTransition openNav=new TranslateTransition(new Duration(350), mendisp1);
         openNav.setToX(0);
-        TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
-        ObservableList<Categorie> cats = FXCollections.observableArrayList();
-        cats.addAll(pm.getAll(Categorie.class));
-        category.setItems(cats);
+        TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp1);
         test.setOnAction((ActionEvent evt)->{
+                initChamp();
                 blackout.setVisible(true);
                 menu.setVisible(true);
-                addProd.setVisible(true);
+                addPhoto.setVisible(true);
                 editProd.setVisible(false);
                 deleteProd.setVisible(false);
                 openNav.play();
                 
         });
-        /*editProd.setOnAction((ActionEvent evt)->{
-                closeNav.setToX(-(mendisp.getWidth()));
-                closeNav.play();
-                closeNav.setOnFinished(event -> menu.setVisible(false));
-                
-        });*/
+        // On initialise tous les champs
+        initChamp();
         
     }
-
-    @FXML
-    private void exitMenu(MouseEvent event) {
-        exit();
+    
+    private void initChamp(){
+    
+        idProd.setText("#");
+        nomProd.setText("");
+        prixProd.setText("");
+        qteProd.setText("");
+        codeFourn.setText("");
+        description.setText("");
+        photoList.getChildren().clear();
+        ObservableList<Categorie> cats = FXCollections.observableArrayList();
+        cats.addAll(pm.getAll(Categorie.class));
+        category.setItems(cats);
     }
-
-    @FXML
-    private void openAdd(ActionEvent event) {
-    }
-
-    @FXML
-    private void cancelAdd(ActionEvent event) {
-    }
-
-   
+    
+    
 
     @FXML
     private void changeToPdt(MouseEvent event) {
@@ -239,8 +238,7 @@ public class Main_finalController implements Initializable {
         sortProduit.setVisible(true);
         typesProd.setVisible(true);
         fillTableProd();
-        exit();
-        
+        exit();       
     }
 
     @FXML
@@ -259,8 +257,7 @@ public class Main_finalController implements Initializable {
     private void signOut(MouseEvent event) {
     }
     
-    private void fillTableProd(){
-        
+    private void fillTableProd(){        
         List<Produit> all = pm.getAll(Produit.class);
         ObservableList<Produit> table = FXCollections.observableArrayList();
         table.addAll(all);
@@ -268,18 +265,13 @@ public class Main_finalController implements Initializable {
         tableProd.toFront();
     }
 
-    private void fillTableCat(){
-        
+    private void fillTableCat(){        
         List<Categorie> all = pm.getAll(Categorie.class);
         ObservableList<Categorie> table = FXCollections.observableArrayList();
         table.addAll(all);
-        
-        
-        
-
         tableCat.setItems(table);
         tableCat.toFront();
-        //pm.stop();
+       
     }
     
     public void initTableCat(){
@@ -302,6 +294,7 @@ public class Main_finalController implements Initializable {
         });
     
     }
+    
     public void initTableProd(){
         TableColumn code = new TableColumn("Code");
         TableColumn nom = new TableColumn("Nom");
@@ -331,7 +324,7 @@ public class Main_finalController implements Initializable {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     Produit prod = row.getItem();
                     try {
-                        rowData = pm.getByAttributes(Produit.class, new PersistenceManager.KeyValue("codeProduit",prod.getCodeProduit()));
+                        rowData = pm.get(Produit.class, prod.getCodeProduit());
                     } catch (Exception ex) {
                         Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -343,7 +336,7 @@ public class Main_finalController implements Initializable {
                         Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     System.out.println("Double click on: "+rowData.getNom());
-                    TranslateTransition openNav=new TranslateTransition(new Duration(350), mendisp);
+                    TranslateTransition openNav=new TranslateTransition(new Duration(350), mendisp1);
                     blackout.setVisible(true);
                     menu.setVisible(true);
                     addProd.setVisible(!true);
@@ -357,20 +350,20 @@ public class Main_finalController implements Initializable {
         });
 
     }
+    
     public void fillProdEdit(Produit prod) throws Exception{
+        initChamp();
         idProd.setText(Integer.toString(prod.getCodeProduit()));
         nomProd.setText(prod.getNom());
         prixProd.setText(Integer.toString(prod.getPrix()));
         qteProd.setText(Integer.toString(prod.getQuantite()));
         codeFourn.setText(prod.getCodeFournisseur());
         description.setText(prod.getDescriptions());
-        if (prod.isActif() == true)
-            active.setSelected(true);
-        else
-            active.setSelected(false);
+        active.setSelected(prod.isActif());
+        category.getSelectionModel().select(prod.getCategorie());
         
-         List<Photo> photos = pm.getAll(Photo.class);
-         loadImages2(photos);
+        List<Photo> photos = pm.getAll(Photo.class);
+        loadImages2(photos);
     }
    
 
@@ -383,17 +376,12 @@ public class Main_finalController implements Initializable {
         rowData.setDescriptions(description.getText());
         rowData.setNom(nomProd.getText());
         rowData.setCodeFournisseur(codeFourn.getText());
-        if(active.isSelected()){
-            rowData.setActif(true);}
-        else{
-            rowData.setActif(false);}
-        
-        pm.insert(rowData);
-        //pm.flush();
+        rowData.setActif(active.isSelected());
+        rowData = pm.insert(rowData);
+        System.out.println("pr = " + rowData.getCodeProduit());
+        savePhotos(rowData.getCodeProduit());
         fillTableProd();
         exit();
-        //Produit prod = new Produit(cat, ppd, qpd, des, npd, cfo, active.isSelected());//new Produit(cat,ppd,qpd,des,npd,cfo,actif);
-        //pm.insert(prod);
     }
 
     @FXML
@@ -405,7 +393,6 @@ public class Main_finalController implements Initializable {
 
     @FXML
     private void addProd(ActionEvent event) {
-        List<Node> prodPhotos = photoList.getChildren();
         Categorie cat = category.getValue();
         int ppd =Integer.parseInt(prixProd.getText());
         int qpd = Integer.parseInt(qteProd.getText());
@@ -414,22 +401,28 @@ public class Main_finalController implements Initializable {
         String cfo = codeFourn.getText();
         System.out.println("??");
         Produit prod = new Produit(cat, ppd, qpd, des, npd, cfo, active.isSelected());//new Produit(cat,ppd,qpd,des,npd,cfo,actif);
-        pm.insert(prod);
+        prod = pm.insert(prod);
+        System.out.println("pr = " + prod.getCodeProduit());
+        savePhotos(prod.getCodeProduit());
+
         fillTableProd();
-        
-        for(Node prodPhoto : prodPhotos){
-            if(prodPhoto instanceof photoProdBase){
-        Photo photo = new Photo(prod.getCodeProduit(),((photoProdBase) prodPhoto).getLien());
-               System.out.println("!!");
-        pm.insert(photo);
-        }
-        }
         exit();
+    }
+
+    private void savePhotos(int codeProduit) {
+        List<Node> prodPhotos = photoList.getChildren();
+        for(Node prodPhoto : prodPhotos) {
+            if (prodPhoto instanceof photoProdBase) {
+                Photo photo = new Photo(codeProduit,((photoProdBase) prodPhoto).getLien());
+                System.out.println(" co = " + photo.getCodeProduit() + ", li = " + photo.getLien());
+                pm.insert(photo);
+            }
+        }
     }
     
     private void exit(){
-        TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
-        closeNav.setToX(-(mendisp.getWidth()));
+        TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp1);
+        closeNav.setToX(-(mendisp1.getWidth()));
             closeNav.play();
             closeNav.setOnFinished(new EventHandler<ActionEvent>() {
 
@@ -440,6 +433,7 @@ public class Main_finalController implements Initializable {
             }
         });
     }
+    
     private void loadImages1(List<File> files) throws FileNotFoundException{
         for (File f : files){
         StackPane file = new photoProdBase(f);
@@ -450,6 +444,7 @@ public class Main_finalController implements Initializable {
         //photoList.getChildren().addAll(rori,rori2);
     
     }
+    
     private void loadImages2(List<Photo> photos) throws FileNotFoundException{
         for (Photo f : photos){
         StackPane file = new photoProdBase(f);
@@ -464,7 +459,7 @@ public class Main_finalController implements Initializable {
         fileChooser.setTitle("Select Image files");
         //fileChooser.setInitialDirectory(new File("X:\\testdir\\two"));
         fileChooser.getExtensionFilters().addAll(
-        new ExtensionFilter("image files", "*.jpg"));
+        new ExtensionFilter("image files", "*.jpg","*.png"));
 
     List<File> selectedFiles = fileChooser.showOpenMultipleDialog(theStage);
 
@@ -476,5 +471,10 @@ if (selectedFiles != null) {
 else {
     //actionStatus.setText("PDF file selection cancelled.");
 }
+    }
+
+    @FXML
+    private void exitMenu(ActionEvent event) {
+        exit();
     }
 }

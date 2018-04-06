@@ -1,12 +1,11 @@
 package Modele;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity (name = "GESTIONSTOCK")
 public class GestionStock {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDSTOCK") private int idStock;
     @Column(name = "IDGEST") private int idGest;
     @Column(name = "QUANTITE") private int quantite;
