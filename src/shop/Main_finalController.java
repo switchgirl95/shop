@@ -12,6 +12,7 @@ import com.jfoenix.controls.*;
 import Modele.Produit;
 import Modele.photoProdBase;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javafx.animation.TranslateTransition;
@@ -89,8 +90,6 @@ public class Main_finalController implements Initializable {
     @FXML
     private StackPane catTab;
     @FXML
-    private ToggleGroup sortby;
-    @FXML
     private HBox addCategory;
     @FXML
     private HBox sortProduit;
@@ -144,6 +143,22 @@ public class Main_finalController implements Initializable {
     private StackPane mendisp1;
     @FXML
     private JFXButton exitMenu;
+    @FXML
+    private JFXTextField nomCatTxt;
+    @FXML
+    private JFXButton addCat;
+    
+    
+    List<Produit> prodData;
+    List<Categorie> catData;
+    @FXML
+    private HBox pagProd;
+    
+    int itemsPerPage = 10;
+    @FXML
+    private JFXButton rechercheProd;
+    @FXML
+    private JFXTextField rechercheCat;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -258,19 +273,23 @@ public class Main_finalController implements Initializable {
     }
     
     private void fillTableProd(){        
-        List<Produit> all = pm.getAll(Produit.class);
+        prodData = pm.getAll(Produit.class);
         ObservableList<Produit> table = FXCollections.observableArrayList();
-        table.addAll(all);
+        table.addAll(prodData);
         tableProd.setItems(table);
         tableProd.toFront();
+        //tableProd.scrollTo(5);
+        paginationProd();
     }
 
     private void fillTableCat(){        
-        List<Categorie> all = pm.getAll(Categorie.class);
+        catData = pm.getAll(Categorie.class);
         ObservableList<Categorie> table = FXCollections.observableArrayList();
-        table.addAll(all);
+        table.addAll(catData);
         tableCat.setItems(table);
         tableCat.toFront();
+        paginationCat();
+        
        
     }
     
@@ -315,6 +334,48 @@ public class Main_finalController implements Initializable {
         categoryC.setCellValueFactory(new PropertyValueFactory<>("categorie"));
         desc.setCellValueFactory(new PropertyValueFactory<>("descriptions"));
         act.setCellValueFactory(new PropertyValueFactory<>("actif"));
+        photo.setCellValueFactory(new PropertyValueFactory<>("photos"));
+        
+                photo.setCellFactory(param -> {
+                //Set up the ImageView
+                final ImageView imageview = new ImageView();
+                imageview.setFitHeight(75);
+                imageview.setFitWidth(75);
+
+                //Set up the Table
+                TableCell<Produit, List<Photo>> cell = new TableCell<Produit, List<Photo>>() {
+                    public void updateItem(List<Photo> item, boolean empty) {
+                       FileInputStream input=null;
+                      if (item != null && item.size() != 0) {
+                          System.out.print(item.get(0).getCodeProduit());
+                            System.out.println(item.get(0).getLien());
+                           
+                          try {
+                              input = new FileInputStream("images.png");
+                          } catch (FileNotFoundException ex) {
+                              Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
+                          }
+                          //
+        
+                      }
+                      else{
+                          try {
+                          input = new FileInputStream("images2.png");
+                           } catch (FileNotFoundException ex) {
+                               Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
+                           }
+}
+                      Image image = new Image(input);
+                      imageview.setImage(image);
+                    }
+                 };
+                 // Attach the imageview to the cell
+                 cell.setGraphic(imageview);
+                 return cell;
+            });
+        
+        
+        
 
         
         
@@ -361,8 +422,9 @@ public class Main_finalController implements Initializable {
         description.setText(prod.getDescriptions());
         active.setSelected(prod.isActif());
         category.getSelectionModel().select(prod.getCategorie());
-        
-        List<Photo> photos = pm.getAll(Photo.class);
+        List<Photo> photos = new ArrayList<Photo>();
+               photos.add(prod.getPrimPhoto());
+        //List<Photo> photos = prod.getPhotos();
         loadImages2(photos);
     }
    
@@ -476,5 +538,53 @@ else {
     @FXML
     private void exitMenu(ActionEvent event) {
         exit();
+    }
+
+    @FXML
+    private void addCat(ActionEvent event) {
+        Categorie cat = new Categorie(nomCatTxt.getText());
+        pm.insert(cat);
+        fillTableCat();
+    }
+    
+    private void paginationProd(){
+        pagProd.getChildren().clear();
+        ArrayList<JFXButton> buttons = new ArrayList<>();
+        int noPages = prodData.size()/itemsPerPage + 1;
+        
+        for (int i=1;i<=noPages;i++){
+            final int index = i;
+            buttons.add(new JFXButton(Integer.toString(i)));
+            buttons.get(i-1).setStyle("-fx-background-color: #00e48f;-fx-text-fill: white;-jfx-button-type: RAISED;");
+            buttons.get(i-1).setOnAction((ActionEvent t) -> {
+                tableProd.scrollTo(itemsPerPage*(index-1));
+            });
+        }
+        pagProd.getChildren().addAll(buttons);
+    
+    }
+    private void paginationCat(){
+        pagProd.getChildren().clear();
+        ArrayList<JFXButton> buttons = new ArrayList<>();
+        int noPages = catData.size()/itemsPerPage + 1;
+        
+        for (int i=1;i<=noPages;i++){
+            final int index = i;
+            buttons.add(new JFXButton(Integer.toString(i)));
+            buttons.get(i-1).setStyle("-fx-background-color: #00e48f;-fx-text-fill: white;-jfx-button-type: RAISED;");
+            buttons.get(i-1).setOnAction((ActionEvent t) -> {
+                tableCat.scrollTo(itemsPerPage*(index-1));
+            });
+        }
+        pagProd.getChildren().addAll(buttons);
+    
+    }
+
+    @FXML
+    private void rechercheProd(ActionEvent event) {
+    }
+
+    @FXML
+    private void rechercheCat(ActionEvent event) {
     }
 }

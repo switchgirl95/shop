@@ -11,6 +11,8 @@ import Modele.Gestionnaire;
 import Modele.ListeFacture;
 import Modele.Produit;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
@@ -33,8 +35,10 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.*;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.geometry.Pos;
 
 import javafx.scene.layout.HBox;
+import org.controlsfx.control.Notifications;
 
 import static shop.Shop.pm;
 
@@ -289,6 +293,42 @@ public class Cashier1Controller implements Initializable {
             }
         });
     }
-    
+    private void notifSuccess(String title, String content){
+         Notifications notificationBuilder = Notifications.create()
+                        .title(title)
+                        .text(content)
+                        .hideAfter(Duration.seconds(5))
+                        .position(Pos.TOP_RIGHT)
+                        .darkStyle()
+                        .onAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                System.out.println("click");
+                        }
+                        });
+                
+                notificationBuilder.show();
+                    
+    }
+    private void errorMessage(String title, String content){
+
+        //String title = "Error!" ; 
+        //String content = "Wrong username password combination";
+        JFXDialogLayout dialogContent = new JFXDialogLayout();
+        dialogContent.setHeading(new Text(title));
+        dialogContent.setBody(new Text(content));
+        JFXButton close = new JFXButton("Close");
+        close.setButtonType(JFXButton.ButtonType.RAISED);
+        close.setStyle("-fx-background-color: #00bfff;");
+        dialogContent.setActions(close);
+        JFXDialog dialog = new JFXDialog(stack, dialogContent, JFXDialog.DialogTransition.BOTTOM);
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent __) {
+                dialog.close();
+            }
+        });
+        dialog.show();
+    }
 }
 

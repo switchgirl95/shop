@@ -24,6 +24,8 @@ public class Produit
     @JoinColumn(name = "CODEPRODUIT")
     private List<Photo> photos;
     
+    //private Photo primPhoto;
+    
 
     //Constructeurs
     //************************************
@@ -117,9 +119,9 @@ public class Produit
         this.photos = photos;
     }
     
-    //public Image getPrimPhoto(){
-    //    return this.primPhoto;
-    //}
+    public Photo getPrimPhoto(){
+        return getPhotos().get(0);
+    }
     
     //public void setPrimPhoto(String photo){
         //this.primPhoto = photo;
