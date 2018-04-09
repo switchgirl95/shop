@@ -121,7 +121,7 @@ public class Main_finalController implements Initializable {
     @FXML
     private Text nompage;
     @FXML
-    private Text greeting;
+    private Text nomAdmin;
     @FXML
     private Text signOut;
     @FXML
@@ -282,7 +282,13 @@ public class Main_finalController implements Initializable {
     }
 
     @FXML
-    private void signOut(MouseEvent event) {
+    public void logOut(MouseEvent mouseEvent) {
+        try {
+            Pane login = FXMLLoader.load(getClass().getResource("login.fxml"));
+            Shop.addStack(this.stack, login);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     private void fillTableProd(){        
@@ -427,7 +433,6 @@ public class Main_finalController implements Initializable {
         category.getSelectionModel().select(prod.getCategorie());
         loadImages2(prod.getPhotos());
     }
-   
 
     @FXML
     private void editProd(ActionEvent event) {
@@ -487,6 +492,10 @@ public class Main_finalController implements Initializable {
                 }
             }
         }
+    }
+
+    public void setNomAdmin(String nom) {
+        nomAdmin.setText(nom);
     }
     
     private void exit(){

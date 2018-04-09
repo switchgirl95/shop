@@ -155,8 +155,8 @@
                               <Text fx:id="nompage" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Logo" />
                               <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1">
                                  <children>
-                                    <Text fx:id="greeting" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello, ..." />
-                                    <Text fx:id="signOut" fill="WHITE" onMouseClicked="#signOut" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Out" textAlignment="RIGHT" />
+                                    <Text fx:id="nomAdmin" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                    <Text fill="WHITE" onMouseClicked="#logOut" strokeType="OUTSIDE" strokeWidth="0.0" text="Déconnexion" textAlignment="RIGHT" />
                                  </children>
                               </HBox>
                            </children>

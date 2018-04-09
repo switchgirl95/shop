@@ -21,22 +21,22 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Pos;
 
-import javafx.scene.layout.HBox;
 import org.controlsfx.control.Notifications;
 
 import static shop.Shop.pm;
@@ -48,6 +48,8 @@ import static shop.Shop.pm;
  */
 public class Cashier1Controller implements Initializable {
 
+    @FXML
+    public Text nomCaissier;
     @FXML
     private JFXTextField total;
     @FXML
@@ -223,12 +225,17 @@ public class Cashier1Controller implements Initializable {
         for (ListeFacture lf : panier) {
             lf.setIdFacture(f.getIdFacture());
             pm.insert(lf);
+
+            // On diminue les quantités
+            lf.getProduit().setQuantite(lf.getProduit().getQuantite() - lf.getQuantite());
+            pm.insert(lf.getProduit());
         }
-        // TODO: Diminuer les stocks des produits achetés
 
         // et on imprime la facture
-        if (imprimeFacture(f));
-        else ;
+        if (imprimeFacture(f)) {
+            exitMenu(null);
+            notifSuccess("Information", "La facture a bien été imprimée");
+        } else errorMessage("Erreur", "Echec d'impression de la facture");
     }
 
     private void initMenu(){
@@ -248,11 +255,6 @@ public class Cashier1Controller implements Initializable {
     private void fillTableF() {
         table.addAll(panier);
         tableFacture.setItems(table);
-    }
-    
-    private void onShow() {
-        caissier.setText(gest.getUsername());
-        date.setText(invertDate(parseCalendar(Calendar.getInstance())));
     }
 
     private void updateMontantView() {
@@ -282,7 +284,7 @@ public class Cashier1Controller implements Initializable {
 
     void setCassier(Gestionnaire gest) {
         this.gest = gest;
-        onShow();
+        nomCaissier.setText(gest.getNom());
     }
 
     public static String parseCalendar(Calendar c){
@@ -317,6 +319,18 @@ public class Cashier1Controller implements Initializable {
             }
         });
     }
+
+    @FXML
+    public void logOut(MouseEvent mouseEvent) {
+        gest = null;
+        try {
+            Pane login = FXMLLoader.load(getClass().getResource("login.fxml"));
+            Shop.addStack(this.stack, login);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void notifSuccess(String title, String content){
          Notifications notificationBuilder = Notifications.create()
                         .title(title)
@@ -334,6 +348,7 @@ public class Cashier1Controller implements Initializable {
                 notificationBuilder.show();
                     
     }
+
     private void errorMessage(String title, String content){
 
         //String title = "Error!" ; 
