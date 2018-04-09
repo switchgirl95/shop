@@ -34,6 +34,9 @@ import javafx.util.Duration;
 import tableload.TableLoad;
 
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -228,7 +231,6 @@ public class Main_finalController implements Initializable {
     }
     
     private void initChamp(){
-    
         idProd.setText("#");
         nomProd.setText("");
         prixProd.setText("");
@@ -239,6 +241,7 @@ public class Main_finalController implements Initializable {
         ObservableList<Categorie> cats = FXCollections.observableArrayList();
         cats.addAll(pm.getAll(Categorie.class));
         category.setItems(cats);
+        addProd.setVisible(true);
     }
     
     
@@ -336,49 +339,42 @@ public class Main_finalController implements Initializable {
         act.setCellValueFactory(new PropertyValueFactory<>("actif"));
         photo.setCellValueFactory(new PropertyValueFactory<>("photos"));
         
-                photo.setCellFactory(param -> {
-                //Set up the ImageView
-                final ImageView imageview = new ImageView();
-                imageview.setFitHeight(75);
-                imageview.setFitWidth(75);
+        photo.setCellFactory(param -> {
+            //Set up the ImageView
+            final ImageView imageview = new ImageView();
+            imageview.setFitHeight(75);
+            imageview.setFitWidth(75);
 
-                //Set up the Table
-                TableCell<Produit, List<Photo>> cell = new TableCell<Produit, List<Photo>>() {
-                    public void updateItem(List<Photo> item, boolean empty) {
-                       FileInputStream input=null;
-                      if (item != null && item.size() != 0) {
-                          System.out.print(item.get(0).getCodeProduit());
-                            System.out.println(item.get(0).getLien());
-                           
-                          try {
-                              input = new FileInputStream("images.png");
-                          } catch (FileNotFoundException ex) {
-                              Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
-                          }
-                          //
-        
-                      }
-                      else{
-                          try {
-                          input = new FileInputStream("images2.png");
-                           } catch (FileNotFoundException ex) {
-                               Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
-                           }
-}
-                      Image image = new Image(input);
-                      imageview.setImage(image);
+            //Set up the Table
+            TableCell<Produit, List<Photo>> cell = new TableCell<Produit, List<Photo>>() {
+                public void updateItem(List<Photo> item, boolean empty) {
+                    FileInputStream input=null;
+                    if (item != null && item.size() != 0) {
+                        System.out.print(item.get(0).getCodeProduit());
+                        System.out.println(item.get(0).getLien());
+                        try {
+                            input = new FileInputStream(item.get(0).getLien());
+                            Image image = new Image(input);
+                            imageview.setImage(image);
+                        } catch (FileNotFoundException ex) {
+                            Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }/* else {
+                        try {
+                            input = new FileInputStream("images2.png");
+                        } catch (FileNotFoundException ex) {
+                            Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
-                 };
-                 // Attach the imageview to the cell
-                 cell.setGraphic(imageview);
-                 return cell;
-            });
-        
-        
-        
+                    Image image = new Image(input);
+                    imageview.setImage(image); */
+                }
+             };
+             // Attach the imageview to the cell
+             cell.setGraphic(imageview);
+             return cell;
+        });
 
-        
-        
         tableProd.setRowFactory(tv -> {
             TableRow<Produit> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -422,10 +418,7 @@ public class Main_finalController implements Initializable {
         description.setText(prod.getDescriptions());
         active.setSelected(prod.isActif());
         category.getSelectionModel().select(prod.getCategorie());
-        List<Photo> photos = new ArrayList<Photo>();
-               photos.add(prod.getPrimPhoto());
-        //List<Photo> photos = prod.getPhotos();
-        loadImages2(photos);
+        loadImages2(prod.getPhotos());
     }
    
 
@@ -475,9 +468,16 @@ public class Main_finalController implements Initializable {
         List<Node> prodPhotos = photoList.getChildren();
         for(Node prodPhoto : prodPhotos) {
             if (prodPhoto instanceof photoProdBase) {
-                Photo photo = new Photo(codeProduit,((photoProdBase) prodPhoto).getLien());
-                System.out.println(" co = " + photo.getCodeProduit() + ", li = " + photo.getLien());
-                pm.insert(photo);
+                try {
+                    Path dest = Paths.get("../Images/");
+                    dest = dest.resolve(((photoProdBase) prodPhoto).getPath().getFileName());
+                    Files.copy(((photoProdBase) prodPhoto).getPath(), dest);
+                    Photo photo = new Photo(codeProduit, dest.toString());
+                    System.out.println(" co = " + photo.getCodeProduit() + ", li = " + photo.getLien());
+                    pm.insert(photo);
+                } catch (IOException ignored) {
+                    System.out.println("echec de copy de " + ((photoProdBase) prodPhoto).getPath());
+                }
             }
         }
     }
@@ -486,14 +486,10 @@ public class Main_finalController implements Initializable {
         TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp1);
         closeNav.setToX(-(mendisp1.getWidth()));
             closeNav.play();
-            closeNav.setOnFinished(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
+            closeNav.setOnFinished(event -> {
                 blackout.setVisible(false);
                 menu.setVisible(false);
-            }
-        });
+            });
     }
     
     private void loadImages1(List<File> files) throws FileNotFoundException{
