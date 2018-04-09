@@ -46,6 +46,10 @@ public class ListeFacture
         return idFacture;
     }
 
+    public void setIdFacture(int idFacture) {
+        this.idFacture = idFacture;
+    }
+
     public int getQuantite() {
         return quantite;
     }
