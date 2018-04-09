@@ -74,6 +74,8 @@ public class Main_finalController implements Initializable {
     @FXML
     public JFXComboBox<Categorie> sCat;
     @FXML
+    public JFXTextField sTCat;
+    @FXML
     private Button test;
     @FXML
     private AnchorPane blackout;
@@ -169,7 +171,7 @@ public class Main_finalController implements Initializable {
     @FXML
     private JFXButton rechercheProd;
     @FXML
-    private JFXTextField rechercheCat;
+    private JFXButton rechercheCat;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -592,20 +594,35 @@ else {
         if (!sId.getText().isEmpty()) kv.add(new PersistenceManager.KeyValue("codeProduit", Integer.parseInt(sId.getText())));
         if (!sNom.getText().isEmpty()) kv.add(new PersistenceManager.KeyValue("nomProduit", sNom.getText()));
         if (!sDesc.getText().isEmpty()) kv.add(new PersistenceManager.KeyValue("descriptions", sDesc.getText()));
-        if (sCat.getValue() != null) kv.add(new PersistenceManager.KeyValue("idCategorie", sCat.getValue().getIdcategorie()));
+        if (sCat.getValue() != null) kv.add(new PersistenceManager.KeyValue("categorie", sCat.getValue()));
         List<Produit> search = new ArrayList<>();
         try {
             search = pm.getAllByAttributes(Produit.class, kv.toArray(new PersistenceManager.KeyValue[]{}));
+            tableProd.setItems(FXCollections.observableArrayList(search));
         } catch (Exception e) {
 
         }
-        System.out.println("///");
-        for (Produit p : search)
-            System.out.println(p.getCodeProduit());
-        System.out.println("///");
+        sId.clear();
+        sNom.clear();
+        sDesc.clear();
+        sCat.getSelectionModel().clearSelection();
+        tableProd.toFront();
     }
 
     @FXML
     private void rechercheCat(ActionEvent event) {
+        PersistenceManager.KeyValue kv = null;
+        if (!sTCat.getText().isEmpty()) {
+            kv = new PersistenceManager.KeyValue("nomCategorie", sTCat.getText());
+        }
+        List<Categorie> search = null;
+        try {
+            search = pm.getAllByAttributes(Categorie.class, kv);
+            tableCat.setItems(FXCollections.observableArrayList(search));
+        } catch (Exception e) {
+
+        }
+        sTCat.clear();
+        tableCat.toFront();
     }
 }

@@ -24,8 +24,8 @@
                                        <children>
                                           <HBox fx:id="catSearch" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" visible="false">
                                              <children>
-                                                <JFXTextField fx:id="rechercheCat" focusColor="#00e48f" labelFloat="true" onAction="#rechercheCat" prefHeight="25.0" prefWidth="216.0" promptText="Search" />
-                                                <JFXButton buttonType="RAISED" style="-fx-background-color: #00e48f;" text="Recherche" textFill="WHITE" />
+                                                <JFXTextField fx:id="sTCat" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="216.0" promptText="Search" />
+                                                <JFXButton fx:id="rechercheCat" buttonType="RAISED" style="-fx-background-color: #00e48f;" text="Recherche" onAction="#rechercheCat" textFill="WHITE" />
                                              </children>
                                           </HBox>
                                           <HBox fx:id="typesProd" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
