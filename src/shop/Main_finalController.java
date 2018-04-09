@@ -66,6 +66,14 @@ import static shop.Shop.pm;
 public class Main_finalController implements Initializable {
 
     @FXML
+    public JFXTextField sId;
+    @FXML
+    public JFXTextField sNom;
+    @FXML
+    public JFXTextField sDesc;
+    @FXML
+    public JFXComboBox<Categorie> sCat;
+    @FXML
     private Button test;
     @FXML
     private AnchorPane blackout;
@@ -406,6 +414,10 @@ public class Main_finalController implements Initializable {
             return row ;
         });
 
+        //
+        ObservableList<Categorie> cats = FXCollections.observableArrayList();
+        cats.addAll(pm.getAll(Categorie.class));
+        sCat.setItems(cats);
     }
     
     public void fillProdEdit(Produit prod) throws Exception{
@@ -583,6 +595,21 @@ else {
 
     @FXML
     private void rechercheProd(ActionEvent event) {
+        ArrayList<PersistenceManager.KeyValue> kv = new ArrayList<>();
+        if (!sId.getText().isEmpty()) kv.add(new PersistenceManager.KeyValue("codeProduit", Integer.parseInt(sId.getText())));
+        if (!sNom.getText().isEmpty()) kv.add(new PersistenceManager.KeyValue("nomProduit", sNom.getText()));
+        if (!sDesc.getText().isEmpty()) kv.add(new PersistenceManager.KeyValue("descriptions", sDesc.getText()));
+        if (sCat.getValue() != null) kv.add(new PersistenceManager.KeyValue("idCategorie", sCat.getValue().getIdcategorie()));
+        List<Produit> search = new ArrayList<>();
+        try {
+            search = pm.getAllByAttributes(Produit.class, kv.toArray(new PersistenceManager.KeyValue[]{}));
+        } catch (Exception e) {
+
+        }
+        System.out.println("///");
+        for (Produit p : search)
+            System.out.println(p.getCodeProduit());
+        System.out.println("///");
     }
 
     @FXML

@@ -30,10 +30,10 @@
                                           </HBox>
                                           <HBox fx:id="typesProd" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                                              <children>
-                                                <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Id" />
-                                                <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Nom " />
-                                                <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Description" />
-                                                <JFXComboBox focusColor="#00e48f" promptText="Categorie" />
+                                                <JFXTextField fx:id="sId" focusColor="#00e48f" labelFloat="true" promptText="Id" />
+                                                <JFXTextField fx:id="sNom" focusColor="#00e48f" labelFloat="true" promptText="Nom " />
+                                                <JFXTextField fx:id="sDesc" focusColor="#00e48f" labelFloat="true" promptText="Description" />
+                                                <JFXComboBox fx:id="sCat" focusColor="#00e48f" promptText="Categorie" />
                                                 <JFXButton fx:id="rechercheProd" buttonType="RAISED" onAction="#rechercheProd" prefHeight="25.0" prefWidth="119.0" style="-fx-background-color: #00e48f;" text="Recherche" textFill="WHITE" />
                                              </children>
                                              <padding>

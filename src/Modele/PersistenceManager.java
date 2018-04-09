@@ -69,7 +69,7 @@ public class PersistenceManager {
         return query.getResultList().get(0);
     }
 
-    public <T> T getByAttributes (Class<T> name, KeyValue... keyValues) throws Exception {
+    public <T> List<T> getAllByAttributes (Class<T> name, KeyValue... keyValues) throws Exception {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(name);
         Root<T> rootEntry = cq.from(name);
@@ -81,7 +81,11 @@ public class PersistenceManager {
         cq = cq.where(pred.toArray(new Predicate[]{}));
 
         TypedQuery<T> query = em.createQuery(cq);
-        return query.getResultList().get(0);
+        return query.getResultList();
+    }
+
+    public <T> T getByAttributes (Class<T> name, KeyValue... keyValues) throws Exception {
+        return getAllByAttributes(name, keyValues).get(0);
     }
 
     public static class KeyValue {
