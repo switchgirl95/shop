@@ -618,16 +618,18 @@ else {
 
     @FXML
     private void rechercheCat(ActionEvent event) {
+        PersistenceManager.KeyValue kv = null;
         if (!sTCat.getText().isEmpty()) {
-            List<Categorie> search = null;
-            try {
-                search = pm.getAllByAttributes(Categorie.class, new PersistenceManager.KeyValue("nomCategorie", sTCat.getText()));
-                tableCat.setItems(FXCollections.observableArrayList(search));
-            } catch (Exception e) {
-
-            }
-            sTCat.clear();
-            tableCat.toFront();
+            kv = new PersistenceManager.KeyValue("nomCategorie", sTCat.getText());
         }
+        List<Categorie> search = null;
+        try {
+            search = pm.getAllByAttributes(Categorie.class, kv);
+            tableCat.setItems(FXCollections.observableArrayList(search));
+        } catch (Exception e) {
+
+        }
+        sTCat.clear();
+        tableCat.toFront();
     }
 }
