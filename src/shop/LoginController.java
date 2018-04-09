@@ -64,34 +64,38 @@ public class LoginController implements Initializable {
         Gestionnaire gest = null;
         
         if(isRoot(con_nom.getText(), con_mdp.getText())){
-            base.getChildren().clear();
             StackPane stack = FXMLLoader.load(getClass().getResource("main_final.fxml"));
-             AnchorPane.setTopAnchor(stack, 0.0);
-           AnchorPane.setLeftAnchor(stack, 0.0);
-           AnchorPane.setRightAnchor(stack, 0.0);
-           AnchorPane.setBottomAnchor(stack, 0.0);
-            base.getChildren().add(stack);
-        } else {
+            addStack();
+        }
+        
+        else {
             try {
+                
                 gest = pm.getByAttributes(Gestionnaire.class, new PersistenceManager.KeyValue("username",con_nom.getText()),new PersistenceManager.KeyValue("password",con_mdp.getText()));
-
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(
                         gest.isTypeGest() ? "gestionnaires.fxml" : "cashier1.fxml"));
-                stack = loader.load();
+                        stack = loader.load();
                 if (gest.isTypeGest()) ((GestionnairesController) loader.getController()).setGestionnaire(gest);
                 else ((Cashier1Controller) loader.getController()).setCassier(gest);
-                base.getChildren().clear();
-                AnchorPane.setTopAnchor(stack, 0.0);
-                AnchorPane.setLeftAnchor(stack, 0.0);
-                AnchorPane.setRightAnchor(stack, 0.0);
-                AnchorPane.setBottomAnchor(stack, 0.0);
-                base.getChildren().add(stack);
+                addStack();
+                
             } catch (Exception ex) {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                 errorMessage();
             }
         }       
            
+    }
+    
+    
+    private void addStack(){
+        base.getChildren().clear();
+        AnchorPane.setTopAnchor(stack, 0.0);
+        AnchorPane.setLeftAnchor(stack, 0.0);
+        AnchorPane.setRightAnchor(stack, 0.0);
+        AnchorPane.setBottomAnchor(stack, 0.0);
+        base.getChildren().add(stack);
+    
     }
     
     
@@ -123,7 +127,7 @@ public class LoginController implements Initializable {
     
     try {
 
-        File fXmlFile = new File("../xmlPrueba.xml");
+        File fXmlFile = new File("../Admin.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);

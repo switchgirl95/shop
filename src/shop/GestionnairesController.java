@@ -5,6 +5,7 @@
  */
 package shop;
 
+import Modele.Categorie;
 import Modele.Gestionnaire;
 import Modele.Produit;
 import com.jfoenix.controls.*;
@@ -29,8 +30,11 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.geometry.Pos;
+import org.controlsfx.control.Notifications;
 
 import static shop.Shop.pm;
 
@@ -56,26 +60,26 @@ public class GestionnairesController implements Initializable {
     @FXML
     private HBox sortProduit;
     @FXML
-    private ToggleGroup sortby;
-    @FXML
-    private TableView<?> table3;
+    private TableView<Gestionnaire> table3;
     @FXML
     private AnchorPane blackout;
     @FXML
     private AnchorPane menu;
     @FXML
     private JFXToggleButton active;
-    @FXML
     private JFXButton save;
-    @FXML
-    private JFXButton delet;
 
-     private TableColumn code = new TableColumn("Code");
+    @FXML
+     private JFXTextField id; 
+     private TableColumn idCol = new TableColumn("Id");
     private TableColumn nom = new TableColumn("Nom");
-    private TableColumn codeFournisseur = new TableColumn("Code Fourn");
-    private TableColumn quantite = new TableColumn("Quantite");
-    private TableColumn price = new TableColumn("Price");
-    private TableColumn categoryC = new TableColumn("Categorie");
+    private TableColumn typeCol = new TableColumn("Type Gestionnaire");
+    private TableColumn uname = new TableColumn("Username");
+    private TableColumn actif = new TableColumn("Actif?");
+    private TableColumn tel= new TableColumn("Telephone");
+    private TableColumn mail = new TableColumn("Email");
+    
+    int itemsPerPage = 20;
     /**
      * Initializes the controller class.
      */
@@ -92,35 +96,36 @@ public class GestionnairesController implements Initializable {
     private JFXTextField email;
     @FXML
     private JFXTextField phone;
-    @FXML
-    private JFXComboBox<?> type;
 
     private Gestionnaire gest;
+    @FXML
+    private HBox ModifyProd;
+    @FXML
+    private JFXButton exitMenu;
+    @FXML
+    private JFXButton editGest;
+    @FXML
+    private JFXButton deleteGest;
+    @FXML
+    private JFXButton addGest;
     
+    List<Gestionnaire> gestData;
+    @FXML
+    private ToggleGroup typeG;
+    @FXML
+    private JFXRadioButton type1;
+    @FXML
+    private JFXRadioButton type2;
+    @FXML
+    private HBox pagGest;
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //table = tl.products();
-        table3.getColumns().addAll(code,nom,codeFournisseur,quantite,price,categoryC);
-        List<Produit> all = pm.getAll(Produit.class);
-        ObservableList table = FXCollections.observableArrayList();
-        table.addAll(all);
-        
-        code.setCellValueFactory(new PropertyValueFactory<>("CODEPRODUIT"));
-        nom.setCellValueFactory(new PropertyValueFactory<>("NOM"));
-        codeFournisseur.setCellValueFactory(new PropertyValueFactory<>("CODEFOURNISSEUR"));
-        quantite.setCellValueFactory(new PropertyValueFactory<>("QUANTITE"));
-        price.setCellValueFactory(new PropertyValueFactory<>("PRIX"));
-        categoryC.setCellValueFactory(new PropertyValueFactory<>("CATEGORIE"));
-        
-        System.out.println(table.toString());
-        System.out.println("testons");        
-        table3.setItems(table);
-        //table.setItems(listProd);
-        //addCategory.setVisible(false);
+        initTableGest();
+        fillTableGest();
         prepareSlideMenuAnimation();
     }    
 
@@ -128,18 +133,17 @@ public class GestionnairesController implements Initializable {
     private void changeToPdt(MouseEvent event) {
     }
 
-    @FXML
     private void addObj(ActionEvent event) {
         String username = usrnm.getText();
         String nme = name.getText();
         String password = mdp.getText();
         String mail = email.getText();
         String phn = phone.getText();
-        String tp = (String) type.getValue();
+//        String tp = (String) type.getValue();
         boolean tpe = true;
-        if(tp.equals("gestionnaire")){
-            tpe = false;
-        }
+        //if(tp.equals("gestionnaire")){
+        ///   tpe = false;
+        //}
         
         boolean actif = true;
         if(active.isSelected()){
@@ -155,27 +159,43 @@ public class GestionnairesController implements Initializable {
     private void exitMenu(MouseEvent event) {
     }
     
-    private void errorMessage(){
-       
-        String title = "Error!" ; 
-        String content = "Wrong username password combination";
+    private void errorMessage(String title, String content){
+
+        //String title = "Error!" ; 
+        //String content = "Wrong username password combination";
         JFXDialogLayout dialogContent = new JFXDialogLayout();
         dialogContent.setHeading(new Text(title));
         dialogContent.setBody(new Text(content));
         JFXButton close = new JFXButton("Close");
         close.setButtonType(JFXButton.ButtonType.RAISED);
         close.setStyle("-fx-background-color: #00bfff;");
-        //close.getStyleClass().add("JFXButton");
         dialogContent.setActions(close);
         JFXDialog dialog = new JFXDialog(stack, dialogContent, JFXDialog.DialogTransition.BOTTOM);
         close.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent __) {
                 dialog.close();
-
             }
         });
         dialog.show();
+    }
+    
+        private void notifSuccess(String title, String content){
+         Notifications notificationBuilder = Notifications.create()
+                        .title(title)
+                        .text(content)
+                        .hideAfter(Duration.seconds(5))
+                        .position(Pos.TOP_RIGHT)
+                        .darkStyle()
+                        .onAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                System.out.println("click");
+                        }
+                        });
+                
+                notificationBuilder.show();
+                    
     }
      
      
@@ -185,27 +205,116 @@ public class GestionnairesController implements Initializable {
         TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
         
         test.setOnAction((ActionEvent evt)->{
+                initChamp();
+                blackout.setVisible(true);
                 menu.setVisible(true);
+                addGest.setVisible(true);
+                editGest.setVisible(false);
+                deleteGest.setVisible(false);
                 openNav.play();
                 
         });
-        save.setOnAction((ActionEvent evt)->{
-                closeNav.setToX(-(mendisp.getWidth()));
-                closeNav.play();
-                closeNav.setOnFinished(new EventHandler<ActionEvent>() {
-
-                @Override
-                public void handle(ActionEvent event) {
-                    menu.setVisible(false);
-                }
-            });
+        exitMenu.setOnAction((ActionEvent evt)->{
+               exit();
                 
         });
         
+        initChamp();
+    }
+    
+    private void initChamp(){
+        id.setText("#");
+        usrnm.setText("");
+        name.setText("");
+        mdp.setText("");
+        email.setText("");
+        phone.setText("");
+        
+        
+    
+    
     }
 
     void setGestionnaire(Gestionnaire gest) {
         this.gest = gest;
     }
+
     
+        private void exit(){
+        TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
+        closeNav.setToX(-(mendisp.getWidth()));
+            closeNav.play();
+            closeNav.setOnFinished(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                blackout.setVisible(false);
+                menu.setVisible(false);
+            }
+        });
+    }
+    
+    private void initTableGest(){
+    
+    table3.getColumns().addAll(idCol, nom, typeCol,uname,actif,tel,mail);
+
+        idCol.setCellValueFactory(new PropertyValueFactory<>("idGest"));
+        nom.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        typeCol.setCellValueFactory(new PropertyValueFactory<>("typeGest"));
+        uname.setCellValueFactory(new PropertyValueFactory<>("username"));
+        actif.setCellValueFactory(new PropertyValueFactory<>("actif"));
+        tel.setCellValueFactory(new PropertyValueFactory<>("telephone"));
+        mail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        fillTableGest();
+    }
+    private void fillTableGest(){
+        gestData = pm.getAll(Gestionnaire.class);
+        ObservableList<Gestionnaire> table = FXCollections.observableArrayList();
+        table.addAll(gestData);
+        table3.setItems(table);
+        paginationGest();
+    
+    }
+    
+    private void paginationGest(){
+         pagGest.getChildren().clear();
+        ArrayList<JFXButton> buttons = new ArrayList<>();
+        int noPages = gestData.size()/itemsPerPage + 1;
+        
+        for (int i=1;i<=noPages;i++){
+            final int index = i;
+            buttons.add(new JFXButton(Integer.toString(i)));
+            buttons.get(i-1).setStyle("-fx-background-color: #00e48f;-fx-text-fill: white;-jfx-button-type: RAISED;");
+            buttons.get(i-1).setOnAction((ActionEvent t) -> {
+                table3.scrollTo(itemsPerPage*(index-1));
+            });
+        }
+        pagGest.getChildren().addAll(buttons);
+    
+    
+    }
+
+    
+    @FXML
+    private void editGest(ActionEvent event) {
+    }
+
+    @FXML
+    private void deleteGest(ActionEvent event) {
+    }
+
+    @FXML
+    private void addGest(ActionEvent event) {
+    
+        String usn = usrnm.getText();
+        String nm = name.getText();
+        String mp =mdp.getText();
+        String eml = email.getText();
+        String ph = phone.getText();
+        
+        Gestionnaire gest = new Gestionnaire(nm,type1.isSelected(),usn,mp,active.isSelected(),ph,eml);
+        pm.insert(gest);
+        fillTableGest();
+        exit();
+    }
 }

@@ -42,7 +42,7 @@
                                  <children>
                                     <HBox fx:id="HBProd" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <JFXTextField fx:id="idProd" editable="false" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="104.0" promptText="Id" />
+                                          <JFXTextField fx:id="idProd" editable="false" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="104.0" promptText="Code" />
                                           <JFXTextField fx:id="nomProd" editable="false" focusColor="#00e48f" labelFloat="true" promptText="Nom " />
                                           <JFXTextField fx:id="qteProd" focusColor="#00e48f" labelFloat="true" promptText="Quantite" />
                                           <JFXButton buttonType="RAISED" onAction="#addToCart" style="-fx-background-color: #00e48f;" text="Ajouter" textFill="WHITE" />

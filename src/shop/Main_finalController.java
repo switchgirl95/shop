@@ -339,8 +339,8 @@ public class Main_finalController implements Initializable {
                 photo.setCellFactory(param -> {
                 //Set up the ImageView
                 final ImageView imageview = new ImageView();
-                imageview.setFitHeight(75);
-                imageview.setFitWidth(75);
+                imageview.setFitHeight(100);
+                imageview.setFitWidth(100);
 
                 //Set up the Table
                 TableCell<Produit, List<Photo>> cell = new TableCell<Produit, List<Photo>>() {
@@ -351,22 +351,17 @@ public class Main_finalController implements Initializable {
                             System.out.println(item.get(0).getLien());
                            
                           try {
-                              input = new FileInputStream("images.png");
+                              input = new FileInputStream(item.get(0).getLien());
                           } catch (FileNotFoundException ex) {
                               Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
                           }
                           //
-        
+                          Image image = new Image(input);
+                          imageview.setImage(image);
                       }
-                      else{
-                          try {
-                          input = new FileInputStream("images2.png");
-                           } catch (FileNotFoundException ex) {
-                               Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
-                           }
-}
-                      Image image = new Image(input);
-                      imageview.setImage(image);
+                     
+                         
+                      
                     }
                  };
                  // Attach the imageview to the cell
