@@ -193,7 +193,7 @@
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="57.0" prefWidth="1039.0" spacing="20.0">
                      <children>
-                        <JFXButton fx:id="sauvegarder" buttonType="RAISED" prefHeight="36.0" prefWidth="102.0" style="-fx-background-color: #00e48f;" text="Sauvegarder" textFill="WHITE" onAction="#savaFacture" />
+                        <JFXButton fx:id="sauvegarder" buttonType="RAISED" prefHeight="36.0" prefWidth="102.0" style="-fx-background-color: #00e48f;" text="Sauvegarder" textFill="WHITE" onAction="#saveFacture" />
                         <JFXButton fx:id="annuler" buttonType="RAISED" prefHeight="44.0" prefWidth="96.0" style="-fx-background-color: #F44336;" text="Annuler" textFill="WHITE" onAction="#exitMenu" />
                      </children>
                      <padding>

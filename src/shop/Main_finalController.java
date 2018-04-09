@@ -542,7 +542,12 @@ else {
 
     @FXML
     private void addCat(ActionEvent event) {
-        Categorie cat = new Categorie(nomCatTxt.getText());
+        String text = nomCatTxt.getText();
+        if (text.isEmpty()) return;
+        while (text.charAt(0) == ' ')
+            text = text.substring(1);
+        if (text.isEmpty()) return;
+        Categorie cat = new Categorie(text);
         pm.insert(cat);
         fillTableCat();
     }
