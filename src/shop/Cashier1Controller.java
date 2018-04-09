@@ -6,7 +6,6 @@
 package shop;
 
 import Modele.Facture;
-import Modele.FactureT;
 import Modele.Gestionnaire;
 import Modele.ListeFacture;
 import Modele.Produit;
@@ -49,6 +48,8 @@ import static shop.Shop.pm;
  */
 public class Cashier1Controller implements Initializable {
 
+    @FXML
+    private JFXTextField total;
     @FXML
     private StackPane stack;
     @FXML
@@ -117,6 +118,7 @@ public class Cashier1Controller implements Initializable {
         panier = new HashSet<>();
         initMenu();
         initTables();
+        remise.textProperty().addListener((observable, oldValue, newValue) -> updateMontantView());
     }
 
     private void initTables() {
@@ -184,7 +186,7 @@ public class Cashier1Controller implements Initializable {
         openNav.play();
         openNav.setOnFinished(event1 -> AnchorPane.setBottomAnchor(mendisp,0.0));
         fillTableF();
-        montant2.setText(calculeMontant() + "");
+        updateMontantView();
     }
 
     @FXML
@@ -213,6 +215,20 @@ public class Cashier1Controller implements Initializable {
         }
     }
 
+    @FXML
+    public void saveFacture(ActionEvent event) {
+        // On sauvegarde les items
+        Facture f = new Facture(gest, invertDate(parseCalendar(Calendar.getInstance())), Double.parseDouble(remise.getText()), Double.parseDouble(remise.getText()), true);
+        f = pm.insert(f);
+        for (ListeFacture lf : panier) {
+            lf.setIdFacture(f.getIdFacture());
+            pm.insert(lf);
+        }
+        // et on imprime la facture
+        if (imprimeFacture(f));
+        else ;
+    }
+
     private void initMenu(){
         TranslateTransition closeNav=new TranslateTransition(new Duration(0), mendisp);
         closeNav.setToY(stack.getHeight());
@@ -227,7 +243,6 @@ public class Cashier1Controller implements Initializable {
         });
     }
 
-
     private void fillTableF() {
         
         table.addAll(panier);
@@ -237,6 +252,14 @@ public class Cashier1Controller implements Initializable {
     private void onShow() {
         caissier.setText(gest.getUsername());
         date.setText(invertDate(parseCalendar(Calendar.getInstance())));
+    }
+
+    private void updateMontantView() {
+        montant2.setText(calculeMontant() + "");
+        try {
+            Double t = calculeMontant() - Double.parseDouble(remise.getText());
+            total.setText(t > 0 ? t + "" : "0.0");
+        } catch (NumberFormatException ingnored) {}
     }
 
     private double calculeMontant() {

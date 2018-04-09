@@ -5,10 +5,13 @@
  */
 package shop;
 
-import Modele.Categorie;
+
 import Modele.Gestionnaire;
+import Modele.Photo;
 import Modele.Produit;
 import com.jfoenix.controls.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,7 +36,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.geometry.Pos;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableRow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import org.controlsfx.control.Notifications;
 
 import static shop.Shop.pm;
@@ -70,14 +80,14 @@ public class GestionnairesController implements Initializable {
     private JFXButton save;
 
     @FXML
-     private JFXTextField id; 
-     private TableColumn idCol = new TableColumn("Id");
-    private TableColumn nom = new TableColumn("Nom");
-    private TableColumn typeCol = new TableColumn("Type Gestionnaire");
-    private TableColumn uname = new TableColumn("Username");
-    private TableColumn actif = new TableColumn("Actif?");
-    private TableColumn tel= new TableColumn("Telephone");
-    private TableColumn mail = new TableColumn("Email");
+    private JFXTextField id; 
+    private final TableColumn idCol = new TableColumn("Id");
+    private final TableColumn nom = new TableColumn("Nom");
+    private final TableColumn typeCol = new TableColumn("Type Compte");
+    private final TableColumn uname = new TableColumn("Username");
+    private final TableColumn actif = new TableColumn("Status");
+    private final TableColumn tel= new TableColumn("Telephone");
+    private final TableColumn mail = new TableColumn("Email");
     
     int itemsPerPage = 20;
     /**
@@ -119,6 +129,10 @@ public class GestionnairesController implements Initializable {
     @FXML
     private HBox pagGest;
     
+    private int rowIndex;
+    
+    private Gestionnaire rowData;
+    
     /**
      * Initializes the controller class.
      */
@@ -133,27 +147,7 @@ public class GestionnairesController implements Initializable {
     private void changeToPdt(MouseEvent event) {
     }
 
-    private void addObj(ActionEvent event) {
-        String username = usrnm.getText();
-        String nme = name.getText();
-        String password = mdp.getText();
-        String mail = email.getText();
-        String phn = phone.getText();
-//        String tp = (String) type.getValue();
-        boolean tpe = true;
-        //if(tp.equals("gestionnaire")){
-        ///   tpe = false;
-        //}
-        
-        boolean actif = true;
-        if(active.isSelected()){
-            actif = true;
-        }
-        else
-            actif = false;
-        Gestionnaire gest = new Gestionnaire(nme,tpe,username,password,actif,phn,mail);
-        pm.insert(gest);
-    }
+    
 
     @FXML
     private void exitMenu(MouseEvent event) {
@@ -265,6 +259,88 @@ public class GestionnairesController implements Initializable {
         actif.setCellValueFactory(new PropertyValueFactory<>("actif"));
         tel.setCellValueFactory(new PropertyValueFactory<>("telephone"));
         mail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        
+        actif.setCellFactory(param -> {
+            Text status = new Text();
+            //Set up the Table
+            TableCell<Gestionnaire, Boolean> cell = new TableCell<Gestionnaire, Boolean>() {
+                public void updateItem(Boolean item, boolean empty) {
+                    
+                    if (item != null) {
+                       if (item){ 
+                        status.setText("Actif");
+                        status.setFill(Color.GREEN);
+                       }
+                       else{
+                           status.setText("Passif");
+                        status.setFill(Color.RED);
+                       }
+                    }
+                    
+                    
+                }
+             };
+             // Attach the imageview to the cell
+             cell.setGraphic(status);
+             return cell;
+        });
+        
+        typeCol.setCellFactory(param -> {
+            Text status = new Text();
+            //Set up the Table
+            TableCell<Gestionnaire, Boolean> cell = new TableCell<Gestionnaire, Boolean>() {
+                public void updateItem(Boolean item, boolean empty) {
+                    
+                    if (item != null) {
+                       if (item){ 
+                        status.setText("Gestionnaire");
+                       }
+                       else{
+                           status.setText("Cassiere");
+                       }
+                    }
+                    
+                    
+                }
+             };
+             // Attach the imageview to the cell
+             cell.setGraphic(status);
+             return cell;
+        });
+        
+        
+        
+            table3.setRowFactory(tv -> {
+            TableRow<Gestionnaire> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    Gestionnaire gest = row.getItem();
+                    try {
+                        rowData = pm.get(Gestionnaire.class, gest.getIdGest());
+                    } catch (Exception ex) {
+                        Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    rowIndex = row.getIndex();
+                    
+                    try {
+                        fillProdEdit(rowData);
+                    } catch (Exception ex) {
+                        Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    System.out.println("Double click on: "+rowData.getNom());
+                    TranslateTransition openNav=new TranslateTransition(new Duration(350), mendisp);
+                    blackout.setVisible(true);
+                    menu.setVisible(true);
+                    addGest.setVisible(!true);
+                    editGest.setVisible(!false);
+                    deleteGest.setVisible(!false);
+                    openNav.setToX(0);
+                    openNav.play();
+                }
+            });
+            return row ;
+        });
+        
         fillTableGest();
     }
     private void fillTableGest(){
@@ -293,10 +369,26 @@ public class GestionnairesController implements Initializable {
     
     
     }
+    
+    public void fillProdEdit(Gestionnaire gest) throws Exception{
+        initChamp();
+        id.setText(Integer.toString(gest.getIdGest()));
+        name.setText(gest.getNom());
+        mdp.setText(gest.getPassword());
+        email.setText(gest.getEmail());
+        phone.setText(gest.getTelephone());
+        active.setSelected(gest.isActif() ? true : false);
+        if (gest.isTypeGest()){
+            type1.setSelected(true);
+        }
+        else{type2.setSelected(true);}
+        
+    }
 
     
     @FXML
     private void editGest(ActionEvent event) {
+        
     }
 
     @FXML

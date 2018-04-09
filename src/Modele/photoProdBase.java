@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.*;
+import java.nio.file.Path;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.*;
@@ -19,9 +21,11 @@ public class photoProdBase extends StackPane {
     private AnchorPane anchorPane;
     private JFXButton button;
     private String lien;
+    private Path path;
 
     public photoProdBase(File f) throws FileNotFoundException {
         lien = f.getAbsolutePath();
+        path = f.toPath();
         setUp();
         
     //cm.getItems().add(removeRec);
@@ -90,12 +94,12 @@ public class photoProdBase extends StackPane {
 
     
     }
-    public void setLien(String l){
-        this.lien = l;
-    }
+
     public String getLien(){
         return this.lien;
     }
 
-    
+    public Path getPath() {
+        return path;
+    }
 }

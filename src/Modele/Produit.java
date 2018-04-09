@@ -120,7 +120,7 @@ public class Produit
     }
     
     public Photo getPrimPhoto(){
-        return getPhotos().get(0);
+        return getPhotos() == null ? null : getPhotos().get(0);
     }
     
     //public void setPrimPhoto(String photo){
