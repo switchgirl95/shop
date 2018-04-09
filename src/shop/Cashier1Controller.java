@@ -224,6 +224,8 @@ public class Cashier1Controller implements Initializable {
             lf.setIdFacture(f.getIdFacture());
             pm.insert(lf);
         }
+        // TODO: Diminuer les stocks des produits achetés
+
         // et on imprime la facture
         if (imprimeFacture(f));
         else ;
@@ -244,7 +246,6 @@ public class Cashier1Controller implements Initializable {
     }
 
     private void fillTableF() {
-        
         table.addAll(panier);
         tableFacture.setItems(table);
     }
