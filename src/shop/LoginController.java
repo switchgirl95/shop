@@ -64,8 +64,10 @@ public class LoginController implements Initializable {
         Gestionnaire gest = null;
         
         if(isRoot(con_nom.getText(), con_mdp.getText())){
-            StackPane stack = FXMLLoader.load(getClass().getResource("main_final.fxml"));
-            addStack();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("main_final.xml"));
+            StackPane stack = loader.load();
+            ((Main_finalController) loader.getController()).setNomAdmin(con_nom.getText());
+            Shop.addStack(base, stack);
         }
         
         else {
@@ -77,7 +79,7 @@ public class LoginController implements Initializable {
                         stack = loader.load();
                 if (gest.isTypeGest()) ((GestionnairesController) loader.getController()).setGestionnaire(gest);
                 else ((Cashier1Controller) loader.getController()).setCassier(gest);
-                addStack();
+                Shop.addStack(base, stack);
                 
             } catch (Exception ex) {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
@@ -86,18 +88,6 @@ public class LoginController implements Initializable {
         }       
            
     }
-    
-    
-    private void addStack(){
-        base.getChildren().clear();
-        AnchorPane.setTopAnchor(stack, 0.0);
-        AnchorPane.setLeftAnchor(stack, 0.0);
-        AnchorPane.setRightAnchor(stack, 0.0);
-        AnchorPane.setBottomAnchor(stack, 0.0);
-        base.getChildren().add(stack);
-    
-    }
-    
     
     private void errorMessage() {
         String title = "Error!" ;

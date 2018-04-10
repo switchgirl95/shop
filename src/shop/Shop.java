@@ -10,6 +10,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -44,6 +47,15 @@ public class Shop extends Application {
         } catch (Exception e) {
             if (pm != null) pm.stop();
         }
+    }
+
+    public static void addStack(Pane base, Pane stack) {
+        base.getChildren().clear();
+        AnchorPane.setTopAnchor(stack, 0.0);
+        AnchorPane.setLeftAnchor(stack, 0.0);
+        AnchorPane.setRightAnchor(stack, 0.0);
+        AnchorPane.setBottomAnchor(stack, 0.0);
+        base.getChildren().add(stack);
     }
     
 }

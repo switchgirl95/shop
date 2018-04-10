@@ -18,6 +18,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -25,13 +26,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +54,8 @@ import static shop.Shop.pm;
  */
 public class GestionnairesController implements Initializable {
 
+    @FXML
+    public Text nomGest;
     @FXML
     private StackPane stack;
     @FXML
@@ -147,8 +148,6 @@ public class GestionnairesController implements Initializable {
     private void changeToPdt(MouseEvent event) {
     }
 
-    
-
     @FXML
     private void exitMenu(MouseEvent event) {
     }
@@ -223,28 +222,21 @@ public class GestionnairesController implements Initializable {
         mdp.setText("");
         email.setText("");
         phone.setText("");
-        
-        
-    
-    
     }
 
     void setGestionnaire(Gestionnaire gest) {
         this.gest = gest;
+        nomGest.setText(gest.getNom());
     }
 
     
-        private void exit(){
+    private void exit(){
         TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
         closeNav.setToX(-(mendisp.getWidth()));
-            closeNav.play();
-            closeNav.setOnFinished(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                blackout.setVisible(false);
-                menu.setVisible(false);
-            }
+        closeNav.play();
+        closeNav.setOnFinished(event -> {
+            blackout.setVisible(false);
+            menu.setVisible(false);
         });
     }
     
@@ -378,17 +370,22 @@ public class GestionnairesController implements Initializable {
         email.setText(gest.getEmail());
         phone.setText(gest.getTelephone());
         active.setSelected(gest.isActif() ? true : false);
-        if (gest.isTypeGest()){
-            type1.setSelected(true);
-        }
-        else{type2.setSelected(true);}
-        
+        if (gest.isTypeGest()) type1.setSelected(true); else type2.setSelected(true);
     }
 
     
     @FXML
     private void editGest(ActionEvent event) {
-        
+        String usn = usrnm.getText();
+        String nm = name.getText();
+        String mp =mdp.getText();
+        String eml = email.getText();
+        String ph = phone.getText();
+
+        Gestionnaire gest = new Gestionnaire(Integer.parseInt(id.getText()), nm,type1.isSelected(),usn,mp,active.isSelected(),ph,eml);
+        pm.insert(gest);
+        fillTableGest();
+        exit();
     }
 
     @FXML
@@ -397,7 +394,6 @@ public class GestionnairesController implements Initializable {
 
     @FXML
     private void addGest(ActionEvent event) {
-    
         String usn = usrnm.getText();
         String nm = name.getText();
         String mp =mdp.getText();
@@ -408,5 +404,16 @@ public class GestionnairesController implements Initializable {
         pm.insert(gest);
         fillTableGest();
         exit();
+    }
+
+    @FXML
+    public void logOut(MouseEvent mouseEvent) {
+        gest = null;
+        try {
+            Pane login = FXMLLoader.load(getClass().getResource("login.fxml"));
+            Shop.addStack(this.stack, login);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
