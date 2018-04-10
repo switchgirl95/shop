@@ -6,6 +6,7 @@
 package shop;
 
 import Modele.Categorie;
+import Modele.Gestionnaire;
 import Modele.PersistenceManager;
 import Modele.Photo;
 import com.jfoenix.controls.*;
@@ -50,6 +51,7 @@ import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
@@ -335,7 +337,7 @@ public class Main_finalController implements Initializable {
         TableColumn price = new TableColumn("Prix");
         TableColumn categoryC = new TableColumn("Categorie");
         TableColumn desc = new TableColumn("Description");
-        TableColumn act = new TableColumn("Actif?");
+        TableColumn act = new TableColumn("Status");
         TableColumn photo = new TableColumn("Photo");
         tableProd.getColumns().addAll(code,nom,codeFournisseur,quantite,price,categoryC,desc,act,photo);
         
@@ -375,6 +377,31 @@ public class Main_finalController implements Initializable {
              };
              // Attach the imageview to the cell
              cell.setGraphic(imageview);
+             return cell;
+        });
+        
+        act.setCellFactory(param -> {
+            Text status = new Text();
+            //Set up the Table
+            TableCell<Gestionnaire, Boolean> cell = new TableCell<Gestionnaire, Boolean>() {
+                public void updateItem(Boolean item, boolean empty) {
+                    
+                    if (item != null) {
+                       if (item){ 
+                        status.setText("Actif");
+                        status.setFill(Color.GREEN);
+                       }
+                       else{
+                           status.setText("Passif");
+                        status.setFill(Color.RED);
+                       }
+                    }
+                    
+                    
+                }
+             };
+             // Attach the imageview to the cell
+             cell.setGraphic(status);
              return cell;
         });
 

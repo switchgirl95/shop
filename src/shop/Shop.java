@@ -22,10 +22,13 @@ public class Shop extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("gestionnaires.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("main_final.fxml"));
         
         Scene scene = new Scene(root);
-        
+            try{
+            String css = this.getClass().getResource("main.css").toExternalForm();
+            scene.getStylesheets().add(css);
+            }catch(Exception e){System.out.println(e);}
         stage.setScene(scene);
         stage.show();
     }

@@ -83,7 +83,7 @@ public class GestionnairesController implements Initializable {
     private JFXTextField id; 
     private final TableColumn idCol = new TableColumn("Id");
     private final TableColumn nom = new TableColumn("Nom");
-    private final TableColumn typeCol = new TableColumn("Type Compte");
+    private final TableColumn typeCol = new TableColumn("Type Gestionnaire");
     private final TableColumn uname = new TableColumn("Username");
     private final TableColumn actif = new TableColumn("Status");
     private final TableColumn tel= new TableColumn("Telephone");
@@ -296,7 +296,7 @@ public class GestionnairesController implements Initializable {
                         status.setText("Gestionnaire");
                        }
                        else{
-                           status.setText("Cassiere");
+                           status.setText("Cassier");
                        }
                     }
                     
