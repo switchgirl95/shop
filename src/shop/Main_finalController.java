@@ -6,6 +6,7 @@
 package shop;
 
 import Modele.Categorie;
+import Modele.GestionStock;
 import Modele.Gestionnaire;
 import Modele.PersistenceManager;
 import Modele.Photo;
@@ -125,13 +126,9 @@ public class Main_finalController implements Initializable {
     @FXML
     private Text nomAdmin;
     @FXML
-    private Text signOut;
-    @FXML
     private TableView<Categorie> tableCat;
     @FXML
     private TableView<Produit> tableProd;
-    @FXML
-    private StackPane catTab1;
     @FXML
     private Text catText1;
     @FXML
@@ -166,6 +163,7 @@ public class Main_finalController implements Initializable {
     
     List<Produit> prodData;
     List<Categorie> catData;
+    List<GestionStock> geStData;
     @FXML
     private HBox pagProd;
     
@@ -174,11 +172,26 @@ public class Main_finalController implements Initializable {
     private JFXButton rechercheProd;
     @FXML
     private JFXButton rechercheCat;
+    @FXML
+    private StackPane geStTab1;
+    @FXML
+    private HBox sortGeSt;
+    @FXML
+    private HBox printGeSt;
+    @FXML
+    private JFXButton impGeSt;
+    @FXML
+    private JFXTextField sTGeSt;
+    @FXML
+    private JFXButton rechercheGeSt;
+    @FXML
+    private TableView<GestionStock> tableGeSt;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
             initTableCat();
             initTableProd();
+            initTableGeSt();
             addCategory.setVisible(false);
             prepareSlideMenuAnimation();
             fillTableProd();
@@ -267,6 +280,8 @@ public class Main_finalController implements Initializable {
         catSearch.setVisible(false);
         sortProduit.setVisible(true);
         typesProd.setVisible(true);
+        sortGeSt.setVisible(false);
+        printGeSt.setVisible(false);
         fillTableProd();
         exit();       
     }
@@ -280,7 +295,23 @@ public class Main_finalController implements Initializable {
         addCategory.setVisible(true);
         sortProduit.setVisible(false);
         typesProd.setVisible(false);
+        sortGeSt.setVisible(false);
+        printGeSt.setVisible(false);
         fillTableCat();
+    }
+    
+    @FXML
+    private void changeToGeSt(MouseEvent event) {
+        TranslateTransition closeNav = new TranslateTransition(new Duration(250), selectpane);
+        closeNav.setToX(340);
+        closeNav.play();
+        catSearch.setVisible(false);
+        addCategory.setVisible(false);
+        sortProduit.setVisible(false);
+        typesProd.setVisible(false);
+        sortGeSt.setVisible(true);
+        printGeSt.setVisible(true);
+       fillTableGeSt();
     }
 
     @FXML
@@ -301,6 +332,15 @@ public class Main_finalController implements Initializable {
         tableProd.toFront();
         //tableProd.scrollTo(5);
         paginationProd();
+    }
+    private void fillTableGeSt(){        
+        //geStData = pm.getAll(GestionStock.class);
+        //ObservableList<GestionStock> table = FXCollections.observableArrayList();
+        //table.addAll(geStData);
+        //tableGeSt.setItems(table);
+        tableGeSt.toFront();
+        //tableProd.scrollTo(5);
+       // paginationGeSt();
     }
 
     private void fillTableCat(){        
@@ -332,6 +372,26 @@ public class Main_finalController implements Initializable {
             });
             return row ;
         });
+    
+    }
+    
+        public void initTableGeSt(){
+        
+        TableColumn idGSCol = new TableColumn("Id");
+        TableColumn nomGSCol = new TableColumn("Gestionnaire");
+        TableColumn qteGSCol = new TableColumn("Quantite");
+        TableColumn dateCol = new TableColumn("Date");
+        TableColumn typeCol = new TableColumn("Type");
+        TableColumn prodGSCol = new TableColumn("Produit");
+        tableCat.getColumns().addAll(idGSCol,nomGSCol,qteGSCol,dateCol,typeCol,prodGSCol);
+        
+        idGSCol.setCellValueFactory(new PropertyValueFactory<>("idStock"));
+        nomGSCol.setCellValueFactory(new PropertyValueFactory<>("idGest")); 
+        qteGSCol.setCellValueFactory(new PropertyValueFactory<>("quantite")); 
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("dateStock"));
+        typeCol.setCellValueFactory(new PropertyValueFactory<>("typeGest")); 
+        prodGSCol.setCellValueFactory(new PropertyValueFactory<>("idProduit")); 
+
     
     }
     
@@ -623,6 +683,23 @@ else {
         pagProd.getChildren().addAll(buttons);
     
     }
+    
+        private void paginationGeSt(){
+        pagProd.getChildren().clear();
+        ArrayList<JFXButton> buttons = new ArrayList<>();
+        int noPages = geStData.size()/itemsPerPage + 1;
+        
+        for (int i=1;i<=noPages;i++){
+            final int index = i;
+            buttons.add(new JFXButton(Integer.toString(i)));
+            buttons.get(i-1).setStyle("-fx-background-color: #00e48f;-fx-text-fill: white;-jfx-button-type: RAISED;");
+            buttons.get(i-1).setOnAction((ActionEvent t) -> {
+                tableGeSt.scrollTo(itemsPerPage*(index-1));
+            });
+        }
+        pagProd.getChildren().addAll(buttons);
+    
+    }
 
     @FXML
     private void rechercheProd(ActionEvent event) {
@@ -661,4 +738,14 @@ else {
         sTCat.clear();
         tableCat.toFront();
     }
+
+    @FXML
+    private void ImprimerGestStock(ActionEvent event) {
+    }
+
+    @FXML
+    private void rechercheGeSt(ActionEvent event) {
+    }
+
+    
 }

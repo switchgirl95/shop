@@ -54,7 +54,7 @@ public class photoProdBase extends StackPane {
         setMinWidth(USE_PREF_SIZE);
         setPrefHeight(180.0);
         setPrefWidth(180.0);
-        setStyle("-fx-background-color: purple;");
+        setStyle("-fx-background-color: white;");
 
         stackPane.setPrefHeight(169.0);
         stackPane.setPrefWidth(148.0);
