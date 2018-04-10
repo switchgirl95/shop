@@ -9,6 +9,14 @@ import Modele.Facture;
 import Modele.Gestionnaire;
 import Modele.ListeFacture;
 import Modele.Produit;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPRow;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
@@ -31,6 +39,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -220,7 +230,7 @@ public class Cashier1Controller implements Initializable {
     @FXML
     public void saveFacture(ActionEvent event) {
         // On sauvegarde les items
-        Facture f = new Facture(gest, invertDate(parseCalendar(Calendar.getInstance())), Double.parseDouble(remise.getText()), Double.parseDouble(remise.getText()), true);
+        Facture f = new Facture(gest, parseCalendar(Calendar.getInstance()), Double.parseDouble(remise.getText()), Double.parseDouble(remise.getText()), true);
         f = pm.insert(f);
         for (ListeFacture lf : panier) {
             lf.setIdFacture(f.getIdFacture());
@@ -243,16 +253,11 @@ public class Cashier1Controller implements Initializable {
         closeNav.setToY(stack.getHeight());
         AnchorPane.setBottomAnchor(mendisp,null);
         closeNav.play();
-        closeNav.setOnFinished(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                menu.setVisible(false);
-            }
-        });
+        closeNav.setOnFinished(event -> menu.setVisible(false));
     }
 
     private void fillTableF() {
+        table.clear();
         table.addAll(panier);
         tableFacture.setItems(table);
     }
@@ -260,7 +265,7 @@ public class Cashier1Controller implements Initializable {
     private void updateMontantView() {
         montant2.setText(calculeMontant() + "");
         try {
-            Double t = calculeMontant() - Double.parseDouble(remise.getText());
+            Double t = calculeMontant() - calculeMontant() * Double.parseDouble(remise.getText()) / 100;
             total.setText(t > 0 ? t + "" : "0.0");
         } catch (NumberFormatException ingnored) {}
     }
@@ -274,10 +279,67 @@ public class Cashier1Controller implements Initializable {
     }
 
     private boolean imprimeFacture(Facture facture) {
-        /*Gestionnaire gest = facture.getGestionnaire();
+        Gestionnaire gest = facture.getGestionnaire();
         List<ListeFacture> listeFactures = facture.getListeFacture();
         for (ListeFacture lf : listeFactures)
-            lf.getProduit();*/
+            ;
+
+        /**
+         * Structure du pdf:
+         * - logo
+         * - date heure
+         * - no facture
+         * - nom caissière
+         * - liste produits(codeP, nomP, qté, prixU, prixT)
+         * - montant total
+         * - remise
+         * - net à payer
+         * - footer
+         */
+        File logo = new File("");
+        Calendar c = Calendar.getInstance();
+        String date = "Date: " + invertDate(facture.getDateFacture()) + " " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
+        String noFact = "Facture no." + facture.getIdFacture();
+        String caisse = "Caissier(ère): " + gest.getNom();
+        String total = "Montant total: " + montant2.getText() + " XAF";
+        double r = Double.parseDouble(this.remise.getText());
+        String remise = r > 0 ? "Remise: " + r + "%\n" : "";
+        String net = "Net à payer: " + this.total.getText() + " XAF";
+        String miscListe = "************* Liste des produits *************";
+        String miscFoot = "Les marchandises vendues et livrées ne sont ni reprises, ni échangées.";
+        String miscLine = "------------------------------------------------";
+
+        PdfPTable table = new PdfPTable(5);
+        table.addCell("Code P.");
+        table.addCell("nom Produit");
+        table.addCell("quantité");
+        table.addCell("prix unitaire");
+        table.addCell("prix total");
+        for (ListeFacture lf : facture.getListeFacture()) {
+            table.addCell(lf.getCodeProduit() + "");
+            table.addCell(lf.getNomProduit());
+            table.addCell(lf.getQuantite() + "");
+            table.addCell(lf.getPrix() + "");
+            table.addCell(lf.getPrixTotal() + "");
+        }
+        table.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+        // Ecriture du document
+        Document document = new Document(/*new Rectangle(111, 146)*/);
+        System.out.println(document.getPageSize());
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream("../Factures/Facture" + facture.getIdFacture() + ".pdf"));
+            document.open();
+            Paragraph header = new Paragraph(noFact + "\n" + date + "\n" + caisse + "\n\n" + miscListe + "\n\n"),
+                      footer = new Paragraph("\n" + total + "\n" + remise + net + "\n\n" + miscLine + "\n" + miscFoot + "\n" + miscLine);
+
+            document.add(header);
+            document.add(table);
+            document.add(footer);
+            document.close();
+        } catch (Exception e) {
+            if (document.isOpen()) document.close();
+        }
 
         return true;
     }
