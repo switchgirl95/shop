@@ -138,9 +138,7 @@ public class Cashier1Controller implements Initializable {
         tablePNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
         tablePQuantite.setCellValueFactory(new PropertyValueFactory<>("quantite"));
         tablePPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
-        ObservableList<Produit> tableP = FXCollections.observableArrayList();
-        tableP.addAll(pm.getAll(Produit.class));
-        tableProduits.setItems(tableP);
+        fillTableP();
         tableProduits.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Produit>() {
             @Override
             public void changed(ObservableValue<? extends Produit> observableValue, Produit oldP, Produit newP) {
@@ -182,8 +180,6 @@ public class Cashier1Controller implements Initializable {
                 deleteButton.setOnAction(event -> table.remove(fac));
             }
         });
-
-
     }
 
     
@@ -230,7 +226,7 @@ public class Cashier1Controller implements Initializable {
     @FXML
     public void saveFacture(ActionEvent event) {
         // On sauvegarde les items
-        Facture f = new Facture(gest, parseCalendar(Calendar.getInstance()), Double.parseDouble(remise.getText()), Double.parseDouble(remise.getText()), true);
+        Facture f = new Facture(gest, parseCalendar(Calendar.getInstance()), Double.parseDouble(remise.getText()), Double.parseDouble(montant2.getText()), true);
         f = pm.insert(f);
         for (ListeFacture lf : panier) {
             lf.setIdFacture(f.getIdFacture());
@@ -240,12 +236,15 @@ public class Cashier1Controller implements Initializable {
             lf.getProduit().setQuantite(lf.getProduit().getQuantite() - lf.getQuantite());
             pm.insert(lf.getProduit());
         }
+        pm.em().refresh(f);
 
         // et on imprime la facture
         if (imprimeFacture(f)) {
             exitMenu(null);
             notifSuccess("Information", "La facture a bien été imprimée");
         } else errorMessage("Erreur", "Echec d'impression de la facture");
+        panier.clear();
+        fillTableP();
     }
 
     private void initMenu(){
@@ -254,6 +253,14 @@ public class Cashier1Controller implements Initializable {
         AnchorPane.setBottomAnchor(mendisp,null);
         closeNav.play();
         closeNav.setOnFinished(event -> menu.setVisible(false));
+    }
+
+    private void fillTableP() {
+        ObservableList<Produit> tableP = FXCollections.observableArrayList();
+        tableP.clear();
+        tableP.addAll(pm.getAll(Produit.class));
+        tableProduits.setItems(tableP);
+        tableProduits.toFront();
     }
 
     private void fillTableF() {
@@ -281,24 +288,21 @@ public class Cashier1Controller implements Initializable {
     private boolean imprimeFacture(Facture facture) {
         Gestionnaire gest = facture.getGestionnaire();
         List<ListeFacture> listeFactures = facture.getListeFacture();
-        for (ListeFacture lf : listeFactures)
-            ;
 
-        /**
-         * Structure du pdf:
-         * - logo
-         * - date heure
-         * - no facture
-         * - nom caissière
-         * - liste produits(codeP, nomP, qté, prixU, prixT)
-         * - montant total
-         * - remise
-         * - net à payer
-         * - footer
+        /** TODO
+          Structure du pdf:
+          - logo
+          - date heure
+          - no facture
+          - nom caissière
+          - liste produits(codeP, nomP, qté, prixU, prixT)
+          - montant total
+          - remise
+          - net à payer
+          - footer
          */
-        File logo = new File("");
-        Calendar c = Calendar.getInstance();
-        String date = "Date: " + invertDate(facture.getDateFacture()) + " " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
+        File logo = new File("le logo ici");
+        String date = "Date: " + invertDate(facture.getDateFacture());
         String noFact = "Facture no." + facture.getIdFacture();
         String caisse = "Caissier(ère): " + gest.getNom();
         String total = "Montant total: " + montant2.getText() + " XAF";
@@ -355,14 +359,16 @@ public class Cashier1Controller implements Initializable {
             add1 = "0";
         if (c.get(Calendar.DAY_OF_MONTH) < 10)
             add2 = "0";
-        return c.get(Calendar.YEAR) + "-" + add1 + (c.get(Calendar.MONTH) + 1) + "-" + add2 + c.get(Calendar.DAY_OF_MONTH);
+        return c.get(Calendar.YEAR) + "-" + add1 + (c.get(Calendar.MONTH) + 1) + "-" + add2 + c.get(Calendar.DAY_OF_MONTH) + " " +
+                c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
     }
 
     public static String invertDate(String s) {
-        if (s.charAt(2) == '-') // format DD-MM-YYYY
-            return s.substring(6, 10) + "-" + s.substring(3, 5) + "-" + s.substring(0, 2);
+        String[] ss = s.split(" ");
+        if (ss[0].charAt(2) == '-') // format DD-MM-YYYY
+            return ss[0].substring(6, 10) + "-" + ss[0].substring(3, 5) + "-" + ss[0].substring(0, 2) + " " + ss[1];
         else // format YYYY-MM-DD
-            return s.substring(8, 10) + "-" + s.substring(5, 7) + "-" + s.substring(0, 4);
+            return ss[0].substring(8, 10) + "-" + ss[0].substring(5, 7) + "-" + ss[0].substring(0, 4) + " " + ss[1];
     }
 
     @FXML

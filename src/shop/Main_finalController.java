@@ -537,8 +537,8 @@ public class Main_finalController implements Initializable {
     
     private void loadImages1(List<File> files) throws FileNotFoundException{
         for (File f : files){
-        StackPane file = new photoProdBase(f);
-        photoList.getChildren().add(file);
+            StackPane file = new photoProdBase(f);
+            photoList.getChildren().add(file);
         }
         
         //photoList.getChildren().add(rori);
