@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -64,8 +65,8 @@ public class LoginController implements Initializable {
         Gestionnaire gest = null;
         
         if(isRoot(con_nom.getText(), con_mdp.getText())){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("main_final.xml"));
-            StackPane stack = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("main_final.fxml"));
+            Pane stack = loader.load();
             ((Main_finalController) loader.getController()).setNomAdmin(con_nom.getText());
             Shop.addStack(base, stack);
         }
@@ -76,7 +77,7 @@ public class LoginController implements Initializable {
                 gest = pm.getByAttributes(Gestionnaire.class, new PersistenceManager.KeyValue("username",con_nom.getText()),new PersistenceManager.KeyValue("password",con_mdp.getText()));
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(
                         gest.isTypeGest() ? "gestionnaires.fxml" : "cashier1.fxml"));
-                        stack = loader.load();
+                stack = loader.load();
                 if (gest.isTypeGest()) ((GestionnairesController) loader.getController()).setGestionnaire(gest);
                 else ((Cashier1Controller) loader.getController()).setCassier(gest);
                 Shop.addStack(base, stack);
