@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
+
 <AnchorPane fx:id="base" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="366.0" prefHeight="661.0" prefWidth="1067.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shop.LoginController">
    <children>
       <StackPane fx:id="stack" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #00E48F;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -13,8 +17,8 @@
                <children>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="324.0" spacing="20.0">
                      <children>
-                        <JFXTextField fx:id="con_nom" focusColor="#2f2f32" labelFloat="true" promptText="Nom d'utilisateur" />
-                        <JFXPasswordField fx:id="con_mdp" focusColor="#2f2f32" labelFloat="true" promptText="Mot de passe" />
+                        <JFXTextField fx:id="con_nom" focusColor="#2f2f32" labelFloat="true" onAction="#checkId" promptText="Nom d'utilisateur" />
+                        <JFXPasswordField fx:id="con_mdp" focusColor="#2f2f32" labelFloat="true" onAction="#checkId" promptText="Mot de passe" />
                         <JFXButton fx:id="buttoncon" buttonType="RAISED" onAction="#checkId" prefHeight="34.0" prefWidth="129.0" style="-fx-background-color: #2F2F32;" text="Se connecter" textFill="WHITE" />
                      </children>
                   </HBox>

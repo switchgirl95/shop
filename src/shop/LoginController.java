@@ -28,6 +28,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.input.MouseEvent;
 
 import static shop.Shop.pm;
 
@@ -58,16 +59,17 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
 
-    }    
+    }   
+   
 
     @FXML
     private void checkId(ActionEvent event) throws IOException {
         Gestionnaire gest = null;
         
         if(isRoot(con_nom.getText(), con_mdp.getText())){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("main_final.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("gestionnaires.fxml"));
             Pane stack = loader.load();
-            ((Main_finalController) loader.getController()).setNomAdmin(con_nom.getText());
+            ((GestionnairesController) loader.getController()).setNomAdmin(con_nom.getText());
             Shop.addStack(base, stack);
         }
         
@@ -76,9 +78,9 @@ public class LoginController implements Initializable {
                 
                 gest = pm.getByAttributes(Gestionnaire.class, new PersistenceManager.KeyValue("username",con_nom.getText()),new PersistenceManager.KeyValue("password",con_mdp.getText()));
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                        gest.isTypeGest() ? "gestionnaires.fxml" : "cashier1.fxml"));
+                        gest.isTypeGest() ? "main_final.fxml" : "cashier1.fxml"));
                 stack = loader.load();
-                if (gest.isTypeGest()) ((GestionnairesController) loader.getController()).setGestionnaire(gest);
+                if (gest.isTypeGest()) ((Main_finalController) loader.getController()).setGestionnaire(gest);
                 else ((Cashier1Controller) loader.getController()).setCassier(gest);
                 Shop.addStack(base, stack);
                 
@@ -91,12 +93,12 @@ public class LoginController implements Initializable {
     }
     
     private void errorMessage() {
-        String title = "Error!" ;
-        String content = "Wrong username password combination";
+        String title = "Erreur!" ;
+        String content = "Nom d'utilisateur ou mot de passe incorrecte";
         JFXDialogLayout dialogContent = new JFXDialogLayout();
         dialogContent.setHeading(new Text(title));
         dialogContent.setBody(new Text(content));
-        JFXButton close = new JFXButton("Close");
+        JFXButton close = new JFXButton("OK");
         close.setButtonType(JFXButton.ButtonType.RAISED);
         close.setStyle("-fx-background-color: #00bfff;");
 
@@ -118,7 +120,7 @@ public class LoginController implements Initializable {
     
     try {
 
-        File fXmlFile = new File("../Admin.xml");
+        File fXmlFile = new File("session.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);

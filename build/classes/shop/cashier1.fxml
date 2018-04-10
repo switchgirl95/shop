@@ -164,7 +164,7 @@
                      <children>
                         <JFXTextField fx:id="montant2" editable="false" focusColor="#00e48f" labelFloat="true" promptText="Montant" />
                         <Text fx:id="montant" strokeType="OUTSIDE" strokeWidth="0.0" />
-                        <JFXTextField fx:id="remise" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="155.0" promptText="Remise" text="0"/>
+                        <JFXTextField fx:id="remise" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="155.0" promptText="Remise %" text="0"/>
                         <JFXTextField fx:id="total" editable="false" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="155.0" />
                      </children>
                   </HBox>

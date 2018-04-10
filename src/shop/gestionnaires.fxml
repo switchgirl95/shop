@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="1079.0" style="-fx-background-color: #E8E8E8;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shop.GestionnairesController">
+
+<StackPane fx:id="stackP" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="1079.0" style="-fx-background-color: #E8E8E8;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shop.GestionnairesController">
    <children>
       <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="366.0" prefHeight="646.0" prefWidth="1087.0" style="-fx-background-color: #E8E8E8;">
          <children>
@@ -32,7 +35,7 @@
                                                 <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Nom " />
                                                 <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Description" />
                                                 <JFXComboBox focusColor="#00e48f" promptText="Category" />
-                                                <JFXButton buttonType="RAISED" style="-fx-background-color: #00e48f;" textFill="WHITE" />
+                                                <JFXButton buttonType="RAISED" style="-fx-background-color: #00e48f;" text="Rechercher" textFill="WHITE" />
                                              </children>
                                              <padding>
                                                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -127,8 +130,8 @@
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="NOM PAGE" />
                               <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1">
                                  <children>
-                                    <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" fx:id="nomGest" />
-                                    <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Déconnexion" onMouseClicked="#logOut" textAlignment="RIGHT" />
+                                    <Text fx:id="nomAdmin" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                    <JFXButton onAction="#logOut" text="Déconnexion" textFill="WHITE" />
                                  </children>
                               </HBox>
                            </children>
@@ -152,75 +155,78 @@
       <AnchorPane fx:id="blackout" opacity="0.53" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" visible="false" />
       <AnchorPane fx:id="menu" maxHeight="1.7976931348623157E308" onMouseClicked="#exitMenu" prefHeight="648.0" prefWidth="1145.0" visible="false">
          <children>
-            <VBox fx:id="mendisp" prefHeight="200.0" prefWidth="529.0" translateX="-529.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <StackPane fx:id="mendisp1" prefHeight="150.0" prefWidth="400.0" translateX="-400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="529.0" style="-fx-background-color: #2F2F32;">
+                  <VBox fx:id="mendisp" prefHeight="200.0" prefWidth="529.0" style="-fx-background-color: white;">
                      <children>
-                        <JFXButton fx:id="exitMenu" buttonType="RAISED" prefHeight="34.0" prefWidth="37.0" style="-fx-background-color: #F44336;" text="x" textFill="WHITE" />
-                     </children>
-                     <padding>
-                        <Insets right="20.0" />
-                     </padding>
-                  </HBox>
-                  <StackPane prefHeight="625.0" prefWidth="200.0">
-                     <children>
-                        <VBox alignment="CENTER" maxHeight="657.0" minHeight="0.0" prefHeight="625.0" prefWidth="529.0" spacing="30.0" style="-fx-background-color: white;">
+                        <HBox alignment="CENTER_RIGHT" prefHeight="69.0" prefWidth="529.0" style="-fx-background-color: #2F2F32;" VBox.vgrow="NEVER">
                            <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionnaire - ID">
-                                 <font>
-                                    <Font size="18.0" />
-                                 </font>
-                              </Text>
-                              <JFXTextField fx:id="id" editable="false" labelFloat="true" promptText="Id" text="#" />
-                              <JFXTextField fx:id="usrnm" labelFloat="true" promptText="Nom d'utilisateur" />
-                              <JFXTextField fx:id="name" labelFloat="true" promptText="Nom" />
-                              <JFXTextField fx:id="mdp" labelFloat="true" promptText="Mot de passe" />
-                              <JFXTextField fx:id="email" labelFloat="true" promptText="Email" />
-                              <JFXTextField fx:id="phone" labelFloat="true" prefHeight="25.0" prefWidth="364.0" promptText="Telephone" />
-                              <HBox alignment="CENTER" prefHeight="25.0" prefWidth="389.0">
-                                 <children>
-                                    <JFXRadioButton fx:id="type1" selected="true" text="Gestionnaire">
-                                       <toggleGroup>
-                                          <ToggleGroup fx:id="typeG" />
-                                       </toggleGroup>
-                                    </JFXRadioButton>
-                                    <JFXRadioButton fx:id="type2" text="Caissiere" toggleGroup="$typeG" />
-                                 </children>
-                              </HBox>
-                              <HBox prefHeight="39.0" prefWidth="389.0">
-                                 <children>
-                                    <VBox alignment="CENTER_LEFT" prefHeight="67.0" prefWidth="279.0" spacing="10.0" />
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER" prefHeight="40.0" prefWidth="389.0">
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Passif" />
-                                    <JFXToggleButton fx:id="active" prefHeight="42.0" prefWidth="151.0" text="Actif" unToggleColor="#fc7d7d" unToggleLineColor="#f80b0b" />
-                                 </children>
-                                 <padding>
-                                    <Insets top="-40.0" />
-                                 </padding>
-                              </HBox>
-                              <StackPane fx:id="stack" minHeight="50.0" prefHeight="49.0" prefWidth="389.0">
-                                 <children>
-                                    <HBox fx:id="ModifyProd" alignment="CENTER" prefHeight="50.0" prefWidth="389.0" spacing="30.0">
-                                       <children>
-                                          <JFXButton fx:id="editGest" buttonType="RAISED" onAction="#editGest" prefHeight="47.0" prefWidth="116.0" style="-fx-background-color: #00e48f;" text="Sauvegarder" textFill="WHITE" />
-                                          <JFXButton fx:id="deleteGest" buttonType="RAISED" onAction="#deleteGest" prefHeight="48.0" prefWidth="116.0" style="-fx-background-color: #F44336;" text="Supprimer" textFill="WHITE" />
-                                       </children>
-                                    </HBox>
-                                    <JFXButton fx:id="addGest" buttonType="RAISED" onAction="#addGest" prefHeight="47.0" prefWidth="116.0" style="-fx-background-color: #00e48f;" text="Ajouter" textFill="WHITE" />
-                                 </children>
-                              </StackPane>
+                              <JFXButton fx:id="exitMenu" buttonType="RAISED" prefHeight="34.0" prefWidth="37.0" style="-fx-background-color: #F44336;" text="x" textFill="WHITE" />
                            </children>
                            <padding>
-                              <Insets bottom="70.0" left="70.0" right="70.0" top="70.0" />
+                              <Insets right="20.0" />
                            </padding>
-                        </VBox>
+                        </HBox>
+                        <StackPane prefHeight="625.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <VBox alignment="CENTER" maxHeight="657.0" minHeight="0.0" prefHeight="625.0" prefWidth="529.0" spacing="30.0" style="-fx-background-color: white;">
+                                 <children>
+                                    <Text fx:id="menuTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionnaire - ID">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <JFXTextField fx:id="id" editable="false" labelFloat="true" promptText="Id" text="#" />
+                                    <JFXTextField fx:id="usrnm" labelFloat="true" promptText="Nom d'utilisateur" />
+                                    <JFXTextField fx:id="name" labelFloat="true" promptText="Nom" />
+                                    <JFXTextField fx:id="mdp" labelFloat="true" promptText="Mot de passe" />
+                                    <JFXTextField fx:id="email" labelFloat="true" promptText="Email" />
+                                    <JFXTextField fx:id="phone" labelFloat="true" prefHeight="25.0" prefWidth="364.0" promptText="Telephone" />
+                                    <HBox alignment="CENTER" prefHeight="25.0" prefWidth="389.0">
+                                       <children>
+                                          <JFXRadioButton fx:id="type1" selected="true" text="Gestionnaire">
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="typeG" />
+                                             </toggleGroup>
+                                          </JFXRadioButton>
+                                          <JFXRadioButton fx:id="type2" text="Caissiere" toggleGroup="$typeG" />
+                                       </children>
+                                    </HBox>
+                                    <HBox prefHeight="39.0" prefWidth="389.0">
+                                       <children>
+                                          <VBox alignment="CENTER_LEFT" prefHeight="67.0" prefWidth="279.0" spacing="10.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="40.0" prefWidth="389.0">
+                                       <children>
+                                          <JFXToggleButton fx:id="active" prefHeight="42.0" prefWidth="151.0" selected="true" text="Status" />
+                                       </children>
+                                       <padding>
+                                          <Insets top="-40.0" />
+                                       </padding>
+                                    </HBox>
+                                    <StackPane fx:id="stack" minHeight="50.0" prefHeight="49.0" prefWidth="389.0">
+                                       <children>
+                                          <HBox fx:id="ModifyProd" alignment="CENTER" prefHeight="50.0" prefWidth="389.0" spacing="30.0">
+                                             <children>
+                                                <JFXButton fx:id="editGest" buttonType="RAISED" onAction="#editGest" prefHeight="47.0" prefWidth="116.0" style="-fx-background-color: #00e48f;" text="Sauvegarder" textFill="WHITE" />
+                                                <JFXButton fx:id="deleteGest" buttonType="RAISED" onAction="#deleteGest" prefHeight="48.0" prefWidth="116.0" style="-fx-background-color: #F44336;" text="Supprimer" textFill="WHITE" />
+                                             </children>
+                                          </HBox>
+                                          <JFXButton fx:id="addGest" buttonType="RAISED" onAction="#addGest" prefHeight="47.0" prefWidth="116.0" style="-fx-background-color: #00e48f;" text="Ajouter" textFill="WHITE" />
+                                       </children>
+                                    </StackPane>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="70.0" left="70.0" right="70.0" top="70.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                        </StackPane>
                      </children>
-                  </StackPane>
+                  </VBox>
                </children>
-            </VBox>
+            </StackPane>
          </children>
       </AnchorPane>
    </children>

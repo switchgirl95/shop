@@ -54,7 +54,6 @@ import static shop.Shop.pm;
  */
 public class GestionnairesController implements Initializable {
 
-    @FXML
     public Text nomGest;
     @FXML
     private StackPane stack;
@@ -133,6 +132,14 @@ public class GestionnairesController implements Initializable {
     private int rowIndex;
     
     private Gestionnaire rowData;
+    @FXML
+    private StackPane stackP;
+    @FXML
+    private Text menuTitle;
+    @FXML
+    private Text nomAdmin;
+    @FXML
+    private StackPane mendisp1;
     
     /**
      * Initializes the controller class.
@@ -163,7 +170,7 @@ public class GestionnairesController implements Initializable {
         close.setButtonType(JFXButton.ButtonType.RAISED);
         close.setStyle("-fx-background-color: #00bfff;");
         dialogContent.setActions(close);
-        JFXDialog dialog = new JFXDialog(stack, dialogContent, JFXDialog.DialogTransition.BOTTOM);
+        JFXDialog dialog = new JFXDialog(mendisp1, dialogContent, JFXDialog.DialogTransition.BOTTOM);
         close.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent __) {
@@ -193,9 +200,9 @@ public class GestionnairesController implements Initializable {
      
      
     private void prepareSlideMenuAnimation() {
-        TranslateTransition openNav=new TranslateTransition(new Duration(350), mendisp);
+        TranslateTransition openNav=new TranslateTransition(new Duration(350), mendisp1);
         openNav.setToX(0);
-        TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
+        TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp1);
         
         test.setOnAction((ActionEvent evt)->{
                 initChamp();
@@ -216,6 +223,7 @@ public class GestionnairesController implements Initializable {
     }
     
     private void initChamp(){
+        menuTitle.setText("Nouveau Gestionnaire");
         id.setText("#");
         usrnm.setText("");
         name.setText("");
@@ -224,15 +232,14 @@ public class GestionnairesController implements Initializable {
         phone.setText("");
     }
 
-    void setGestionnaire(Gestionnaire gest) {
-        this.gest = gest;
-        nomGest.setText(gest.getNom());
+    public void setNomAdmin(String nom) {
+        nomAdmin.setText("Bienvenue " + nom);
     }
 
     
     private void exit(){
-        TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp);
-        closeNav.setToX(-(mendisp.getWidth()));
+        TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp1);
+        closeNav.setToX(-(mendisp1.getWidth()));
         closeNav.play();
         closeNav.setOnFinished(event -> {
             blackout.setVisible(false);
@@ -320,7 +327,7 @@ public class GestionnairesController implements Initializable {
                         Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     System.out.println("Double click on: "+rowData.getNom());
-                    TranslateTransition openNav=new TranslateTransition(new Duration(350), mendisp);
+                    TranslateTransition openNav=new TranslateTransition(new Duration(350), mendisp1);
                     blackout.setVisible(true);
                     menu.setVisible(true);
                     addGest.setVisible(!true);
@@ -364,7 +371,9 @@ public class GestionnairesController implements Initializable {
     
     public void fillProdEdit(Gestionnaire gest) throws Exception{
         initChamp();
+        menuTitle.setText("Gestionnaire:  "+ gest.getIdGest());
         id.setText(Integer.toString(gest.getIdGest()));
+        usrnm.setText(gest.getUsername());
         name.setText(gest.getNom());
         mdp.setText(gest.getPassword());
         email.setText(gest.getEmail());
@@ -376,6 +385,8 @@ public class GestionnairesController implements Initializable {
     
     @FXML
     private void editGest(ActionEvent event) {
+        ArrayList<String> list = checkGest();
+        if (list.isEmpty()){
         String usn = usrnm.getText();
         String nm = name.getText();
         String mp =mdp.getText();
@@ -386,17 +397,33 @@ public class GestionnairesController implements Initializable {
         pm.insert(gest);
         fillTableGest();
         exit();
+        }
+        
+        else{
+            String message = "";
+            int i = 0;
+            for(String s : list){
+                message = message + "Error " + Integer.toString(++i)+": " + s +"\n";
+                
+            }
+            errorMessage("Echec!!!", message);
+        
+        }
     }
 
     @FXML
     private void deleteGest(ActionEvent event) {
+        pm.delete(rowData);
+        fillTableGest();
+        exit();
+        notifSuccess("Success!!", "Gestionnaire supprime avec success.");
     }
 
     @FXML
     private void addGest(ActionEvent event) {
         String usn = usrnm.getText();
         String nm = name.getText();
-        String mp =mdp.getText();
+        String mp = mdp.getText();
         String eml = email.getText();
         String ph = phone.getText();
         
@@ -406,14 +433,30 @@ public class GestionnairesController implements Initializable {
         exit();
     }
 
+
+
     @FXML
-    public void logOut(MouseEvent mouseEvent) {
-        gest = null;
+    private void logOut(ActionEvent event) {
+        System.out.println("tt");
+       // gest = null;
         try {
             Pane login = FXMLLoader.load(getClass().getResource("login.fxml"));
-            Shop.addStack(this.stack, login);
+            Shop.addStack((Pane) this.stackP.getParent(), login);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private ArrayList<String> checkGest(){
+        ArrayList<String> list = new ArrayList<String>();
+        if(usrnm.getText().equals("")){list.add("Nom d'utilisateur absent");}
+        if(name.getText().equals("")){list.add("Nom absent");}
+        if (mdp.getText().matches("[0-9]+")){list.add("Mot de passe absent");}
+        if (mdp.getText().matches("[0-9]+")){list.add("Adresse mail absent");}
+        else if (!mdp.getText().matches("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$")){list.add("L'adresse mail est incorrecte");}
+        if(phone.getText().equals("")){list.add("Numero de telephone absent");}
+        else if (!phone.getText().matches("[0-9]+")){list.add("Ce numero est incorrecte");}
+       
+        return list;
+        
     }
 }

@@ -17,6 +17,7 @@
     <jar href="lib/hibernate-core-5.2.10.Final.jar" size="6618716" download="eager" />
     <jar href="lib/hibernate-entitymanager-5.2.10.Final.jar" size="591" download="eager" />
     <jar href="lib/hibernate-jpa-2.1-api-1.0.0.Final.jar" size="113371" download="eager" />
+    <jar href="lib/itextpdf-5.4.3.jar" size="2070978" download="eager" />
     <jar href="lib/jandex-2.0.3.Final.jar" size="186741" download="eager" />
     <jar href="lib/javassist-3.20.0-GA.jar" size="750581" download="eager" />
     <jar href="lib/javax.persistence-api-2.2.jar" size="164556" download="eager" />
@@ -24,7 +25,7 @@
     <jar href="lib/jboss-transaction-api_1.2_spec-1.0.1.Final.jar" size="28352" download="eager" />
     <jar href="lib/jfoenix-8.0.1.jar" size="2405715" download="eager" />
     <jar href="lib/mysql-connector-java-5.1.45-bin.jar" size="999810" download="eager" />
-    <jar href="shop.jar" size="83335" download="eager" />
+    <jar href="shop.jar" size="85540" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="shop" >
     <param name="requiredFXVersion" value="8.0+"/>

@@ -73,7 +73,7 @@
                                                       <Insets right="20.0" />
                                                    </padding>
                                                 </HBox>
-                                                <HBox fx:id="printGeSt" alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="62.0" prefWidth="1039.0">
+                                                <HBox fx:id="printGeSt" alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="62.0" prefWidth="1039.0" visible="false">
                                                    <children>
                                                       <JFXButton fx:id="impGeSt" buttonType="RAISED" onAction="#ImprimerGestStock" prefHeight="30.0" prefWidth="172.0" style="-fx-background-color: #00e48f;" text="Imprimer..." textFill="WHITE" />
                                                    </children>
@@ -174,7 +174,7 @@
                               <Text fx:id="nompage" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Logo" />
                               <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1">
                                  <children>
-                                    <Text fx:id="nomAdmin" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                    <Text fx:id="nomGest" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" />
                                     <Text fill="WHITE" onMouseClicked="#logOut" strokeType="OUTSIDE" strokeWidth="0.0" text="Déconnexion" textAlignment="RIGHT" />
                                  </children>
                               </HBox>

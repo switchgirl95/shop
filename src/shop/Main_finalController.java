@@ -123,7 +123,6 @@ public class Main_finalController implements Initializable {
     private Text catText;
     @FXML
     private Text nompage;
-    @FXML
     private Text nomAdmin;
     @FXML
     private TableView<Categorie> tableCat;
@@ -186,6 +185,10 @@ public class Main_finalController implements Initializable {
     private JFXButton rechercheGeSt;
     @FXML
     private TableView<GestionStock> tableGeSt;
+    @FXML
+    private Text nomGest;
+    
+    private Gestionnaire gest;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -318,7 +321,8 @@ public class Main_finalController implements Initializable {
     public void logOut(MouseEvent mouseEvent) {
         try {
             Pane login = FXMLLoader.load(getClass().getResource("login.fxml"));
-            Shop.addStack(this.stack, login);
+            
+            Shop.addStack((Pane)this.stack.getParent(), login);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -383,7 +387,7 @@ public class Main_finalController implements Initializable {
         TableColumn dateCol = new TableColumn("Date");
         TableColumn typeCol = new TableColumn("Type");
         TableColumn prodGSCol = new TableColumn("Produit");
-        tableCat.getColumns().addAll(idGSCol,nomGSCol,qteGSCol,dateCol,typeCol,prodGSCol);
+        tableGeSt.getColumns().addAll(idGSCol,nomGSCol,qteGSCol,dateCol,typeCol,prodGSCol);
         
         idGSCol.setCellValueFactory(new PropertyValueFactory<>("idStock"));
         nomGSCol.setCellValueFactory(new PropertyValueFactory<>("idGest")); 
@@ -524,18 +528,36 @@ public class Main_finalController implements Initializable {
     @FXML
     private void editProd(ActionEvent event) {
         System.out.println("Editing");
-        rowData.setCategorie(category.getValue());
-        rowData.setPrix(Integer.parseInt( prixProd.getText()));
-        rowData.setQuantite(Integer.parseInt(qteProd.getText()));
-        rowData.setDescriptions(description.getText());
-        rowData.setNom(nomProd.getText());
-        rowData.setCodeFournisseur(codeFourn.getText());
-        rowData.setActif(active.isSelected());
-        rowData = pm.insert(rowData);
-        System.out.println("pr = " + rowData.getCodeProduit());
-        savePhotos(rowData.getCodeProduit());
-        fillTableProd();
-        exit();
+        ArrayList<String> list = checkProd();
+        
+        if (list.isEmpty()){
+            rowData.setCategorie(category.getValue());
+            rowData.setPrix(Integer.parseInt( prixProd.getText()));
+            rowData.setQuantite(Integer.parseInt(qteProd.getText()));
+            rowData.setDescriptions(description.getText());
+            rowData.setNom(nomProd.getText());
+            rowData.setCodeFournisseur(codeFourn.getText());
+            rowData.setActif(active.isSelected());
+            rowData = pm.insert(rowData);
+            notifSuccess("Yep", "Goodgo");
+            System.out.println("pr = " + rowData.getCodeProduit());
+            //savePhotos(rowData.getCodeProduit());
+            fillTableProd();
+            exit();
+        
+        }
+        else{
+            String message = "";
+            int i = 0;
+            for(String s : list){
+                message = message + "Error " + Integer.toString(++i)+": " + s +"\n";
+                
+            }
+            errorMessage("Echec!!!", message);
+        
+        }
+        
+
     }
 
     @FXML
@@ -581,9 +603,7 @@ public class Main_finalController implements Initializable {
         }
     }
 
-    public void setNomAdmin(String nom) {
-        nomAdmin.setText(nom);
-    }
+
     
     private void exit(){
         TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp1);
@@ -746,6 +766,29 @@ else {
     @FXML
     private void rechercheGeSt(ActionEvent event) {
     }
+    
+    void setGestionnaire(Gestionnaire gest) {
+        this.gest = gest;
+        nomGest.setText(gest.getNom());
+    }
+    private ArrayList<String> checkProd(){
+        ArrayList<String> list = new ArrayList<String>();
+        if(nomProd.getText().equals("")){list.add("Le produit doit avoir un nom");}
+        if(prixProd.getText().equals("")){list.add("Le produit doit avoir un prix");}
+        else if (!prixProd.getText().matches("[0-9]+")){list.add("Ce prix est incorrecte");}
+        if(prixProd.getText().equals("")){list.add("Le produit doit avoir une quantite");}
+        else if (!qteProd.getText().matches("[0-9]+")){list.add("Cette quantite est incorrecte");}
+        
+        if(codeFourn.getText().equals("")){list.add("Code Fournisseur est absent");}
+        
+        return list;
+    
+        
+    }
+    
+    
+    
+    
 
     
 }
