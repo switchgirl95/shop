@@ -96,7 +96,7 @@ public class ListeFacture
         return o instanceof ListeFacture && this.idFacture == ((ListeFacture) o).getIdFacture() && this.getCodeProduit() == ((ListeFacture) o).getCodeProduit();
     }
 
-    protected class Key implements Serializable {
+    public static class Key implements Serializable {
         // used to define the LISTE_FACTURE table composite key
         //int codeProduit;
         Produit produit;

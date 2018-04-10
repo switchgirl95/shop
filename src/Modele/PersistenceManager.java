@@ -20,6 +20,10 @@ public class PersistenceManager {
         em = emf.createEntityManager();
     }
 
+    public EntityManager em() {
+        return em;
+    }
+
     public void stop () {
         em.close();
         emf.close();
@@ -34,7 +38,6 @@ public class PersistenceManager {
         et.commit();
 
         return o;
-
     }
 
     public void delete (Object o) {
