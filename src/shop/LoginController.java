@@ -122,7 +122,7 @@ public class LoginController implements Initializable {
     
     try {
 
-        File fXmlFile = new File("session.xml");
+        File fXmlFile = new File("../session.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
