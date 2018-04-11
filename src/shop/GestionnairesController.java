@@ -141,6 +141,7 @@ public class GestionnairesController implements Initializable {
     @FXML
     private StackPane mendisp1;
     
+    ObservableList<Gestionnaire> table;
     /**
      * Initializes the controller class.
      */
@@ -344,7 +345,7 @@ public class GestionnairesController implements Initializable {
     }
     private void fillTableGest(){
         gestData = pm.getAll(Gestionnaire.class);
-        ObservableList<Gestionnaire> table = FXCollections.observableArrayList();
+        table = FXCollections.observableArrayList();
         table.addAll(gestData);
         table3.setItems(table);
         paginationGest();
@@ -387,18 +388,22 @@ public class GestionnairesController implements Initializable {
     private void editGest(ActionEvent event) {
         ArrayList<String> list = checkGest();
         if (list.isEmpty()){
-        String usn = usrnm.getText();
-        String nm = name.getText();
-        String mp =mdp.getText();
-        String eml = email.getText();
-        String ph = phone.getText();
-
-        Gestionnaire gest = new Gestionnaire(Integer.parseInt(id.getText()), nm,type1.isSelected(),usn,mp,active.isSelected(),ph,eml);
-        pm.insert(gest);
-        fillTableGest();
+        rowData.setUsername(usrnm.getText());
+        rowData.setNom(name.getText()); 
+        rowData.setPassword(mdp.getText());
+        rowData.setEmail(email.getText());
+        rowData.setTelephone(phone.getText());
+        rowData.setTypeGest(type1.isSelected());
+        rowData.setActif(active.isSelected());
+try{
+        //Gestionnaire gest = new Gestionnaire(Integer.parseInt(id.getText()), nm,type1.isSelected(),usn,mp,active.isSelected(),ph,eml);
+        pm.insert(rowData);
+        table.add(gest);
+        //fillTableGest();
         exit();
-        }
-        
+        }catch(Exception e){System.out.println(e);} 
+        }     
+
         else{
             String message = "";
             int i = 0;
@@ -410,13 +415,37 @@ public class GestionnairesController implements Initializable {
         
         }
     }
-
-    @FXML
-    private void deleteGest(ActionEvent event) {
+    
+    private void confirmDeleteGest(String title, String content){
+        JFXDialogLayout dialogContent = new JFXDialogLayout();
+        dialogContent.setHeading(new Text(title));
+        dialogContent.setBody(new Text(content));
+        JFXButton close = new JFXButton("Confirmer");
+        close.setButtonType(JFXButton.ButtonType.RAISED);
+        close.setStyle("-fx-background-color: #00bfff;");
+        dialogContent.setActions(close);
+        JFXDialog dialog = new JFXDialog(mendisp1, dialogContent, JFXDialog.DialogTransition.BOTTOM);
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent __) {
+                dg();
+            }
+        });
+        dialog.show();
+    
+    }
+    private void dg(){
         pm.delete(rowData);
+        //table.remove(rowData);
         fillTableGest();
         exit();
         notifSuccess("Success!!", "Gestionnaire supprime avec success.");
+    
+    }
+
+    @FXML
+    private void deleteGest(ActionEvent event) {
+        confirmDeleteGest("Attention!!","Voulez-vous vraiment supprimer "+ rowData.getNom()+" ?");
     }
 
     @FXML
@@ -428,8 +457,10 @@ public class GestionnairesController implements Initializable {
         String ph = phone.getText();
         
         Gestionnaire gest = new Gestionnaire(nm,type1.isSelected(),usn,mp,active.isSelected(),ph,eml);
+        
         pm.insert(gest);
-        fillTableGest();
+        table.add(gest);
+        //fillTableGest();
         exit();
     }
 
@@ -447,12 +478,13 @@ public class GestionnairesController implements Initializable {
         }
     }
     private ArrayList<String> checkGest(){
+        System.out.println("Checking");
         ArrayList<String> list = new ArrayList<String>();
         if(usrnm.getText().equals("")){list.add("Nom d'utilisateur absent");}
         if(name.getText().equals("")){list.add("Nom absent");}
         if (mdp.getText().matches("[0-9]+")){list.add("Mot de passe absent");}
         if (mdp.getText().matches("[0-9]+")){list.add("Adresse mail absent");}
-        else if (!mdp.getText().matches("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$")){list.add("L'adresse mail est incorrecte");}
+        //else if (!mdp.getText().matches("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$")){list.add("L'adresse mail est incorrecte");}
         if(phone.getText().equals("")){list.add("Numero de telephone absent");}
         else if (!phone.getText().matches("[0-9]+")){list.add("Ce numero est incorrecte");}
        

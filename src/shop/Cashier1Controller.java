@@ -8,6 +8,7 @@ package shop;
 import Modele.Facture;
 import Modele.Gestionnaire;
 import Modele.ListeFacture;
+import Modele.PersistenceManager;
 import Modele.Produit;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
@@ -205,18 +206,24 @@ public class Cashier1Controller implements Initializable {
             qte = Integer.parseInt(qteProd.getText());
             if (qte == 0) throw new NumberFormatException();
             ListeFacture lf = new ListeFacture(pm.get(Produit.class, Integer.parseInt(idProd.getText())), 0, qte);
-            if (!panier.add(lf)) {
-                panier.remove(lf);
-                panier.add(lf);
-            }
+            Produit p = pm.get(Produit.class,Integer.parseInt(idProd.getText()));
+            System.out.println("yo");
+            if(p.getQuantite()<Integer.parseInt(qteProd.getText())){
+   
+                if (!panier.add(lf)) {
+                    panier.remove(lf);
+                    panier.add(lf);
+                }
 
-            // on revient à l'état initial
-            idProd.setText("");
-            nomProd.setText("");
-            qteProd.setText("");
-            tableProduits.getSelectionModel().select(null);
-            // message de confirmation d'ajout
-            System.out.println("Ajouté");
+                // on revient à l'état initial
+                idProd.setText("");
+                nomProd.setText("");
+                qteProd.setText("");
+                tableProduits.getSelectionModel().select(null);
+                // message de confirmation d'ajout
+                System.out.println("Ajouté");
+           }
+           else{errorMessage("Erreur!!","Il n'y a pas assez de ce produit!");}
         } catch (NumberFormatException e) {
             // erreur
             System.out.println("Quantité pas sérieuse");

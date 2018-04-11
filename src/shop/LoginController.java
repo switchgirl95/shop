@@ -77,24 +77,26 @@ public class LoginController implements Initializable {
             try {
                 
                 gest = pm.getByAttributes(Gestionnaire.class, new PersistenceManager.KeyValue("username",con_nom.getText()),new PersistenceManager.KeyValue("password",con_mdp.getText()));
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                        gest.isTypeGest() ? "main_final.fxml" : "cashier1.fxml"));
-                stack = loader.load();
-                if (gest.isTypeGest()) ((Main_finalController) loader.getController()).setGestionnaire(gest);
-                else ((Cashier1Controller) loader.getController()).setCassier(gest);
-                Shop.addStack(base, stack);
-                
+                if (gest.isActif()){
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                            gest.isTypeGest() ? "main_final.fxml" : "cashier1.fxml"));
+                    stack = loader.load();
+                    if (gest.isTypeGest()) ((Main_finalController) loader.getController()).setGestionnaire(gest);
+                    else ((Cashier1Controller) loader.getController()).setCassier(gest);
+                    Shop.addStack(base, stack);
+                }
+                else{
+                    errorMessage("Ce compte n'est pas actif","Veuillez voir l'admin.");
+                }
             } catch (Exception ex) {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-                errorMessage();
+                errorMessage("Erreur!","Nom d'utilisateur ou mot de passe incorrecte");
             }
         }       
            
     }
     
-    private void errorMessage() {
-        String title = "Erreur!" ;
-        String content = "Nom d'utilisateur ou mot de passe incorrecte";
+    private void errorMessage(String title, String content) {
         JFXDialogLayout dialogContent = new JFXDialogLayout();
         dialogContent.setHeading(new Text(title));
         dialogContent.setBody(new Text(content));

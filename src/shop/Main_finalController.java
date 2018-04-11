@@ -559,12 +559,36 @@ public class Main_finalController implements Initializable {
         
 
     }
-
-    @FXML
-    private void deleteProd(ActionEvent event) {
+    
+    private void confirmDeleteProd(String title, String content){
+        JFXDialogLayout dialogContent = new JFXDialogLayout();
+        dialogContent.setHeading(new Text(title));
+        dialogContent.setBody(new Text(content));
+        JFXButton close = new JFXButton("Confirmer");
+        close.setButtonType(JFXButton.ButtonType.RAISED);
+        close.setStyle("-fx-background-color: #00bfff;");
+        dialogContent.setActions(close);
+        JFXDialog dialog = new JFXDialog(mendisp1, dialogContent, JFXDialog.DialogTransition.BOTTOM);
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent __) {
+                dP();
+            }
+        });
+        dialog.show();
+    
+    }
+    
+    private void dP(){
         pm.delete(rowData);
         fillTableProd();
         exit();
+    }
+    
+    @FXML
+    private void deleteProd(ActionEvent event) {
+        confirmDeleteProd("Attention!!","Voulez-vous vraiment supprimer "+ rowData.getNom()+" ?");
+        
     }
 
     @FXML
