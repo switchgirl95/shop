@@ -31,11 +31,11 @@
                                           </HBox>
                                           <HBox fx:id="typesProd" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                                              <children>
-                                                <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Id" />
-                                                <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Nom " />
-                                                <JFXTextField focusColor="#00e48f" labelFloat="true" promptText="Description" />
-                                                <JFXComboBox focusColor="#00e48f" promptText="Category" />
-                                                <JFXButton buttonType="RAISED" style="-fx-background-color: #00e48f;" text="Rechercher" textFill="WHITE" />
+                                                <JFXTextField fx:id="filtIdGest" focusColor="#00e48f" labelFloat="true" promptText="Id" />
+                                                <JFXTextField fx:id="filtNomGest" focusColor="#00e48f" labelFloat="true" promptText="Nom " />
+                                                <JFXTextField fx:id="filtUnameGest" focusColor="#00e48f" labelFloat="true" promptText="Username" />
+                                                <JFXTextField fx:id="filtTelGest" focusColor="#00e48f" labelFloat="true" promptText="Telephone" />
+                                                <JFXTextField fx:id="filtEmailGest" focusColor="#00e48f" labelFloat="true" promptText="Email" />
                                              </children>
                                              <padding>
                                                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

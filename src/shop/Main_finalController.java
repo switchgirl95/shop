@@ -72,8 +72,7 @@ public class Main_finalController implements Initializable {
     public JFXTextField sId;
     public JFXTextField sNom;
     public JFXTextField sDesc;
-    @FXML
-    public JFXComboBox<Categorie> sCat;
+//    public JFXComboBox<Categorie> sCat;
     public JFXTextField sTCat;
     @FXML
     private Button test;
@@ -195,7 +194,15 @@ public class Main_finalController implements Initializable {
     ObservableList<Categorie> tableOC = FXCollections.observableArrayList();
     @FXML
     private JFXTextField searchCat;
-    
+    TableColumn code = new TableColumn("Code");
+    TableColumn nom = new TableColumn("Nom");
+    TableColumn codeFournisseur = new TableColumn("Code Fourn");
+    TableColumn quantite = new TableColumn("Quantité");
+    TableColumn price = new TableColumn("Prix");
+    TableColumn categoryC = new TableColumn("Categorie");
+    TableColumn desc = new TableColumn("Description");
+    TableColumn act = new TableColumn("Status");
+    TableColumn photo = new TableColumn("Photo");
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -203,6 +210,7 @@ public class Main_finalController implements Initializable {
             initTableProd();
             initTableGeSt();
             initFilters();
+            setFactories();
             addCategory.setVisible(false);
             prepareSlideMenuAnimation();
             fillTableProd();
@@ -369,6 +377,7 @@ public class Main_finalController implements Initializable {
     public void initTableCat(){
         
         TableColumn id = new TableColumn("Id");
+        id.setMinWidth(100); id.setMaxWidth(100);
         TableColumn nom = new TableColumn("Nom");
         tableCat.getColumns().addAll(id,nom);
         
@@ -408,15 +417,18 @@ public class Main_finalController implements Initializable {
     }
     
     public void initTableProd(){
-        TableColumn code = new TableColumn("Code");
-        TableColumn nom = new TableColumn("Nom");
-        TableColumn codeFournisseur = new TableColumn("Code Fourn");
-        TableColumn quantite = new TableColumn("Quantité");
-        TableColumn price = new TableColumn("Prix");
-        TableColumn categoryC = new TableColumn("Categorie");
-        TableColumn desc = new TableColumn("Description");
-        TableColumn act = new TableColumn("Status");
-        TableColumn photo = new TableColumn("Photo");
+    
+        code.setMinWidth(75); code.setMaxWidth(75);
+        
+        quantite.setMinWidth(75); quantite.setMaxWidth(75);
+       
+        price.setMinWidth(150); price.setMaxWidth(150);
+        
+        categoryC.setMinWidth(75); categoryC.setMaxWidth(75);
+       
+        act.setMinWidth(75); act.setMaxWidth(75);
+       
+        photo.setMinWidth(100); photo.setMaxWidth(100);
         tableProd.getColumns().addAll(code,nom,codeFournisseur,quantite,price,categoryC,desc,act,photo);
         
         code.setCellValueFactory(new PropertyValueFactory<>("codeProduit"));
@@ -429,59 +441,6 @@ public class Main_finalController implements Initializable {
         act.setCellValueFactory(new PropertyValueFactory<>("actif"));
         photo.setCellValueFactory(new PropertyValueFactory<>("photos"));
         
-
-        photo.setCellFactory(param -> {
-            //Set up the ImageView
-            final ImageView imageview = new ImageView();
-            imageview.setFitHeight(75);
-            imageview.setFitWidth(75);
-
-            //Set up the Table
-            TableCell<Produit, List<Photo>> cell = new TableCell<Produit, List<Photo>>() {
-                public void updateItem(List<Photo> item, boolean empty) {
-                    FileInputStream input=null;
-                    if (item != null && item.size() != 0) {
-                        System.out.print(item.get(0).getCodeProduit());
-                        System.out.println(item.get(0).getLien());
-                        try {
-                            input = new FileInputStream(item.get(0).getLien());
-                            Image image = new Image(input);
-                            imageview.setImage(image);
-                        } catch (FileNotFoundException ex) {
-                            Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-             };
-             // Attach the imageview to the cell
-             cell.setGraphic(imageview);
-             return cell;
-        });
-        
-        act.setCellFactory(param -> {
-            Text status = new Text();
-            //Set up the Table
-            TableCell<Gestionnaire, Boolean> cell = new TableCell<Gestionnaire, Boolean>() {
-                public void updateItem(Boolean item, boolean empty) {
-                    
-                    if (item != null) {
-                       if (item){ 
-                        status.setText("Actif");
-                        status.setFill(Color.GREEN);
-                       }
-                       else{
-                           status.setText("Passif");
-                        status.setFill(Color.RED);
-                       }
-                    }
-                    
-                    
-                }
-             };
-             // Attach the imageview to the cell
-             cell.setGraphic(status);
-             return cell;
-        });
 
         tableProd.setRowFactory(tv -> {
             TableRow<Produit> row = new TableRow<>();
@@ -517,7 +476,7 @@ public class Main_finalController implements Initializable {
         //
         ObservableList<Categorie> cats = FXCollections.observableArrayList();
         cats.addAll(pm.getAll(Categorie.class));
-        sCat.setItems(cats);
+        //sCat.setItems(cats);
     }
     
     public void fillProdEdit(Produit prod) throws Exception{
@@ -753,12 +712,13 @@ else {
     
     }
 
+        /*
     private void rechercheProd(ActionEvent event) {
         ArrayList<PersistenceManager.KeyValue> kv = new ArrayList<>();
         if (!sId.getText().isEmpty()) kv.add(new PersistenceManager.KeyValue("codeProduit", Integer.parseInt(sId.getText())));
         if (!sNom.getText().isEmpty()) kv.add(new PersistenceManager.KeyValue("nomProduit", sNom.getText()));
         if (!sDesc.getText().isEmpty()) kv.add(new PersistenceManager.KeyValue("descriptions", sDesc.getText()));
-        if (sCat.getValue() != null) kv.add(new PersistenceManager.KeyValue("categorie", sCat.getValue()));
+       // if (sCat.getValue() != null) kv.add(new PersistenceManager.KeyValue("categorie", sCat.getValue()));
         List<Produit> search = new ArrayList<>();
         try {
             search = pm.getAllByAttributes(Produit.class, kv.toArray(new PersistenceManager.KeyValue[]{}));
@@ -772,6 +732,7 @@ else {
         sCat.getSelectionModel().clearSelection();
         tableProd.toFront();
     }
+
 
     private void rechercheCat(ActionEvent event) {
         PersistenceManager.KeyValue kv = null;
@@ -788,7 +749,7 @@ else {
         sTCat.clear();
         tableCat.toFront();
     }
-
+*/
     @FXML
     private void ImprimerGestStock(ActionEvent event) {
     }
@@ -921,9 +882,68 @@ else {
             tableCat.setItems(subentries);
         });
         
+        
 
     
     
+    
+    }
+    
+    public void setFactories(){
+        photo.setCellFactory(param -> {
+            //Set up the ImageView
+            final ImageView imageview = new ImageView();
+            imageview.setFitHeight(100);
+            imageview.setFitWidth(100);
+
+            //Set up the Table
+            TableCell<Produit, List<Photo>> cell = new TableCell<Produit, List<Photo>>() {
+                public void updateItem(List<Photo> item, boolean empty) {
+                    FileInputStream input=null;
+                    if (item != null && item.size() != 0) {
+                        System.out.print(item.get(0).getCodeProduit());
+                        System.out.println(item.get(0).getLien());
+                        try {
+                            input = new FileInputStream(item.get(0).getLien());
+                            Image image = new Image(input);
+                            imageview.setImage(image);
+                        } catch (FileNotFoundException ex) {
+                            Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+             };
+             // Attach the imageview to the cell
+             cell.setGraphic(imageview);
+             return cell;
+        });
+        
+        act.setCellFactory(param -> {
+            Text status = new Text();
+            //Set up the Table
+            TableCell<Gestionnaire, Boolean> cell = new TableCell<Gestionnaire, Boolean>() {
+                public void updateItem(Boolean item, boolean empty) {
+                    
+                    if (item != null) {
+                       if (item){ 
+                        status.setText("Actif");
+                        status.setFill(Color.GREEN);
+                       }
+                       else{
+                           status.setText("Passif");
+                        status.setFill(Color.RED);
+                       }
+                    }
+                    
+                    
+                }
+             };
+             // Attach the imageview to the cell
+             cell.setGraphic(status);
+             return cell;
+        });
+
+
     
     }
     

@@ -26,7 +26,7 @@ public class Shop extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("cashier1.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("main_final.fxml"));
         
         Scene scene = new Scene(root);
             try{

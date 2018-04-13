@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+
 <StackPane fx:id="stack" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="1079.0" style="-fx-background-color: #E8E8E8;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shop.Cashier1Controller">
    <children>
       <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="366.0" prefHeight="646.0" prefWidth="1087.0">
@@ -17,13 +19,11 @@
                            <children>
                               <AnchorPane prefHeight="73.0" prefWidth="1079.0" style="-fx-background-color: #F2F2F2;">
                                  <children>
-                                    <HBox fx:id="HBProd" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <JFXTextField fx:id="idProd" editable="false" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="104.0" promptText="Code" />
-                                          <JFXTextField fx:id="nomProd" editable="false" focusColor="#00e48f" labelFloat="true" promptText="Nom " />
-                                          <JFXTextField fx:id="qteProd" focusColor="#00e48f" labelFloat="true" promptText="Quantite" />
-                                          <JFXButton buttonType="RAISED" onAction="#addToCart" style="-fx-background-color: #00e48f;" text="Ajouter" textFill="WHITE" />
-                                          <JFXButton fx:id="test" buttonType="RAISED" onAction="#openMenu" style="-fx-background-color: #2F2F32;" text="Voir Panier" textFill="WHITE" />
+                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rechercher:" />
+                                          <JFXTextField fx:id="filtIdProd" focusColor="#00e48f" labelFloat="true" promptText="Code du Produit" />
+                                          <JFXTextField fx:id="filtNomProd" focusColor="#00e48f" labelFloat="true" promptText="Nom du Produit" />
                                        </children>
                                        <padding>
                                           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -39,10 +39,11 @@
                                              <children>
                                                 <TableView fx:id="tableProduits" prefHeight="275.0" prefWidth="1039.0">
                                                    <columns>
-                                                      <TableColumn fx:id="tablePCode" prefWidth="75.0" text="Code" />
-                                                      <TableColumn fx:id="tablePNom" prefWidth="75.0" text="nom Produit" />
-                                                      <TableColumn fx:id="tablePQuantite" prefWidth="75.0" text="Quantité" />
-                                                      <TableColumn fx:id="tablePPrix" prefWidth="75.0" text="Prix" />
+                                                      <TableColumn fx:id="tablePCode" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Code" />
+                                                      <TableColumn fx:id="tablePNom" prefWidth="351.0" text="Nom Produit" />
+                                                      <TableColumn fx:id="tablePQuantite" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Quantité" />
+                                                      <TableColumn fx:id="tablePPrix" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" text="Prix (FCFA)" />
+                                                      <TableColumn fx:id="photo" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="Photo" />
                                                    </columns>
                                                    <columnResizePolicy>
                                                       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -50,6 +51,26 @@
                                                 </TableView>
                                              </children>
                                           </StackPane>
+                                          <HBox fx:id="pagProd" alignment="CENTER" prefHeight="41.0" prefWidth="1039.0" spacing="5.0" style="-fx-background-color: #F2F2F2;" VBox.vgrow="NEVER">
+                                             <padding>
+                                                <Insets bottom="5.0" left="-20.0" right="-20.0" top="5.0" />
+                                             </padding>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox fx:id="HBProd" alignment="CENTER" minHeight="-Infinity" prefHeight="60.0" prefWidth="200.0" spacing="20.0" VBox.vgrow="NEVER">
+                                             <children>
+                                                <JFXTextField fx:id="idProd" editable="false" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="104.0" promptText="Code" />
+                                                <JFXTextField fx:id="nomProd" editable="false" focusColor="#00e48f" labelFloat="true" promptText="Nom " />
+                                                <JFXTextField fx:id="qteProd" focusColor="#00e48f" labelFloat="true" promptText="Quantite" />
+                                                <JFXButton buttonType="RAISED" onAction="#addToCart" style="-fx-background-color: #00e48f;" text="Ajouter" textFill="WHITE" />
+                                                <JFXButton fx:id="test1" buttonType="RAISED" onAction="#openMenu" style="-fx-background-color: #2F2F32;" text="Voir Panier" textFill="WHITE" />
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                             </padding>
+                                          </HBox>
                                        </children>
                                        <padding>
                                           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -105,7 +126,7 @@
                                        <HBox.margin>
                                           <Insets right="30.0" />
                                        </HBox.margin></Text>
-                                    <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Déconnexion" onMouseClicked="#logOut" textAlignment="RIGHT" />
+                                    <Text fill="WHITE" onMouseClicked="#logOut" strokeType="OUTSIDE" strokeWidth="0.0" text="Déconnexion" textAlignment="RIGHT" />
                                  </children>
                               </HBox>
                            </children>
@@ -149,11 +170,11 @@
                   </GridPane>
                   <TableView fx:id="tableFacture" prefHeight="364.0" prefWidth="1039.0">
                     <columns>
-                      <TableColumn fx:id="tableFCode" prefWidth="75.0" text="Code" />
+                      <TableColumn fx:id="tableFCode" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Code" />
                       <TableColumn fx:id="tableFNom" prefWidth="75.0" text="nom Produit" />
-                       <TableColumn fx:id="tableFPrixU" prefWidth="75.0" text="Prix unitaire" />
-                       <TableColumn fx:id="tableFQuantite" prefWidth="75.0" text="Quantité" />
-                       <TableColumn fx:id="tableFPrixT" prefWidth="75.0" text="Prix total" />
+                       <TableColumn fx:id="tableFPrixU" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Prix unitaire" />
+                       <TableColumn fx:id="tableFQuantite" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Quantité" />
+                       <TableColumn fx:id="tableFPrixT" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Prix total" />
                         <TableColumn fx:id="tableFSupp" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
                     </columns>
                      <columnResizePolicy>
@@ -164,14 +185,14 @@
                      <children>
                         <JFXTextField fx:id="montant2" editable="false" focusColor="#00e48f" labelFloat="true" promptText="Montant" />
                         <Text fx:id="montant" strokeType="OUTSIDE" strokeWidth="0.0" />
-                        <JFXTextField fx:id="remise" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="155.0" promptText="Remise %" text="0"/>
+                        <JFXTextField fx:id="remise" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="155.0" promptText="Remise %" text="0" />
                         <JFXTextField fx:id="total" editable="false" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="155.0" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="57.0" prefWidth="1039.0" spacing="20.0">
                      <children>
-                        <JFXButton fx:id="sauvegarder" buttonType="RAISED" prefHeight="36.0" prefWidth="102.0" style="-fx-background-color: #00e48f;" text="Sauvegarder" textFill="WHITE" onAction="#saveFacture" />
-                        <JFXButton fx:id="annuler" buttonType="RAISED" prefHeight="44.0" prefWidth="96.0" style="-fx-background-color: #F44336;" text="Annuler" textFill="WHITE" onAction="#exitMenu" />
+                        <JFXButton fx:id="sauvegarder" buttonType="RAISED" onAction="#saveFacture" prefHeight="36.0" prefWidth="102.0" style="-fx-background-color: #00e48f;" text="Sauvegarder" textFill="WHITE" />
+                        <JFXButton fx:id="annuler" buttonType="RAISED" onAction="#exitMenu" prefHeight="44.0" prefWidth="96.0" style="-fx-background-color: #F44336;" text="Annuler" textFill="WHITE" />
                      </children>
                      <padding>
                         <Insets bottom="10.0" />

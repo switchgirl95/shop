@@ -149,6 +149,7 @@ public class Cashier1Controller implements Initializable {
         initMenu();
         initTables();
         initFilter();
+        setFactories();
         paginationProd(tableP);
         remise.textProperty().addListener((observable, oldValue, newValue) -> updateMontantView());
     }
@@ -184,7 +185,7 @@ public class Cashier1Controller implements Initializable {
         //tableFSupp.setMinWidth(40);
         tableFSupp.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         tableFSupp.setCellFactory(param -> new TableCell<ListeFacture, ListeFacture>() {
-            private final Button deleteButton = new Button("Unfriend");
+            private final JFXButton deleteButton = new JFXButton("x");
 
             @Override
             protected void updateItem(ListeFacture fac, boolean empty) {
@@ -197,37 +198,11 @@ public class Cashier1Controller implements Initializable {
 
                 setGraphic(deleteButton);
                 
-                deleteButton.setOnAction(event -> table.remove(fac));
+                deleteButton.setOnAction(event -> {table.remove(fac); panier.remove(fac);});
             }
         });
         photo.setCellValueFactory(new PropertyValueFactory<>("photos"));
-        photo.setCellFactory(param -> {
-            //Set up the ImageView
-            final ImageView imageview = new ImageView();
-            imageview.setFitHeight(150);
-            imageview.setFitWidth(150);
-
-            //Set up the Table
-            TableCell<Produit, List<Photo>> cell = new TableCell<Produit, List<Photo>>() {
-                public void updateItem(List<Photo> item, boolean empty) {
-                    FileInputStream input=null;
-                    if (item != null && item.size() != 0) {
-                        System.out.print(item.get(0).getCodeProduit());
-                        System.out.println(item.get(0).getLien());
-                        try {
-                            input = new FileInputStream(item.get(0).getLien());
-                            Image image = new Image(input);
-                            imageview.setImage(image);
-                        } catch (FileNotFoundException ex) {
-                            Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-             };
-             // Attach the imageview to the cell
-             cell.setGraphic(imageview);
-             return cell;
-        });
+        
     }
 
     
@@ -556,7 +531,38 @@ public class Cashier1Controller implements Initializable {
                 dialog.close();
             }
         });
-        dialog.show();
+       dialog.show();
+    }
+    private void setFactories(){
+        photo.setCellFactory(param -> {
+            //Set up the ImageView
+            final ImageView imageview = new ImageView();
+            imageview.setFitHeight(150);
+            imageview.setFitWidth(150);
+
+            //Set up the Table
+            TableCell<Produit, List<Photo>> cell = new TableCell<Produit, List<Photo>>() {
+                public void updateItem(List<Photo> item, boolean empty) {
+                    FileInputStream input=null;
+                    if (item != null && item.size() != 0) {
+                        System.out.print(item.get(0).getCodeProduit());
+                        System.out.println(item.get(0).getLien());
+                        try {
+                            input = new FileInputStream(item.get(0).getLien());
+                            Image image = new Image(input);
+                            imageview.setImage(image);
+                        } catch (FileNotFoundException ex) {
+                            Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+             };
+             // Attach the imageview to the cell
+             cell.setGraphic(imageview);
+             return cell;
+        });
+    
+    
     }
 }
 
