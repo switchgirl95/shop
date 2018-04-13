@@ -160,16 +160,13 @@ public class Cashier1Controller implements Initializable {
         tablePQuantite.setCellValueFactory(new PropertyValueFactory<>("quantite"));
         tablePPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
         fillTableP();
-        tableProduits.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Produit>() {
-            @Override
-            public void changed(ObservableValue<? extends Produit> observableValue, Produit oldP, Produit newP) {
-                // affiche le produit dans la zone du haut
-                if (newP != null) {
-                    idProd.setText(newP.getCodeProduit() + "");
-                    nomProd.setText(newP.getNom());
-                    qteProd.setText("");
-                    qteProd.requestFocus();
-                }
+        tableProduits.getSelectionModel().selectedItemProperty().addListener((observableValue, oldP, newP) -> {
+            // affiche le produit dans la zone du haut
+            if (newP != null) {
+                idProd.setText(newP.getCodeProduit() + "");
+                nomProd.setText(newP.getNom());
+                qteProd.setText("");
+                qteProd.requestFocus();
             }
         });
 
@@ -198,14 +195,20 @@ public class Cashier1Controller implements Initializable {
 
                 setGraphic(deleteButton);
                 
+
                 deleteButton.setOnAction(event -> {table.remove(fac); panier.remove(fac);});
+
+        deleteButton.setOnAction(event -> {
+                    panier.remove(fac);
+                    table.remove(fac);
+                });
+
             }
         });
         photo.setCellValueFactory(new PropertyValueFactory<>("photos"));
         
     }
 
-    
     @FXML
     private void openMenu(ActionEvent event) {
         System.out.println(Double.toString(stack.getHeight()-mendisp.getHeight()));
@@ -228,9 +231,10 @@ public class Cashier1Controller implements Initializable {
             qte = Integer.parseInt(qteProd.getText());
             if (qte == 0) throw new NumberFormatException();
             ListeFacture lf = new ListeFacture(pm.get(Produit.class, Integer.parseInt(idProd.getText())), 0, qte);
-            //Produit p = pm.get(Produit.class,Integer.parseInt(idProd.getText()));
-            System.out.println("yo");
-            //if(p.getQuantite()<Integer.parseInt(qteProd.getText())){
+
+            Produit p = pm.get(Produit.class, Integer.parseInt(idProd.getText()));
+            if(Integer.parseInt(qteProd.getText()) <= p.getQuantite()) {
+
    
                 if (!panier.add(lf)) {
                     panier.remove(lf);
@@ -244,11 +248,13 @@ public class Cashier1Controller implements Initializable {
                 tableProduits.getSelectionModel().select(null);
                 // message de confirmation d'ajout
                 System.out.println("Ajouté");
-           //}
-           //else{errorMessage("Erreur!!","Il n'y a pas assez de ce produit!");}
+
+           } else errorMessage("Erreur","Il n'y a pas assez de ce produit!");
+
         } catch (NumberFormatException e) {
             // erreur
             System.out.println("Quantité pas sérieuse");
+            errorMessage("Erreur", "Ce n'est pas un entier");
         }
     }
 

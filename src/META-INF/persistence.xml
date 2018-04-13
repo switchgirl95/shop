@@ -13,8 +13,8 @@
     <class>Modele.Photo</class>
     <properties>
       <!-- Login et password [4] -->
-      <property name="javax.persistence.jdbc.password" value="7858"/>
-      <property name="javax.persistence.jdbc.user" value="root"/>
+      <property name="javax.persistence.jdbc.password" value="SHOPDB_PASSWORD"/>
+      <property name="javax.persistence.jdbc.user" value="SHOPDB_USER"/>
       <!-- MySQL [2] -->
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <!-- Adresse [3] -->
