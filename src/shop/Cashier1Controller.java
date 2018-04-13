@@ -9,6 +9,7 @@ import Modele.Facture;
 import Modele.Gestionnaire;
 import Modele.ListeFacture;
 import Modele.PersistenceManager;
+import Modele.Photo;
 import Modele.Produit;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
@@ -41,12 +42,18 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Pos;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import org.controlsfx.control.Notifications;
 
@@ -69,8 +76,6 @@ public class Cashier1Controller implements Initializable {
     private AnchorPane blackout;
     @FXML
     private VBox mendisp;
-    @FXML
-    private Button test;
     @FXML
     private AnchorPane menu;
     @FXML
@@ -123,6 +128,18 @@ public class Cashier1Controller implements Initializable {
     @FXML
     private TableColumn<ListeFacture, ListeFacture> tableFSupp;
     ObservableList<ListeFacture> table = FXCollections.observableArrayList();
+    ObservableList<Produit> tableP = FXCollections.observableArrayList();
+    @FXML
+    private JFXTextField filtIdProd;
+    @FXML
+    private JFXTextField filtNomProd;
+    @FXML
+    private JFXButton test1;
+    @FXML
+    private TableColumn photo;
+    @FXML
+    private HBox pagProd;
+    int itemsPerPage = 10;
     /**
      * Initializes the controller class.
      */
@@ -131,6 +148,8 @@ public class Cashier1Controller implements Initializable {
         panier = new HashSet<>();
         initMenu();
         initTables();
+        initFilter();
+        paginationProd(tableP);
         remise.textProperty().addListener((observable, oldValue, newValue) -> updateMontantView());
     }
 
@@ -181,6 +200,34 @@ public class Cashier1Controller implements Initializable {
                 deleteButton.setOnAction(event -> table.remove(fac));
             }
         });
+        photo.setCellValueFactory(new PropertyValueFactory<>("photos"));
+        photo.setCellFactory(param -> {
+            //Set up the ImageView
+            final ImageView imageview = new ImageView();
+            imageview.setFitHeight(150);
+            imageview.setFitWidth(150);
+
+            //Set up the Table
+            TableCell<Produit, List<Photo>> cell = new TableCell<Produit, List<Photo>>() {
+                public void updateItem(List<Photo> item, boolean empty) {
+                    FileInputStream input=null;
+                    if (item != null && item.size() != 0) {
+                        System.out.print(item.get(0).getCodeProduit());
+                        System.out.println(item.get(0).getLien());
+                        try {
+                            input = new FileInputStream(item.get(0).getLien());
+                            Image image = new Image(input);
+                            imageview.setImage(image);
+                        } catch (FileNotFoundException ex) {
+                            Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+             };
+             // Attach the imageview to the cell
+             cell.setGraphic(imageview);
+             return cell;
+        });
     }
 
     
@@ -206,9 +253,9 @@ public class Cashier1Controller implements Initializable {
             qte = Integer.parseInt(qteProd.getText());
             if (qte == 0) throw new NumberFormatException();
             ListeFacture lf = new ListeFacture(pm.get(Produit.class, Integer.parseInt(idProd.getText())), 0, qte);
-            Produit p = pm.get(Produit.class,Integer.parseInt(idProd.getText()));
+            //Produit p = pm.get(Produit.class,Integer.parseInt(idProd.getText()));
             System.out.println("yo");
-            if(p.getQuantite()<Integer.parseInt(qteProd.getText())){
+            //if(p.getQuantite()<Integer.parseInt(qteProd.getText())){
    
                 if (!panier.add(lf)) {
                     panier.remove(lf);
@@ -222,8 +269,8 @@ public class Cashier1Controller implements Initializable {
                 tableProduits.getSelectionModel().select(null);
                 // message de confirmation d'ajout
                 System.out.println("Ajouté");
-           }
-           else{errorMessage("Erreur!!","Il n'y a pas assez de ce produit!");}
+           //}
+           //else{errorMessage("Erreur!!","Il n'y a pas assez de ce produit!");}
         } catch (NumberFormatException e) {
             // erreur
             System.out.println("Quantité pas sérieuse");
@@ -263,7 +310,7 @@ public class Cashier1Controller implements Initializable {
     }
 
     private void fillTableP() {
-        ObservableList<Produit> tableP = FXCollections.observableArrayList();
+        
         tableP.clear();
         tableP.addAll(pm.getAll(Produit.class));
         tableProduits.setItems(tableP);
@@ -290,6 +337,73 @@ public class Cashier1Controller implements Initializable {
             montant += lf.getPrix() * lf.getQuantite();
 
         return montant;
+    }
+    
+    private void initFilter(){
+        
+        //search ID
+        filtIdProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                tableProduits.setItems(tableP);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Produit> subentries = FXCollections.observableArrayList();
+
+            long count = tableProduits.getColumns().stream().count();
+            for (int i = 0; i < tableProduits.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + tableProduits.getColumns().get(0).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(tableProduits.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            tableProduits.setItems(subentries);
+        });
+        
+        //Search Name
+        
+        filtNomProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                tableProduits.setItems(tableP);
+                paginationProd(tableP);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Produit> subentries = FXCollections.observableArrayList();
+
+            long count = tableProduits.getColumns().stream().count();
+            for (int i = 0; i < tableProduits.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + tableProduits.getColumns().get(1).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(tableProduits.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            tableProduits.setItems(subentries);
+            paginationProd(subentries);
+        });
+    
+        
+    }
+    
+    private void paginationProd(ObservableList prodData){
+        pagProd.getChildren().clear();
+        ArrayList<JFXButton> buttons = new ArrayList<>();
+        int noPages = prodData.size()/itemsPerPage + 1;
+        
+        for (int i=1;i<=noPages;i++){
+            final int index = i;
+            buttons.add(new JFXButton(Integer.toString(i)));
+            buttons.get(i-1).setStyle("-fx-background-color: #00e48f;-fx-text-fill: white;-jfx-button-type: RAISED;");
+            buttons.get(i-1).setOnAction((ActionEvent t) -> {
+                tableProduits.scrollTo(itemsPerPage*(index-1));
+            });
+        }
+        pagProd.getChildren().addAll(buttons);
+    
     }
 
     private boolean imprimeFacture(Facture facture) {

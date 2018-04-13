@@ -37,9 +37,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableRow;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -142,6 +144,16 @@ public class GestionnairesController implements Initializable {
     private StackPane mendisp1;
     
     ObservableList<Gestionnaire> table;
+    @FXML
+    private JFXTextField filtIdGest;
+    @FXML
+    private JFXTextField filtNomGest;
+    @FXML
+    private JFXTextField filtUnameGest;
+    @FXML
+    private JFXTextField filtTelGest;
+    @FXML
+    private JFXTextField filtEmailGest;
     /**
      * Initializes the controller class.
      */
@@ -149,6 +161,7 @@ public class GestionnairesController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initTableGest();
         fillTableGest();
+        initFilters();
         prepareSlideMenuAnimation();
     }    
 
@@ -490,5 +503,112 @@ try{
        
         return list;
         
+    }
+    private void initFilters(){
+        //ID FILTER
+        filtIdGest.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                table3.setItems(table);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Gestionnaire> subentries = FXCollections.observableArrayList();
+
+            long count = table3.getColumns().stream().count();
+            for (int i = 0; i < table3.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + table3.getColumns().get(0).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(table3.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            table3.setItems(subentries);
+        });
+        
+        //NAME FILTER
+        filtNomGest.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                table3.setItems(table);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Gestionnaire> subentries = FXCollections.observableArrayList();
+
+            long count = table3.getColumns().stream().count();
+            for (int i = 0; i < table3.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + table3.getColumns().get(1).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(table3.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            table3.setItems(subentries);
+        });
+        
+        //DESC FILTER
+        filtUnameGest.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                table3.setItems(table);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Gestionnaire> subentries = FXCollections.observableArrayList();
+
+            long count = table3.getColumns().stream().count();
+            for (int i = 0; i < table3.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + table3.getColumns().get(3).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(table3.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            table3.setItems(subentries);
+        });
+        
+        //TELEPHONE FILTER
+        filtTelGest.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                table3.setItems(table);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Gestionnaire> subentries = FXCollections.observableArrayList();
+
+            long count = table3.getColumns().stream().count();
+            for (int i = 0; i < table3.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + table3.getColumns().get(5).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(table3.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            table3.setItems(subentries);
+        });
+        
+        //Email FILTER
+        filtEmailGest.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                table3.setItems(table);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Gestionnaire> subentries = FXCollections.observableArrayList();
+
+            long count = table3.getColumns().stream().count();
+            for (int i = 0; i < table3.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + table3.getColumns().get(6).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(table3.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            table3.setItems(subentries);
+        });
+    
     }
 }

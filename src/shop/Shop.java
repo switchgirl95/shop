@@ -6,6 +6,7 @@
 package shop;
 
 import Modele.PersistenceManager;
+import com.jfoenix.controls.JFXDecorator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

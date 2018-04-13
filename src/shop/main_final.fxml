@@ -24,17 +24,16 @@
                                        <children>
                                           <HBox fx:id="catSearch" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" visible="false">
                                              <children>
-                                                <JFXTextField fx:id="sTCat" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="216.0" promptText="Search" />
-                                                <JFXButton fx:id="rechercheCat" buttonType="RAISED" onAction="#rechercheCat" style="-fx-background-color: #00e48f;" text="Recherche" textFill="WHITE" />
+                                                <JFXTextField fx:id="searchCat" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="216.0" promptText="Search" />
                                              </children>
                                           </HBox>
                                           <HBox fx:id="typesProd" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                                              <children>
-                                                <JFXTextField fx:id="sId" focusColor="#00e48f" labelFloat="true" promptText="Id" />
-                                                <JFXTextField fx:id="sNom" focusColor="#00e48f" labelFloat="true" promptText="Nom " />
-                                                <JFXTextField fx:id="sDesc" focusColor="#00e48f" labelFloat="true" promptText="Description" />
+                                                <JFXTextField fx:id="filtIdProd" focusColor="#00e48f" labelFloat="true" promptText="Id" />
+                                                <JFXTextField fx:id="filtNomProd" focusColor="#00e48f" labelFloat="true" promptText="Nom " />
+                                                <JFXTextField fx:id="filtDescProd" focusColor="#00e48f" labelFloat="true" promptText="Description" />
                                                 <JFXComboBox fx:id="sCat" focusColor="#00e48f" promptText="Categorie" />
-                                                <JFXButton fx:id="rechercheProd" buttonType="RAISED" onAction="#rechercheProd" prefHeight="25.0" prefWidth="119.0" style="-fx-background-color: #00e48f;" text="Recherche" textFill="WHITE" />
+                                                <JFXTextField fx:id="filtCodeFProd" focusColor="#00e48f" labelFloat="true" layoutX="512.0" layoutY="30.0" promptText="Code Fournisseur" />
                                              </children>
                                              <padding>
                                                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

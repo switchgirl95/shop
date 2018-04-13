@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -68,15 +69,11 @@ import static shop.Shop.pm;
  */
 public class Main_finalController implements Initializable {
 
-    @FXML
     public JFXTextField sId;
-    @FXML
     public JFXTextField sNom;
-    @FXML
     public JFXTextField sDesc;
     @FXML
     public JFXComboBox<Categorie> sCat;
-    @FXML
     public JFXTextField sTCat;
     @FXML
     private Button test;
@@ -168,10 +165,6 @@ public class Main_finalController implements Initializable {
     
     int itemsPerPage = 10;
     @FXML
-    private JFXButton rechercheProd;
-    @FXML
-    private JFXButton rechercheCat;
-    @FXML
     private StackPane geStTab1;
     @FXML
     private HBox sortGeSt;
@@ -189,12 +182,27 @@ public class Main_finalController implements Initializable {
     private Text nomGest;
     
     private Gestionnaire gest;
+    @FXML
+    private JFXTextField filtIdProd;
+    @FXML
+    private JFXTextField filtNomProd;
+    @FXML
+    private JFXTextField filtDescProd;
+    @FXML
+    private JFXTextField filtCodeFProd;
+    
+    ObservableList<Produit> tableOP = FXCollections.observableArrayList();
+    ObservableList<Categorie> tableOC = FXCollections.observableArrayList();
+    @FXML
+    private JFXTextField searchCat;
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
             initTableCat();
             initTableProd();
             initTableGeSt();
+            initFilters();
             addCategory.setVisible(false);
             prepareSlideMenuAnimation();
             fillTableProd();
@@ -330,9 +338,9 @@ public class Main_finalController implements Initializable {
     
     private void fillTableProd(){        
         prodData = pm.getAll(Produit.class);
-        ObservableList<Produit> table = FXCollections.observableArrayList();
-        table.addAll(prodData);
-        tableProd.setItems(table);
+        
+        tableOP.addAll(prodData);
+        tableProd.setItems(tableOP);
         tableProd.toFront();
         //tableProd.scrollTo(5);
         paginationProd();
@@ -349,9 +357,9 @@ public class Main_finalController implements Initializable {
 
     private void fillTableCat(){        
         catData = pm.getAll(Categorie.class);
-        ObservableList<Categorie> table = FXCollections.observableArrayList();
-        table.addAll(catData);
-        tableCat.setItems(table);
+        
+        tableOC.addAll(catData);
+        tableCat.setItems(tableOC);
         tableCat.toFront();
         paginationCat();
         
@@ -745,7 +753,6 @@ else {
     
     }
 
-    @FXML
     private void rechercheProd(ActionEvent event) {
         ArrayList<PersistenceManager.KeyValue> kv = new ArrayList<>();
         if (!sId.getText().isEmpty()) kv.add(new PersistenceManager.KeyValue("codeProduit", Integer.parseInt(sId.getText())));
@@ -766,7 +773,6 @@ else {
         tableProd.toFront();
     }
 
-    @FXML
     private void rechercheCat(ActionEvent event) {
         PersistenceManager.KeyValue kv = null;
         if (!sTCat.getText().isEmpty()) {
@@ -810,7 +816,116 @@ else {
         
     }
     
+    private void initFilters(){
+        //ID FILTER
+        filtIdProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                tableProd.setItems(tableOP);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Produit> subentries = FXCollections.observableArrayList();
+
+            long count = tableProd.getColumns().stream().count();
+            for (int i = 0; i < tableProd.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + tableProd.getColumns().get(0).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(tableProd.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            tableProd.setItems(subentries);
+        });
+        
+        //NAME FILTER
+        filtNomProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                tableProd.setItems(tableOP);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Produit> subentries = FXCollections.observableArrayList();
+
+            long count = tableProd.getColumns().stream().count();
+            for (int i = 0; i < tableProd.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + tableProd.getColumns().get(1).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(tableProd.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            tableProd.setItems(subentries);
+        });
+        
+        //DESC FILTER
+        filtDescProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                tableProd.setItems(tableOP);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Produit> subentries = FXCollections.observableArrayList();
+
+            long count = tableProd.getColumns().stream().count();
+            for (int i = 0; i < tableProd.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + tableProd.getColumns().get(2).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(tableProd.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            tableProd.setItems(subentries);
+        });
+        //codefournisseur FILTER
+        filtCodeFProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                tableProd.setItems(tableOP);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Produit> subentries = FXCollections.observableArrayList();
+
+            long count = tableProd.getColumns().stream().count();
+            for (int i = 0; i < tableProd.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + tableProd.getColumns().get(4).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(tableProd.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            tableProd.setItems(subentries);
+        });
+        
+        //NOM CAT FILTER
+        searchCat.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                tableCat.setItems(tableOC);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Categorie> subentries = FXCollections.observableArrayList();
+
+            long count = tableCat.getColumns().stream().count();
+            for (int i = 0; i < tableCat.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + tableCat.getColumns().get(1).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(tableCat.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            tableCat.setItems(subentries);
+        });
+        
+
     
+    
+    
+    }
     
     
 
