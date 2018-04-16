@@ -33,6 +33,7 @@
                                                 <JFXTextField fx:id="filtNomProd" focusColor="#00e48f" labelFloat="true" promptText="Nom " />
                                                 <JFXTextField fx:id="filtDescProd" focusColor="#00e48f" labelFloat="true" promptText="Description" />
                                                 <JFXTextField fx:id="filtCodeFProd" focusColor="#00e48f" labelFloat="true" layoutX="512.0" layoutY="30.0" promptText="Code Fournisseur" />
+                                                <JFXTextField fx:id="filtCat" focusColor="#00e48f" labelFloat="true" promptText="Categorie" />
                                              </children>
                                              <padding>
                                                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -83,11 +84,11 @@
                                           </StackPane>
                                           <StackPane maxHeight="1.7976931348623157E308" prefHeight="365.0" prefWidth="1079.0" VBox.vgrow="ALWAYS">
                                              <children>
-                                                <TableView fx:id="tableCat" maxHeight="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
+                                                <TableView fx:id="tableCat" maxHeight="1.7976931348623157E308" onSort="#setFactories" prefHeight="200.0" prefWidth="200.0">
                                                    <columnResizePolicy>
                                                       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                    </columnResizePolicy></TableView>
-                                                <TableView fx:id="tableProd" maxHeight="1.7976931348623157E308" prefHeight="349.0" prefWidth="1039.0">
+                                                <TableView fx:id="tableProd" maxHeight="1.7976931348623157E308" onSort="#setFactories" prefHeight="349.0" prefWidth="1039.0">
                                                    <columnResizePolicy>
                                                       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                    </columnResizePolicy>

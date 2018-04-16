@@ -7,6 +7,7 @@ package shop;
 
 import Modele.Gestionnaire;
 import Modele.PersistenceManager;
+import com.itextpdf.text.BadElementException;
 import com.jfoenix.controls.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -58,6 +59,14 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        Catalog cat = new Catalog();
+        try {
+            boolean toto = cat.imprimeCatalogue();
+        } catch (BadElementException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }   
    
@@ -122,7 +131,7 @@ public class LoginController implements Initializable {
     
     try {
 
-        File fXmlFile = new File("../session.xml");
+        File fXmlFile = new File("session.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);

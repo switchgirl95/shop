@@ -41,6 +41,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -59,6 +60,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
 import net.bytebuddy.matcher.FilterableList;
 import org.controlsfx.control.Notifications;
+import static shop.Cashier1Controller.parseCalendar;
 
 import static shop.Shop.pm;
 
@@ -203,6 +205,8 @@ public class Main_finalController implements Initializable {
     TableColumn desc = new TableColumn("Description");
     TableColumn act = new TableColumn("Status");
     TableColumn photo = new TableColumn("Photo");
+    @FXML
+    private JFXTextField filtCat;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -404,7 +408,7 @@ public class Main_finalController implements Initializable {
         TableColumn dateCol = new TableColumn("Date");
         TableColumn typeCol = new TableColumn("Type");
         TableColumn prodGSCol = new TableColumn("Produit");
-        tableGeSt.getColumns().addAll(idGSCol,nomGSCol,qteGSCol,dateCol,typeCol,prodGSCol);
+        tableGeSt.getColumns().addAll(idGSCol,prodGSCol,qteGSCol,dateCol,nomGSCol,typeCol);
         
         idGSCol.setCellValueFactory(new PropertyValueFactory<>("idStock"));
         nomGSCol.setCellValueFactory(new PropertyValueFactory<>("idGest")); 
@@ -498,6 +502,7 @@ public class Main_finalController implements Initializable {
         ArrayList<String> list = checkProd();
         
         if (list.isEmpty()){
+            int newQte = Integer.parseInt(qteProd.getText());
             rowData.setCategorie(category.getValue());
             rowData.setPrix(Integer.parseInt( prixProd.getText()));
             rowData.setQuantite(Integer.parseInt(qteProd.getText()));
@@ -506,6 +511,24 @@ public class Main_finalController implements Initializable {
             rowData.setCodeFournisseur(codeFourn.getText());
             rowData.setActif(active.isSelected());
             rowData = pm.insert(rowData);
+            int diffQte = newQte - rowData.getQuantite(); 
+            boolean type= true;
+            if (diffQte < 0){//reduction
+                
+            type = false;
+            
+            }
+            
+            if(diffQte > 0){//addition
+                type = true;
+            }
+            
+            /*
+            Changer le idProduit a code Produit dans le modele gestionStock
+            
+            GestionStock gs = new GestionStock(gest.getIdGest(),diffQte,parseCalendar(Calendar.getInstance()),type,rowData.getCodeProduit());
+            pm.insert(gs);
+            */
             notifSuccess("Yep", "Goodgo");
             System.out.println("pr = " + rowData.getCodeProduit());
             //savePhotos(rowData.getCodeProduit());
@@ -797,6 +820,7 @@ else {
                 }
             }
             tableProd.setItems(subentries);
+            setFactories();
         });
         
         //NAME FILTER
@@ -818,10 +842,32 @@ else {
                 }
             }
             tableProd.setItems(subentries);
+            setFactories();
         });
         
         //DESC FILTER
         filtDescProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                tableProd.setItems(tableOP);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Produit> subentries = FXCollections.observableArrayList();
+
+            long count = tableProd.getColumns().stream().count();
+            for (int i = 0; i < tableProd.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + tableProd.getColumns().get(6).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(tableProd.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            tableProd.setItems(subentries);
+            setFactories();
+        });
+        //codefournisseur FILTER
+        filtCodeFProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
                 tableProd.setItems(tableOP);
             }
@@ -839,9 +885,10 @@ else {
                 }
             }
             tableProd.setItems(subentries);
+            setFactories();
         });
-        //codefournisseur FILTER
-        filtCodeFProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+        
+        filtCat.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
                 tableProd.setItems(tableOP);
             }
@@ -851,7 +898,7 @@ else {
             long count = tableProd.getColumns().stream().count();
             for (int i = 0; i < tableProd.getItems().size(); i++) {
                 for (int j = 0; j < count; j++) {
-                    String entry = "" + tableProd.getColumns().get(4).getCellData(i);
+                    String entry = "" + tableProd.getColumns().get(5).getCellData(i);
                     if (entry.toLowerCase().contains(value)) {
                         subentries.add(tableProd.getItems().get(i));
                         break;
@@ -859,6 +906,7 @@ else {
                 }
             }
             tableProd.setItems(subentries);
+            setFactories();
         });
         
         //NOM CAT FILTER
@@ -880,16 +928,13 @@ else {
                 }
             }
             tableCat.setItems(subentries);
+            setFactories();
         });
-        
-        
-
-    
-    
-    
     }
     
+    @FXML
     public void setFactories(){
+         System.out.print("sorting...");
         photo.setCellFactory(param -> {
             //Set up the ImageView
             final ImageView imageview = new ImageView();
@@ -898,10 +943,11 @@ else {
 
             //Set up the Table
             TableCell<Produit, List<Photo>> cell = new TableCell<Produit, List<Photo>>() {
+                @Override
                 public void updateItem(List<Photo> item, boolean empty) {
                     FileInputStream input=null;
-                    if (item != null && item.size() != 0) {
-                        System.out.print(item.get(0).getCodeProduit());
+                    if (item != null && !item.isEmpty()) {
+                       
                         System.out.println(item.get(0).getLien());
                         try {
                             input = new FileInputStream(item.get(0).getLien());
@@ -911,6 +957,7 @@ else {
                             Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+                    
                 }
              };
              // Attach the imageview to the cell
