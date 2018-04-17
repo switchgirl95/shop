@@ -56,6 +56,8 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Window;
 
 import org.controlsfx.control.Notifications;
 
@@ -449,6 +451,7 @@ public class Cashier1Controller implements Initializable {
     private boolean imprimeFacture(Facture facture) {
         Gestionnaire gest = facture.getGestionnaire();
         List<ListeFacture> listeFactures = facture.getListeFacture();
+        
 
         /** TODO
           Structure du pdf:
