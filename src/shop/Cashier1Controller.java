@@ -41,6 +41,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -244,6 +245,19 @@ public class Cashier1Controller implements Initializable {
         tableHRemise.setCellValueFactory(new PropertyValueFactory<>("remise"));
         tableHMontant.setCellValueFactory(new PropertyValueFactory<>("montant"));
         tableHType.setCellValueFactory(new PropertyValueFactory<>("typeFact"));
+        tableHRemise.setCellFactory(param -> {
+            Text status = new Text();
+            //Set up the Table
+            TableCell<Facture, Double> cell = new TableCell<Facture, Double>() {
+                public void updateItem(Double item, boolean empty) {
+                    if (item != null)
+                        status.setText(item + "%");
+                }
+            };
+            // Attach the imageview to the cell
+            cell.setGraphic(status);
+            return cell;
+        });
     }
 
     @FXML

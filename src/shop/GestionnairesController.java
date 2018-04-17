@@ -194,25 +194,17 @@ public class GestionnairesController implements Initializable {
         dialog.show();
     }
     
-        private void notifSuccess(String title, String content){
-         Notifications notificationBuilder = Notifications.create()
-                        .title(title)
-                        .text(content)
-                        .hideAfter(Duration.seconds(5))
-                        .position(Pos.TOP_RIGHT)
-                        .darkStyle()
-                        .onAction(new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent event) {
-                                System.out.println("click");
-                        }
-                        });
-                
-                notificationBuilder.show();
-                    
+    private void notifSuccess(String title, String content){
+        Notifications notificationBuilder = Notifications.create()
+                .title(title)
+                .text(content)
+                .hideAfter(Duration.seconds(5))
+                .position(Pos.TOP_RIGHT)
+                .darkStyle()
+                .onAction(event -> System.out.println("click"));
+        notificationBuilder.show();
     }
-     
-     
+
     private void prepareSlideMenuAnimation() {
         TranslateTransition openNav=new TranslateTransition(new Duration(350), mendisp1);
         openNav.setToX(0);
@@ -278,19 +270,15 @@ public class GestionnairesController implements Initializable {
             //Set up the Table
             TableCell<Gestionnaire, Boolean> cell = new TableCell<Gestionnaire, Boolean>() {
                 public void updateItem(Boolean item, boolean empty) {
-                    
                     if (item != null) {
                        if (item){ 
-                        status.setText("Actif");
-                        status.setFill(Color.GREEN);
-                       }
-                       else{
+                           status.setText("Actif");
+                           status.setFill(Color.GREEN);
+                       } else{
                            status.setText("Passif");
-                        status.setFill(Color.RED);
+                           status.setFill(Color.RED);
                        }
                     }
-                    
-                    
                 }
              };
              // Attach the imageview to the cell
