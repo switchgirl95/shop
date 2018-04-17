@@ -24,12 +24,19 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.FadeTransition;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 
 import static shop.Shop.pm;
 
@@ -52,6 +59,15 @@ public class LoginController implements Initializable {
     private StackPane stack;
     @FXML
     private AnchorPane base;
+    @FXML
+    private ImageView logo;
+    @FXML
+    private HBox champConn;
+    @FXML
+    private Text txtConn;
+    @FXML
+    private ImageView background2;
+    private ImageView background1;
 
     /**
      * Initializes the controller class.
@@ -67,12 +83,53 @@ public class LoginController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        FileInputStream input = null;
+        try {
+            input = new FileInputStream("resources/logo.png");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Image image = new Image(input);
+        logo.setImage(image);
+        
+        try {
+            input = new FileInputStream("resources/back.png");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Image image2 = new Image(input);
+        background2.setImage(image2);
+        
+       
+        
+     FadeTransition ft = new FadeTransition(Duration.millis(2000), logo);
+     ft.setFromValue(0.0);
+     ft.setToValue(1.0);
+     //ft.setCycleCount(4);
+     //ft.setAutoReverse(true);
+     ft.play();
+     
+     FadeTransition ft2 = new FadeTransition(Duration.millis(2000), champConn);
+     ft2.setFromValue(0.0);
+     ft2.setToValue(1.0);
+     //ft.setCycleCount(4);
+     //ft.setAutoReverse(true);
+     ft2.play();
+     
+     FadeTransition ft3 = new FadeTransition(Duration.millis(2000), txtConn);
+     ft3.setFromValue(0.0);
+     ft3.setToValue(1.0);
+     //ft.setCycleCount(4);
+     //ft.setAutoReverse(true);
+     ft3.play();
 
     }   
    
 
     @FXML
     private void checkId(ActionEvent event) throws IOException {
+        con_nom.getParent().requestFocus();
         Gestionnaire gest = null;
         
         if(isRoot(con_nom.getText(), con_mdp.getText())){
@@ -110,6 +167,7 @@ public class LoginController implements Initializable {
         dialogContent.setHeading(new Text(title));
         dialogContent.setBody(new Text(content));
         JFXButton close = new JFXButton("OK");
+        close.requestFocus();
         close.setButtonType(JFXButton.ButtonType.RAISED);
         close.setStyle("-fx-background-color: #00bfff;");
 
@@ -126,7 +184,7 @@ public class LoginController implements Initializable {
     
     try {
 
-        File fXmlFile = new File("../session.xml");
+        File fXmlFile = new File("session.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);

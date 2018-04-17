@@ -55,6 +55,7 @@ public class Catalog {
         int i = 0;
         int j = 0;
         PdfPTable table = new PdfPTable(4);
+        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         table.setWidthPercentage(100);
        
     
@@ -68,6 +69,7 @@ public class Catalog {
                  System.out.println("j = "+j);
                  
                 PdfPTable item = new PdfPTable(1);
+                item.getDefaultCell().setBorder(Rectangle.NO_BORDER);
                 if(j<prods.size()){
                     Produit pdt = prods.get(j);
                     System.out.println(pdt);
@@ -107,23 +109,7 @@ public class Catalog {
         
         }
         
-        /*
-        Produit pdt = prods.get(j);
-        System.out.println(pdt);
-        PdfPTable item = new PdfPTable(1);
-        item.addCell(pdt.getCodeProduit()+ "");
-                item.addCell(pdt.getNom()+ "");
-                item.addCell(pdt.getDescriptions()+ "");
-                table.addCell(item);
-                table.addCell(item);
-                table.addCell(item);
-                table.addCell(item);
-                table.addCell(item);
-                table.addCell(item);
-                table.addCell(item);
-                table.addCell(item);
-                table.addCell(item);
-        */
+       
         table.setHorizontalAlignment(Element.ALIGN_RIGHT);
 
         // Ecriture du document

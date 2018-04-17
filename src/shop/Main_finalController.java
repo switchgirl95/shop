@@ -348,7 +348,7 @@ public class Main_finalController implements Initializable {
     
     private void fillTableProd(){        
         prodData = pm.getAll(Produit.class);
-        
+        tableOP.clear();
         tableOP.addAll(prodData);
         tableProd.setItems(tableOP);
         tableProd.toFront();
@@ -361,7 +361,7 @@ public class Main_finalController implements Initializable {
         table.addAll(geStData);
         tableGeSt.setItems(table);
         tableGeSt.toFront();
-        tableProd.scrollTo(5);
+        
         paginationGeSt();
     }
 

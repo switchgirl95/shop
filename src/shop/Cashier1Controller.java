@@ -59,6 +59,8 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Window;
 
 import org.controlsfx.control.Notifications;
 
@@ -439,7 +441,7 @@ public class Cashier1Controller implements Initializable {
         for (int i=1;i<=noPages;i++){
             final int index = i;
             buttons.add(new JFXButton(Integer.toString(i)));
-            buttons.get(i-1).setStyle("-fx-background-color: #00e48f;-fx-text-fill: white;-jfx-button-type: RAISED;");
+            buttons.get(i-1).setStyle("-fx-background-color: #F44336;-fx-text-fill: white;-jfx-button-type: RAISED;");
             buttons.get(i-1).setOnAction((ActionEvent t) -> {
                 tableProduits.scrollTo(itemsPerPage*(index-1));
             });
@@ -450,6 +452,9 @@ public class Cashier1Controller implements Initializable {
 
     private boolean imprimeFacture(Facture facture) {
         Gestionnaire gest = facture.getGestionnaire();
+
+        List<ListeFacture> listeFactures = facture.getListeFacture();
+
 
         /** TODO
           Structure du pdf:
@@ -632,12 +637,13 @@ public class Cashier1Controller implements Initializable {
         TranslateTransition closeNav = new TranslateTransition(new Duration(250), selectpane);
         closeNav.setToX(0);
         closeNav.play();
-        tableFacture.toFront();
         HBProd.toFront();
-        tableFacture.setVisible(true);
-        tableHist.setVisible(false);
+        //tableFacture.toFront();
         HBProd.setVisible(true);
         HBHist.setVisible(false);
+        //tableFacture.setVisible(true);
+        tableHist.setVisible(false);
+       
         fillTableF();
     }
 
@@ -648,8 +654,8 @@ public class Cashier1Controller implements Initializable {
         closeNav.play();
         tableHist.toFront();
         HBHist.toFront();
-        tableFacture.setVisible(!true);
-        tableHist.setVisible(!false);
+        //tableFacture.setVisible(!true);
+        //tableHist.setVisible(!false);
         HBProd.setVisible(!true);
         HBHist.setVisible(!false);
         fillTableH();
