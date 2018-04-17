@@ -42,6 +42,11 @@ public class Gestionnaire {
         this(idGest.intValue(), nom, typeGest, username, password, actif, telephone, email);
     }
 
+    @Override
+    public String toString() {
+        return nom;
+    }
+
     public int getIdGest() {
         return idGest;
     }

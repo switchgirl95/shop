@@ -291,8 +291,6 @@ public class Main_finalController implements Initializable {
         category.setItems(cats);
         addProd.setVisible(true);
     }
-    
-    
 
     @FXML
     private void changeToPdt(MouseEvent event) {
@@ -334,7 +332,7 @@ public class Main_finalController implements Initializable {
         typesProd.setVisible(false);
         sortGeSt.setVisible(true);
         printGeSt.setVisible(true);
-       fillTableGeSt();
+        fillTableGeSt();
     }
 
     @FXML
@@ -350,7 +348,7 @@ public class Main_finalController implements Initializable {
     
     private void fillTableProd(){        
         prodData = pm.getAll(Produit.class);
-        
+        tableOP.clear();
         tableOP.addAll(prodData);
         tableProd.setItems(tableOP);
         tableProd.toFront();
@@ -358,13 +356,13 @@ public class Main_finalController implements Initializable {
         paginationProd();
     }
     private void fillTableGeSt(){        
-        //geStData = pm.getAll(GestionStock.class);
-        //ObservableList<GestionStock> table = FXCollections.observableArrayList();
-        //table.addAll(geStData);
-        //tableGeSt.setItems(table);
+        geStData = pm.getAll(GestionStock.class);
+        ObservableList<GestionStock> table = FXCollections.observableArrayList();
+        table.addAll(geStData);
+        tableGeSt.setItems(table);
         tableGeSt.toFront();
-        //tableProd.scrollTo(5);
-       // paginationGeSt();
+        
+        paginationGeSt();
     }
 
     private void fillTableCat(){        
@@ -374,8 +372,6 @@ public class Main_finalController implements Initializable {
         tableCat.setItems(tableOC);
         tableCat.toFront();
         paginationCat();
-        
-       
     }
     
     public void initTableCat(){
@@ -400,8 +396,7 @@ public class Main_finalController implements Initializable {
     
     }
     
-        public void initTableGeSt(){
-        
+    public void initTableGeSt() {
         TableColumn idGSCol = new TableColumn("Id");
         TableColumn nomGSCol = new TableColumn("Gestionnaire");
         TableColumn qteGSCol = new TableColumn("Quantite");
@@ -411,13 +406,11 @@ public class Main_finalController implements Initializable {
         tableGeSt.getColumns().addAll(idGSCol,prodGSCol,qteGSCol,dateCol,nomGSCol,typeCol);
         
         idGSCol.setCellValueFactory(new PropertyValueFactory<>("idStock"));
-        nomGSCol.setCellValueFactory(new PropertyValueFactory<>("idGest")); 
+        nomGSCol.setCellValueFactory(new PropertyValueFactory<>("gestionnaire"));
         qteGSCol.setCellValueFactory(new PropertyValueFactory<>("quantite")); 
         dateCol.setCellValueFactory(new PropertyValueFactory<>("dateStock"));
         typeCol.setCellValueFactory(new PropertyValueFactory<>("typeGest")); 
-        prodGSCol.setCellValueFactory(new PropertyValueFactory<>("idProduit")); 
-
-    
+        prodGSCol.setCellValueFactory(new PropertyValueFactory<>("produit"));
     }
     
     public void initTableProd(){
@@ -535,19 +528,14 @@ public class Main_finalController implements Initializable {
             fillTableProd();
             exit();
         
-        }
-        else{
+        } else {
             String message = "";
             int i = 0;
-            for(String s : list){
+            for(String s : list)
                 message = message + "Error " + Integer.toString(++i)+": " + s +"\n";
-                
-            }
             errorMessage("Echec!!!", message);
         
         }
-        
-
     }
     
     private void confirmDeleteProd(String title, String content){
@@ -578,7 +566,6 @@ public class Main_finalController implements Initializable {
     @FXML
     private void deleteProd(ActionEvent event) {
         confirmDeleteProd("Attention!!","Voulez-vous vraiment supprimer "+ rowData.getNom()+" ?");
-        
     }
 
     @FXML
@@ -718,21 +705,19 @@ else {
     
     }
     
-        private void paginationGeSt(){
+    private void paginationGeSt() {
         pagProd.getChildren().clear();
         ArrayList<JFXButton> buttons = new ArrayList<>();
         int noPages = geStData.size()/itemsPerPage + 1;
-        
-        for (int i=1;i<=noPages;i++){
+
+        for (int i=1;i<=noPages;i++) {
             final int index = i;
             buttons.add(new JFXButton(Integer.toString(i)));
             buttons.get(i-1).setStyle("-fx-background-color: #00e48f;-fx-text-fill: white;-jfx-button-type: RAISED;");
-            buttons.get(i-1).setOnAction((ActionEvent t) -> {
-                tableGeSt.scrollTo(itemsPerPage*(index-1));
-            });
+            buttons.get(i-1).setOnAction((ActionEvent t) ->
+                tableGeSt.scrollTo(itemsPerPage*(index-1)));
         }
         pagProd.getChildren().addAll(buttons);
-    
     }
 
         /*
