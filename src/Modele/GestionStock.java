@@ -7,29 +7,32 @@ public class GestionStock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDSTOCK") private int idStock;
-    @Column(name = "IDGEST") private int idGest;
+    @ManyToOne
+    @JoinColumn(name="IDGEST", nullable=false)
+    private Gestionnaire gestionnaire;
     @Column(name = "QUANTITE") private int quantite;
     @Column(name = "DATESTOCK") private String dateStock;
     @Column(name = "TYPEGEST") private boolean typeGest;
-    @Column(name = "IDPRODUIT") private int idProduit;
+    @ManyToOne
+    @JoinColumn(name="CODEPRODUIT", nullable=false)
+    private Produit produit;
 
     //Constructeurs
     //**************************************
     public GestionStock() {
-        this.idGest =0;
         this.idStock =0;
     }
 
-    public GestionStock(int idGest, int quantite, String dateStock, boolean typeGest, int idProduit) {
-        this.idGest = idGest;
+    public GestionStock(Gestionnaire gest, int quantite, String dateStock, boolean typeGest, Produit produit) {
+        this.gestionnaire = gest;
         this.quantite = quantite;
         this.dateStock = dateStock;
         this.typeGest = typeGest;
-        this.idProduit = idProduit;
+        this.produit = produit;
     }
 
-    public GestionStock(int idStock, int idGest, int quantite, String dateStock, boolean typeGest, int idProduit) {
-        this(idGest, quantite, dateStock, typeGest, idProduit);
+    public GestionStock(int idStock, Gestionnaire gest, int quantite, String dateStock, boolean typeGest, Produit produit) {
+        this(gest, quantite, dateStock, typeGest, produit);
         this.idStock = idStock;
     }
 
@@ -39,8 +42,8 @@ public class GestionStock {
         return idStock;
     }
 
-    public int getIdGest() {
-        return idGest;
+    public Gestionnaire getGestionnaire() {
+        return gestionnaire;
     }
 
     public int getQuantite() {
@@ -55,8 +58,8 @@ public class GestionStock {
         return typeGest;
     }
 
-    public int getIdProduit() {
-        return idProduit;
+    public Produit getProduit() {
+        return produit;
     }
 
     public void setQuantite(int quantite) {

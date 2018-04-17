@@ -35,6 +35,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.print.Printer;
+import javafx.print.PrinterJob;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -203,16 +205,14 @@ public class Cashier1Controller implements Initializable {
         tableFQuantite.setCellValueFactory(new PropertyValueFactory<>("quantite"));
         tableFPrixU.setCellValueFactory(new PropertyValueFactory<>("prix"));
         tableFPrixT.setCellValueFactory(new PropertyValueFactory<>("prixTotal"));
-        //tableFPrix.setCellValueFactory(new PropertyValueFactory<>("PRIX"));
-        
+
         //TableColumn<Person, Person> tableFSupp = new TableColumn<>("Anti-social");
         //tableFSupp.setMinWidth(40);
         //tableFSupp.setMinWidth(40);
         tableFSupp.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         tableFSupp.setCellFactory(param -> new TableCell<ListeFacture, ListeFacture>() {
             private JFXButton deleteButton = new JFXButton("x");
-            
-            
+
             @Override
             protected void updateItem(ListeFacture fac, boolean empty) {
                 super.updateItem(fac, empty);
@@ -227,7 +227,7 @@ public class Cashier1Controller implements Initializable {
                 deleteButton.setStyle("-fx-background-color: red;-fx-text-fill: white;-jfx-button-type: RAISED;");
                 deleteButton.setOnAction(event -> {table.remove(fac); panier.remove(fac);});
 
-        deleteButton.setOnAction(event -> {
+                deleteButton.setOnAction(event -> {
                     panier.remove(fac);
                     table.remove(fac);
                 });
@@ -238,15 +238,12 @@ public class Cashier1Controller implements Initializable {
         
     // ------------------Table Historique --------------------//
         
-        tableHId.setCellFactory(new PropertyValueFactory<>("idFacture"));
-       // tableHGest.setCellFactory(new PropertyValueFactory<>("gestionnaire"));
-        tableHDate.setCellFactory(new PropertyValueFactory<>("dateFacture"));
-        tableHRemise.setCellFactory(new PropertyValueFactory<>("remise"));
-        tableHMontant.setCellFactory(new PropertyValueFactory<>("montant"));
-        tableHType.setCellFactory(new PropertyValueFactory<>("typeFact"));
-        try{
-        //fillTableH();
-        }catch(Exception e){System.out.println(e);}
+        tableHId.setCellValueFactory(new PropertyValueFactory<>("idFacture"));
+        tableHGest.setCellValueFactory(new PropertyValueFactory<>("gestionnaire"));
+        tableHDate.setCellValueFactory(new PropertyValueFactory<>("dateFacture"));
+        tableHRemise.setCellValueFactory(new PropertyValueFactory<>("remise"));
+        tableHMontant.setCellValueFactory(new PropertyValueFactory<>("montant"));
+        tableHType.setCellValueFactory(new PropertyValueFactory<>("typeFact"));
     }
 
     @FXML
@@ -274,8 +271,6 @@ public class Cashier1Controller implements Initializable {
 
             Produit p = pm.get(Produit.class, Integer.parseInt(idProd.getText()));
             if(Integer.parseInt(qteProd.getText()) <= p.getQuantite()) {
-
-   
                 if (!panier.add(lf)) {
                     panier.remove(lf);
                     panier.add(lf);
@@ -352,13 +347,10 @@ public class Cashier1Controller implements Initializable {
         tableFacture.setItems(table);
     }
     
-   private void fillTableH(){
-    
-    tableH.clear();
-   tableH.addAll(pm.getAll(Facture.class));
-   try{
-    tableHist.setItems(tableH);
-   }catch(Exception e){System.out.println(e);}
+    private void fillTableH() {
+        tableH.clear();
+        tableH.addAll(pm.getAll(Facture.class));
+        tableHist.setItems(tableH);
     }
 
     private void updateMontantView() {
@@ -376,9 +368,9 @@ public class Cashier1Controller implements Initializable {
 
         return montant;
     }
-    
+
     private void initFilter(){
-        
+
         //search ID
         filtIdProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
@@ -399,9 +391,9 @@ public class Cashier1Controller implements Initializable {
             }
             tableProduits.setItems(subentries);
         });
-        
+
         //Search Name
-        
+
         filtNomProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
                 tableProduits.setItems(tableP);
@@ -425,15 +417,15 @@ public class Cashier1Controller implements Initializable {
             paginationProd(subentries);
             setFactories();
         });
-    
-        
-    }
+
+
+   }
     
     private void paginationProd(ObservableList prodData){
         pagProd.getChildren().clear();
         ArrayList<JFXButton> buttons = new ArrayList<>();
         int noPages = prodData.size()/itemsPerPage + 1;
-        
+
         for (int i=1;i<=noPages;i++){
             final int index = i;
             buttons.add(new JFXButton(Integer.toString(i)));
@@ -443,12 +435,11 @@ public class Cashier1Controller implements Initializable {
             });
         }
         pagProd.getChildren().addAll(buttons);
-    
+
     }
 
     private boolean imprimeFacture(Facture facture) {
         Gestionnaire gest = facture.getGestionnaire();
-        List<ListeFacture> listeFactures = facture.getListeFacture();
 
         /** TODO
           Structure du pdf:
@@ -494,6 +485,7 @@ public class Cashier1Controller implements Initializable {
         //Document document = new Document(/*new Rectangle(111, 146)*/);
         Document document = new Document(PageSize.A6,10,10,10,10);
         System.out.println(document.getPageSize());
+        PrinterJob pj = PrinterJob.createPrinterJob(Printer.getDefaultPrinter());
         try {
             PdfWriter.getInstance(document, new FileOutputStream("Factures/Facture" + facture.getIdFacture() + ".pdf"));
             document.open();
@@ -541,14 +533,10 @@ public class Cashier1Controller implements Initializable {
         closeNav.setToY(stack.getHeight());
          AnchorPane.setBottomAnchor(mendisp,null);
             closeNav.play();
-            closeNav.setOnFinished(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
+            closeNav.setOnFinished(event1 -> {
                 menu.setVisible(false);
                 blackout.setVisible(false);
-            }
-        });
+            });
     }
 
     @FXML
@@ -563,20 +551,15 @@ public class Cashier1Controller implements Initializable {
     }
 
     private void notifSuccess(String title, String content){
-         Notifications notificationBuilder = Notifications.create()
-                        .title(title)
-                        .text(content)
-                        .hideAfter(Duration.seconds(5))
-                        .position(Pos.TOP_RIGHT)
-                        .darkStyle()
-                        .onAction(new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent event) {
-                                System.out.println("click");
-                        }
-                        });
+        Notifications notificationBuilder = Notifications.create()
+                .title(title)
+                .text(content)
+                .hideAfter(Duration.seconds(5))
+                .position(Pos.TOP_RIGHT)
+                .darkStyle()
+                .onAction(event -> System.out.println("click"));
                 
-                notificationBuilder.show();
+        notificationBuilder.show();
                     
     }
 
@@ -597,6 +580,7 @@ public class Cashier1Controller implements Initializable {
         });
        dialog.show();
     }
+
     @FXML
     private void setFactories(){
         photo.setCellFactory(param -> {
@@ -660,7 +644,14 @@ public class Cashier1Controller implements Initializable {
     }
 
     @FXML
-    private void imprimerFacture(ActionEvent event) {
+    private void imprimerHistorique(ActionEvent event) {
+        tableHist.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Facture>() {
+            @Override
+            public void changed(ObservableValue<? extends Facture> observable, Facture oldValue, Facture newValue) {
+                if (newValue != null)
+                    imprimeFacture(newValue);
+            }
+        });
     }
 }
 

@@ -118,12 +118,7 @@ public class LoginController implements Initializable {
 
         JFXDialog dialog = new JFXDialog(stack, dialogContent, JFXDialog.DialogTransition.BOTTOM);
 
-        close.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent __) {
-                dialog.close();
-            }
-        });
+        close.setOnAction(e -> dialog.close());
         dialog.show();
     }
     
@@ -131,7 +126,7 @@ public class LoginController implements Initializable {
     
     try {
 
-        File fXmlFile = new File("session.xml");
+        File fXmlFile = new File("../session.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);

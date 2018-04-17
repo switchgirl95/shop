@@ -122,4 +122,10 @@ public class Produit
     //public void setPrimPhoto(String photo){
         //this.primPhoto = photo;
     //}
+
+
+    @Override
+    public String toString() {
+        return nom;
+    }
 }
