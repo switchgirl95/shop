@@ -445,7 +445,7 @@ public class Cashier1Controller implements Initializable {
         for (int i=1;i<=noPages;i++){
             final int index = i;
             buttons.add(new JFXButton(Integer.toString(i)));
-            buttons.get(i-1).setStyle("-fx-background-color: #F44336;-fx-text-fill: white;-jfx-button-type: RAISED;");
+            buttons.get(i-1).setStyle("-fx-background-color: #00e48f;-fx-text-fill: white;-jfx-button-type: RAISED;");
             buttons.get(i-1).setOnAction((ActionEvent t) -> {
                 tableProduits.scrollTo(itemsPerPage*(index-1));
             });
@@ -640,6 +640,8 @@ public class Cashier1Controller implements Initializable {
         closeNav.setToX(0);
         closeNav.play();
         HBProd.toFront();
+        tableHist.setVisible(false);
+        tableProduits.setVisible(true);
         //tableFacture.toFront();
         HBProd.setVisible(true);
         HBHist.setVisible(false);
@@ -655,6 +657,8 @@ public class Cashier1Controller implements Initializable {
         closeNav.setToX(170);
         closeNav.play();
         tableHist.toFront();
+        tableHist.setVisible(!false);
+        tableProduits.setVisible(!true);
         HBHist.toFront();
         //tableFacture.setVisible(!true);
         //tableHist.setVisible(!false);

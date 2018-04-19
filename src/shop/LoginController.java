@@ -67,6 +67,7 @@ public class LoginController implements Initializable {
     private Text txtConn;
     @FXML
     private ImageView background2;
+    @FXML
     private ImageView background1;
 
     /**
@@ -100,8 +101,18 @@ public class LoginController implements Initializable {
         }
         Image image2 = new Image(input);
         background2.setImage(image2);
+        System.out.println("lol");
+        try {
+            input = new FileInputStream("resources/back1.jpg");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         
-       
+        }
+        Image image3 = new Image(input);
+        System.out.println("lol");
+        background1.setImage(image3);
+
+        //background1.fitWidthProperty().bind(stack.widthProperty());
         
      FadeTransition ft = new FadeTransition(Duration.millis(2000), logo);
      ft.setFromValue(0.0);
