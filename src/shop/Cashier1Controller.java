@@ -315,22 +315,19 @@ public class Cashier1Controller implements Initializable {
 
         Facture f = new Facture(gest, parseCalendar(Calendar.getInstance()), Double.parseDouble(remise.getText()), Double.parseDouble(montant2.getText()), true);
         f = pm.insert(f);
+        pm.em().refresh(f);
         for (ListeFacture lf : panier) {
             lf.setIdFacture(f.getIdFacture());
             pm.insert(lf);
-            
-            /*
-            Changer Id Produit a codeProduit
-            GestionStock gs = new GestionStock(gest.getIdGest(),lf.getQuantite(),parseCalendar(Calendar.getInstance()),false,lf.getCodeProduit());
+
+            // On sauvegarde la transaction
+            GestionStock gs = new GestionStock(gest, lf.getQuantite(), parseCalendar(Calendar.getInstance()), gest.isTypeGest(), lf.getProduit());
             pm.insert(gs);
-            */
-            
             
             // On diminue les quantités
             lf.getProduit().setQuantite(lf.getProduit().getQuantite() - lf.getQuantite());
             pm.insert(lf.getProduit());
         }
-        pm.em().refresh(f);
 
         // et on imprime la facture
         if (imprimeFacture(f)) {
@@ -350,7 +347,6 @@ public class Cashier1Controller implements Initializable {
     }
 
     private void fillTableP() {
-        
         tableP.clear();
         tableP.addAll(pm.getAll(Produit.class));
         tableProduits.setItems(tableP);
@@ -504,9 +500,9 @@ public class Cashier1Controller implements Initializable {
         //Document document = new Document(/*new Rectangle(111, 146)*/);
         Document document = new Document(PageSize.A6,10,10,10,10);
         System.out.println(document.getPageSize());
-        PrinterJob pj = PrinterJob.createPrinterJob(Printer.getDefaultPrinter());
+        //PrinterJob pj = PrinterJob.createPrinterJob(Printer.getDefaultPrinter());
         try {
-            PdfWriter.getInstance(document, new FileOutputStream("Factures/Facture" + facture.getIdFacture() + ".pdf"));
+            PdfWriter.getInstance(document, new FileOutputStream("../Factures/Facture" + facture.getIdFacture() + ".pdf"));
             document.open();
             Paragraph header = new Paragraph(noFact + "\n" + date + "\n" + caisse + "\n\n" + miscListe + "\n\n"),
                       footer = new Paragraph("\n" + total + "\n" + remise + net + "\n\n" + miscLine + "\n" + miscFoot + "\n" + miscLine);
@@ -516,7 +512,9 @@ public class Cashier1Controller implements Initializable {
             document.add(footer);
             document.close();
         } catch (Exception e) {
+            e.printStackTrace();
             if (document.isOpen()) document.close();
+            return false;
         }
 
         return true;
