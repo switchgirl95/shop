@@ -40,6 +40,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -208,6 +209,10 @@ public class Main_finalController implements Initializable {
     @FXML
     private JFXTextField filtCat;
     
+    JFXDatePicker beforeDate = new JFXDatePicker();
+    JFXDatePicker afterDate = new JFXDatePicker();
+    SimpleDateFormat formatter1 =new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");  
+     SimpleDateFormat formatter2 =new SimpleDateFormat("dd/MM/yyyy");  
     @Override
     public void initialize(URL url, ResourceBundle rb) {
             initTableCat();
@@ -218,6 +223,8 @@ public class Main_finalController implements Initializable {
             addCategory.setVisible(false);
             prepareSlideMenuAnimation();
             fillTableProd();
+            
+            sortGeSt.getChildren().addAll(beforeDate,afterDate);
 }
 
     private void errorMessage(String title, String content){
@@ -915,6 +922,12 @@ else {
             tableCat.setItems(subentries);
             setFactories();
         });
+        
+        
+        
+        
+        
+        
     }
     
     @FXML

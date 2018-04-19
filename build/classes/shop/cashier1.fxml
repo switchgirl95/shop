@@ -29,7 +29,7 @@
                                           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                                        </padding>
                                     </HBox>
-                                    <HBox layoutY="18.0" prefHeight="82.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <HBox fx:id="sortHist" alignment="CENTER" layoutY="18.0" prefHeight="82.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane maxHeight="1.7976931348623157E308" prefWidth="200.0" style="-fx-background-color: #E8E8E8;" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">

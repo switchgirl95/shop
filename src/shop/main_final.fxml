@@ -39,12 +39,7 @@
                                                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                                              </padding>
                                           </HBox>
-                                          <HBox fx:id="sortGeSt" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" visible="false">
-                                             <children>
-                                                <JFXTextField fx:id="sTGeSt" focusColor="#00e48f" labelFloat="true" prefHeight="25.0" prefWidth="216.0" promptText="Search" />
-                                                <JFXButton fx:id="rechercheGeSt" buttonType="RAISED" onAction="#rechercheGeSt" style="-fx-background-color: #00e48f;" text="Recherche" textFill="WHITE" />
-                                             </children>
-                                          </HBox>
+                                          <HBox fx:id="sortGeSt" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" visible="false" />
                                        </children>
                                     </StackPane>
                                  </children>

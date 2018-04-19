@@ -22,6 +22,7 @@ import com.itextpdf.text.pdf.PdfPRow;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXTextField;
@@ -52,6 +53,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -170,6 +174,16 @@ public class Cashier1Controller implements Initializable {
     private Pane selectpane;
     @FXML
     private HBox HBHist;
+    @FXML
+    private HBox sortFacture;
+    @FXML
+    private HBox sortHist;
+    
+    JFXDatePicker beforeDate = new JFXDatePicker();
+    JFXDatePicker afterDate = new JFXDatePicker();
+    SimpleDateFormat formatter1 =new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");  
+     SimpleDateFormat formatter2 =new SimpleDateFormat("dd/MM/yyyy");  
+    
     /**
      * Initializes the controller class.
      */
@@ -182,6 +196,8 @@ public class Cashier1Controller implements Initializable {
         setFactories();
         paginationProd(tableP);
         remise.textProperty().addListener((observable, oldValue, newValue) -> updateMontantView());
+        sortHist.getChildren().addAll(beforeDate,afterDate);
+        sortHist.setVisible(false);
     }
 
     private void initTables() {
@@ -247,19 +263,7 @@ public class Cashier1Controller implements Initializable {
         tableHRemise.setCellValueFactory(new PropertyValueFactory<>("remise"));
         tableHMontant.setCellValueFactory(new PropertyValueFactory<>("montant"));
         tableHType.setCellValueFactory(new PropertyValueFactory<>("typeFact"));
-        tableHRemise.setCellFactory(param -> {
-            Text status = new Text();
-            //Set up the Table
-            TableCell<Facture, Double> cell = new TableCell<Facture, Double>() {
-                public void updateItem(Double item, boolean empty) {
-                    if (item != null)
-                        status.setText(item + "%");
-                }
-            };
-            // Attach the imageview to the cell
-            cell.setGraphic(status);
-            return cell;
-        });
+        
     }
 
     @FXML
@@ -382,7 +386,37 @@ public class Cashier1Controller implements Initializable {
     }
 
     private void initFilter(){
+        //date filter
+        
+        
+        afterDate.setOnAction(new EventHandler<ActionEvent>(){
+          @Override
+	 public void handle(ActionEvent event) 
+	 {
+             fillTableH();
+             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                 ObservableList<Facture> subentries = FXCollections.observableArrayList();
+		 LocalDate date = afterDate.getValue();
+		 long count = tableHist.getColumns().stream().count();
+            for (int i = 0; i < tableHist.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + tableHist.getColumns().get(2).getCellData(i);
+                    LocalDate nowDate =  LocalDate.parse(entry.substring(0, entry.length() - 2), formatter);
+                    if (!beforeDate.getValue().isAfter(nowDate) && !afterDate.getValue().isBefore(nowDate)) 
+                    {
+                        subentries.add(tableHist.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            tableHist.setItems(subentries);
+            setFactories();
+	 }
+        });
 
+        
+        
+        
         //search ID
         filtIdProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
@@ -600,6 +634,24 @@ public class Cashier1Controller implements Initializable {
 
     @FXML
     private void setFactories(){
+        
+        tableHRemise.setCellFactory(param -> {
+            Text status = new Text();
+            //Set up the Table
+            TableCell<Facture, Double> cell = new TableCell<Facture, Double>() {
+                public void updateItem(Double item, boolean empty) {
+                    if (item != null)
+                        status.setText(item + "%");
+                    else{status.setText("");}
+                }
+                
+            };
+            // Attach the imageview to the cell
+            cell.setGraphic(status);
+            return cell;
+        });
+        
+        
         photo.setCellFactory(param -> {
             //Set up the ImageView
             final ImageView imageview = new ImageView();
@@ -628,6 +680,9 @@ public class Cashier1Controller implements Initializable {
              cell.setGraphic(imageview);
              return cell;
         });
+        
+        
+        
     
     
     }
@@ -643,9 +698,10 @@ public class Cashier1Controller implements Initializable {
         //tableFacture.toFront();
         HBProd.setVisible(true);
         HBHist.setVisible(false);
+        sortHist.setVisible(false);
         //tableFacture.setVisible(true);
         tableHist.setVisible(false);
-       
+        sortFacture.setVisible(true);
         fillTableF();
     }
 
@@ -658,10 +714,13 @@ public class Cashier1Controller implements Initializable {
         tableHist.setVisible(!false);
         tableProduits.setVisible(!true);
         HBHist.toFront();
+        sortHist.toFront();
         //tableFacture.setVisible(!true);
         //tableHist.setVisible(!false);
         HBProd.setVisible(!true);
         HBHist.setVisible(!false);
+        sortHist.setVisible(!false);
+        sortFacture.setVisible(false);
         fillTableH();
     }
 
