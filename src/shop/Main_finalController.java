@@ -6,6 +6,7 @@
 package shop;
 
 import Modele.Categorie;
+import Modele.Facture;
 import Modele.GestionStock;
 import Modele.Gestionnaire;
 import Modele.PersistenceManager;
@@ -41,6 +42,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -360,7 +363,7 @@ public class Main_finalController implements Initializable {
         tableProd.setItems(tableOP);
         tableProd.toFront();
         //tableProd.scrollTo(5);
-        paginationProd();
+        paginationProd(prodData);
     }
     private void fillTableGeSt(){        
         geStData = pm.getAll(GestionStock.class);
@@ -369,7 +372,7 @@ public class Main_finalController implements Initializable {
         tableGeSt.setItems(table);
         tableGeSt.toFront();
         
-        paginationGeSt();
+        paginationGeSt(geStData);
     }
 
     private void fillTableCat(){        
@@ -378,7 +381,7 @@ public class Main_finalController implements Initializable {
         tableOC.addAll(catData);
         tableCat.setItems(tableOC);
         tableCat.toFront();
-        paginationCat();
+        paginationCat(catData);
     }
     
     public void initTableCat(){
@@ -529,7 +532,7 @@ public class Main_finalController implements Initializable {
             GestionStock gs = new GestionStock(gest.getIdGest(),diffQte,parseCalendar(Calendar.getInstance()),type,rowData.getCodeProduit());
             pm.insert(gs);
             */
-            notifSuccess("Yep", "Goodgo");
+            errorMessage("Yep", "Goodgo");
             System.out.println("pr = " + rowData.getCodeProduit());
             //savePhotos(rowData.getCodeProduit());
             fillTableProd();
@@ -585,6 +588,7 @@ public class Main_finalController implements Initializable {
         String cfo = codeFourn.getText();
         System.out.println("??");
         Produit prod = new Produit(cat, ppd, qpd, des, npd, cfo, active.isSelected());//new Produit(cat,ppd,qpd,des,npd,cfo,actif);
+        prod.setCodeProduit();
         prod = pm.insert(prod);
         System.out.println("pr = " + prod.getCodeProduit());
         savePhotos(prod.getCodeProduit());
@@ -679,10 +683,10 @@ else {
         fillTableCat();
     }
     
-    private void paginationProd(){
+    private void paginationProd(List<Produit> lProd){
         pagProd.getChildren().clear();
         ArrayList<JFXButton> buttons = new ArrayList<>();
-        int noPages = prodData.size()/itemsPerPage + 1;
+        int noPages = lProd.size()/itemsPerPage + 1;
         
         for (int i=1;i<=noPages;i++){
             final int index = i;
@@ -695,10 +699,10 @@ else {
         pagProd.getChildren().addAll(buttons);
     
     }
-    private void paginationCat(){
+    private void paginationCat(List<Categorie> lCat){
         pagProd.getChildren().clear();
         ArrayList<JFXButton> buttons = new ArrayList<>();
-        int noPages = catData.size()/itemsPerPage + 1;
+        int noPages = lCat.size()/itemsPerPage + 1;
         
         for (int i=1;i<=noPages;i++){
             final int index = i;
@@ -712,10 +716,10 @@ else {
     
     }
     
-    private void paginationGeSt() {
+    private void paginationGeSt(List<GestionStock> lGeSt) {
         pagProd.getChildren().clear();
         ArrayList<JFXButton> buttons = new ArrayList<>();
-        int noPages = geStData.size()/itemsPerPage + 1;
+        int noPages = lGeSt.size()/itemsPerPage + 1;
 
         for (int i=1;i<=noPages;i++) {
             final int index = i;
@@ -793,10 +797,65 @@ else {
     }
     
     private void initFilters(){
+        
+        afterDate.setOnAction(new EventHandler<ActionEvent>(){
+          @Override
+	 public void handle(ActionEvent event) 
+	 {
+            fillTableGeSt();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            ObservableList<GestionStock> subentries = FXCollections.observableArrayList();
+            LocalDate date = afterDate.getValue();
+            long count = tableGeSt.getColumns().stream().count();
+            for (int i = 0; i < tableGeSt.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + tableGeSt.getColumns().get(2).getCellData(i);
+                    LocalDate nowDate =  LocalDate.parse(entry.substring(0, entry.length() - 2), formatter);
+                    if (!beforeDate.getValue().isAfter(nowDate) && !afterDate.getValue().isBefore(nowDate)) 
+                    {
+                        subentries.add(tableGeSt.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            tableGeSt.setItems(subentries);
+            paginationGeSt(subentries);
+            setFactories();
+	 }
+        });
+        
+        beforeDate.setOnAction(new EventHandler<ActionEvent>(){
+          @Override
+	 public void handle(ActionEvent event) 
+	 {
+            fillTableGeSt();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            ObservableList<GestionStock> subentries = FXCollections.observableArrayList();
+            LocalDate date = afterDate.getValue();
+            long count = tableGeSt.getColumns().stream().count();
+            for (int i = 0; i < tableGeSt.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + tableGeSt.getColumns().get(2).getCellData(i);
+                    LocalDate nowDate =  LocalDate.parse(entry.substring(0, entry.length() - 2), formatter);
+                    if (!beforeDate.getValue().isAfter(nowDate) && !afterDate.getValue().isBefore(nowDate)) 
+                    {
+                        subentries.add(tableGeSt.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            tableGeSt.setItems(subentries);
+            paginationGeSt(subentries);
+            setFactories();
+	 }
+        });
+        
+        
         //ID FILTER
         filtIdProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
                 tableProd.setItems(tableOP);
+                paginationProd(tableOP);
             }
             String value = newValue.toLowerCase();
             ObservableList<Produit> subentries = FXCollections.observableArrayList();
@@ -812,6 +871,7 @@ else {
                 }
             }
             tableProd.setItems(subentries);
+            paginationProd(subentries);
             setFactories();
         });
         
@@ -819,6 +879,7 @@ else {
         filtNomProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
                 tableProd.setItems(tableOP);
+                paginationProd(tableOP);
             }
             String value = newValue.toLowerCase();
             ObservableList<Produit> subentries = FXCollections.observableArrayList();
@@ -834,6 +895,7 @@ else {
                 }
             }
             tableProd.setItems(subentries);
+            paginationProd(subentries);
             setFactories();
         });
         
@@ -841,6 +903,7 @@ else {
         filtDescProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
                 tableProd.setItems(tableOP);
+                paginationProd(tableOP);
             }
             String value = newValue.toLowerCase();
             ObservableList<Produit> subentries = FXCollections.observableArrayList();
@@ -856,12 +919,14 @@ else {
                 }
             }
             tableProd.setItems(subentries);
+            paginationProd(subentries);
             setFactories();
         });
         //codefournisseur FILTER
         filtCodeFProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
                 tableProd.setItems(tableOP);
+                paginationProd(tableOP);
             }
             String value = newValue.toLowerCase();
             ObservableList<Produit> subentries = FXCollections.observableArrayList();
@@ -877,12 +942,14 @@ else {
                 }
             }
             tableProd.setItems(subentries);
+            paginationProd(subentries);
             setFactories();
         });
         
         filtCat.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
                 tableProd.setItems(tableOP);
+                paginationProd(tableOP);
             }
             String value = newValue.toLowerCase();
             ObservableList<Produit> subentries = FXCollections.observableArrayList();
@@ -898,6 +965,7 @@ else {
                 }
             }
             tableProd.setItems(subentries);
+            paginationProd(subentries);
             setFactories();
         });
         
@@ -905,6 +973,7 @@ else {
         searchCat.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
                 tableCat.setItems(tableOC);
+                paginationCat(tableOC);
             }
             String value = newValue.toLowerCase();
             ObservableList<Categorie> subentries = FXCollections.observableArrayList();
@@ -920,6 +989,7 @@ else {
                 }
             }
             tableCat.setItems(subentries);
+            paginationCat(subentries);
             setFactories();
         });
         

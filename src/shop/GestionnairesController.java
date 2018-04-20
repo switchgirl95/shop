@@ -349,14 +349,14 @@ public class GestionnairesController implements Initializable {
         table = FXCollections.observableArrayList();
         table.addAll(gestData);
         table3.setItems(table);
-        paginationGest();
+        paginationGest(gestData);
     
     }
     
-    private void paginationGest(){
+    private void paginationGest(List<Gestionnaire> list){
          pagGest.getChildren().clear();
         ArrayList<JFXButton> buttons = new ArrayList<>();
-        int noPages = gestData.size()/itemsPerPage + 1;
+        int noPages = list.size()/itemsPerPage + 1;
         
         for (int i=1;i<=noPages;i++){
             final int index = i;
@@ -440,7 +440,7 @@ try{
         //table.remove(rowData);
         fillTableGest();
         exit();
-        notifSuccess("Success!!", "Gestionnaire supprime avec success.");
+        errorMessage("Success!!", "Gestionnaire supprime avec success.");
     
     }
 
@@ -497,6 +497,7 @@ try{
         filtIdGest.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
                 table3.setItems(table);
+                paginationGest(table);
             }
             String value = newValue.toLowerCase();
             ObservableList<Gestionnaire> subentries = FXCollections.observableArrayList();
@@ -512,6 +513,7 @@ try{
                 }
             }
             table3.setItems(subentries);
+            paginationGest(subentries);
         });
         
         //NAME FILTER

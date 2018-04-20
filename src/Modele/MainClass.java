@@ -22,7 +22,7 @@ public class MainClass {
         Connection connection = null;
         final String PERSISTENCE_UNIT_NAME = "ShopDBPU";
         PersistenceManager pm = null;
-
+/*
         // step 1
         Document document = new Document();
 // step 2
@@ -33,7 +33,7 @@ public class MainClass {
         document.add(new Paragraph("Hello World!"));
 // step 5
         document.close();
-
+*/   
         /*try {
             //Facture f = new Facture(1, 2, "2017-03-03", 0, 500, true);
             //Gestionnaire g = new Gestionnaire(2, "Antoine", true, "antoine", "password", true, "691898298", "antoine@yahoo.fr");

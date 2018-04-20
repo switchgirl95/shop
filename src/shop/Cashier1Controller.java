@@ -336,7 +336,8 @@ public class Cashier1Controller implements Initializable {
         // et on imprime la facture
         if (imprimeFacture(f)) {
             exitMenu(null);
-            notifSuccess("Information", "La facture a bien été imprimée");
+            errorMessage("Information", "La facture a bien été imprimée");
+            //notifSuccess("Information", "La facture a bien été imprimée");
         } else errorMessage("Erreur", "Echec d'impression de la facture");
         panier.clear();
         fillTableP();
@@ -389,6 +390,8 @@ public class Cashier1Controller implements Initializable {
         //date filter
         
         
+        
+        
         afterDate.setOnAction(new EventHandler<ActionEvent>(){
           @Override
 	 public void handle(ActionEvent event) 
@@ -410,6 +413,33 @@ public class Cashier1Controller implements Initializable {
                 }
             }
             tableHist.setItems(subentries);
+            paginationHist(subentries);
+            setFactories();
+	 }
+        });
+
+        beforeDate.setOnAction(new EventHandler<ActionEvent>(){
+          @Override
+	 public void handle(ActionEvent event) 
+	 {
+             fillTableH();
+             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                 ObservableList<Facture> subentries = FXCollections.observableArrayList();
+		 LocalDate date = afterDate.getValue();
+		 long count = tableHist.getColumns().stream().count();
+            for (int i = 0; i < tableHist.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + tableHist.getColumns().get(2).getCellData(i);
+                    LocalDate nowDate =  LocalDate.parse(entry.substring(0, entry.length() - 2), formatter);
+                    if (!beforeDate.getValue().isAfter(nowDate) && !afterDate.getValue().isBefore(nowDate)) 
+                    {
+                        subentries.add(tableHist.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            tableHist.setItems(subentries);
+            paginationHist(subentries);
             setFactories();
 	 }
         });
@@ -421,6 +451,7 @@ public class Cashier1Controller implements Initializable {
         filtIdProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
                 tableProduits.setItems(tableP);
+                paginationProd(tableP);
             }
             String value = newValue.toLowerCase();
             ObservableList<Produit> subentries = FXCollections.observableArrayList();
@@ -436,6 +467,7 @@ public class Cashier1Controller implements Initializable {
                 }
             }
             tableProduits.setItems(subentries);
+            paginationProd(subentries);
         });
 
         //Search Name
@@ -478,6 +510,23 @@ public class Cashier1Controller implements Initializable {
             buttons.get(i-1).setStyle("-fx-background-color: #00e48f;-fx-text-fill: white;-jfx-button-type: RAISED;");
             buttons.get(i-1).setOnAction((ActionEvent t) -> {
                 tableProduits.scrollTo(itemsPerPage*(index-1));
+            });
+        }
+        pagProd.getChildren().addAll(buttons);
+
+    }
+    
+    private void paginationHist(ObservableList histData){
+        pagProd.getChildren().clear();
+        ArrayList<JFXButton> buttons = new ArrayList<>();
+        int noPages = histData.size()/itemsPerPage + 1;
+
+        for (int i=1;i<=noPages;i++){
+            final int index = i;
+            buttons.add(new JFXButton(Integer.toString(i)));
+            buttons.get(i-1).setStyle("-fx-background-color: #00e48f;-fx-text-fill: white;-jfx-button-type: RAISED;");
+            buttons.get(i-1).setOnAction((ActionEvent t) -> {
+                tableHist.scrollTo(itemsPerPage*(index-1));
             });
         }
         pagProd.getChildren().addAll(buttons);

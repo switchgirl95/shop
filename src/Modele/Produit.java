@@ -3,6 +3,8 @@ package Modele;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Random;
+import static shop.Shop.pm;
 
 @Entity(name = "PRODUIT")
 public class Produit
@@ -47,6 +49,23 @@ public class Produit
 
     //Getters et Setters
     //***********************************
+    
+    public void setCodeProduit(){
+        Boolean flag = true;
+        int id = 1000;
+        while(flag){
+            Random rand = new Random();
+            id = rand.nextInt(1000);
+            if (true){
+                System.out.println(pm.get(Produit.class,3));
+                flag = false;
+            }
+           
+        }
+        this.codeProduit = id;
+    
+    }
+
     public int getCodeProduit() {
         return codeProduit;
     }
