@@ -49,7 +49,7 @@ public class Produit {
     //Getters et Setters
     //***********************************
     
-    public void setCodeProduit(){
+    /*public void setCodeProduit(){
         Boolean flag = true;
         int id = 1000;
         while(flag){
@@ -62,8 +62,7 @@ public class Produit {
            
         }
         this.codeProduit = id;
-    
-    }
+    }*/
 
     public int getCodeProduit() {
         return codeProduit;
@@ -134,7 +133,7 @@ public class Produit {
     }
     
     public Photo getPrimPhoto(){
-        return getPhotos() == null ? null : getPhotos().get(0);
+        return getPhotos().size() == 0 ? null : getPhotos().get(0);
     }
     
     //public void setPrimPhoto(String photo){

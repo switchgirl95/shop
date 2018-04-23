@@ -215,20 +215,21 @@ public class Main_finalController implements Initializable {
     JFXDatePicker beforeDate = new JFXDatePicker();
     JFXDatePicker afterDate = new JFXDatePicker();
     SimpleDateFormat formatter1 =new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");  
-     SimpleDateFormat formatter2 =new SimpleDateFormat("dd/MM/yyyy");  
+    SimpleDateFormat formatter2 =new SimpleDateFormat("dd/MM/yyyy");
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-            initTableCat();
-            initTableProd();
-            initTableGeSt();
-            initFilters();
-            setFactories();
-            addCategory.setVisible(false);
-            prepareSlideMenuAnimation();
-            fillTableProd();
-            
-            sortGeSt.getChildren().addAll(beforeDate,afterDate);
-}
+        initTableCat();
+        initTableProd();
+        initTableGeSt();
+        initFilters();
+        setFactories();
+        addCategory.setVisible(false);
+        prepareSlideMenuAnimation();
+        fillTableProd();
+
+        sortGeSt.getChildren().addAll(beforeDate,afterDate);
+    }
 
     private void errorMessage(String title, String content){
 
@@ -364,7 +365,13 @@ public class Main_finalController implements Initializable {
         tableProd.toFront();
         //tableProd.scrollTo(5);
         paginationProd(prodData);
+        System.out.println("**********");
+        for(Produit p : prodData)
+            if (p.getPrimPhoto() != null)
+                System.out.println(p.getCodeProduit() + " : " + p.getPrimPhoto().getLien());
+        System.out.println("**********");
     }
+
     private void fillTableGeSt(){        
         geStData = pm.getAll(GestionStock.class);
         ObservableList<GestionStock> table = FXCollections.observableArrayList();
@@ -514,6 +521,7 @@ public class Main_finalController implements Initializable {
             rowData.setCodeFournisseur(codeFourn.getText());
             rowData.setActif(active.isSelected());
             rowData = pm.insert(rowData);
+            savePhotos(rowData);
             int diffQte = newQte - rowData.getQuantite(); 
             boolean type= true;
             if (diffQte < 0){//reduction
@@ -536,6 +544,7 @@ public class Main_finalController implements Initializable {
             System.out.println("pr = " + rowData.getCodeProduit());
             //savePhotos(rowData.getCodeProduit());
             fillTableProd();
+            setFactories();
             exit();
         
         } else {
@@ -588,35 +597,35 @@ public class Main_finalController implements Initializable {
         String cfo = codeFourn.getText();
         System.out.println("??");
         Produit prod = new Produit(cat, ppd, qpd, des, npd, cfo, active.isSelected());//new Produit(cat,ppd,qpd,des,npd,cfo,actif);
-        prod.setCodeProduit();
+        //prod.setCodeProduit();
         prod = pm.insert(prod);
-        System.out.println("pr = " + prod.getCodeProduit());
-        savePhotos(prod.getCodeProduit());
+        savePhotos(prod);
 
         fillTableProd();
+        setFactories();
         exit();
     }
 
-    private void savePhotos(int codeProduit) {
+    private void savePhotos(Produit produit) {
         List<Node> prodPhotos = photoList.getChildren();
+        for (Photo ph : produit.getPhotos())
+            pm.delete(ph);
         for(Node prodPhoto : prodPhotos) {
             if (prodPhoto instanceof photoProdBase) {
                 try {
                     Path dest = Paths.get("../Images/");
                     dest = dest.resolve(((photoProdBase) prodPhoto).getPath().getFileName());
                     Files.copy(((photoProdBase) prodPhoto).getPath(), dest);
-                    Photo photo = new Photo(codeProduit, dest.toString());
+                    Photo photo = new Photo(produit.getCodeProduit(), dest.toString());
                     System.out.println(" co = " + photo.getCodeProduit() + ", li = " + photo.getLien());
                     pm.insert(photo);
                 } catch (IOException ignored) {
-                    System.out.println("echec de copy de " + ((photoProdBase) prodPhoto).getPath());
+                    System.out.println("echec de copie de " + ((photoProdBase) prodPhoto).getPath());
                 }
             }
         }
     }
 
-
-    
     private void exit(){
         TranslateTransition closeNav=new TranslateTransition(new Duration(350), mendisp1);
         closeNav.setToX(-(mendisp1.getWidth()));
@@ -654,16 +663,12 @@ public class Main_finalController implements Initializable {
         fileChooser.getExtensionFilters().addAll(
         new ExtensionFilter("image files", "*.jpg","*.png"));
 
-    List<File> selectedFiles = fileChooser.showOpenMultipleDialog(theStage);
-
-if (selectedFiles != null) {
-    
-    loadImages1(selectedFiles);
-    }
-
-else {
-    //actionStatus.setText("PDF file selection cancelled.");
-}
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(theStage);
+        if (selectedFiles != null)
+            loadImages1(selectedFiles);
+        else {
+        //actionStatus.setText("PDF file selection cancelled.");
+        }
     }
 
     @FXML
@@ -775,25 +780,25 @@ else {
 
     @FXML
     private void rechercheGeSt(ActionEvent event) {
+
     }
     
     void setGestionnaire(Gestionnaire gest) {
         this.gest = gest;
         nomGest.setText(gest.getNom());
     }
+
     private ArrayList<String> checkProd(){
         ArrayList<String> list = new ArrayList<String>();
         if(nomProd.getText().equals("")){list.add("Le produit doit avoir un nom");}
         if(prixProd.getText().equals("")){list.add("Le produit doit avoir un prix");}
-        else if (!prixProd.getText().matches("[0-9]+")){list.add("Ce prix est incorrecte");}
+        else if (!prixProd.getText().matches("[0-9]+")){list.add("Ce prix est incorrect");}
         if(prixProd.getText().equals("")){list.add("Le produit doit avoir une quantite");}
-        else if (!qteProd.getText().matches("[0-9]+")){list.add("Cette quantite est incorrecte");}
+        else if (!qteProd.getText().matches("[0-9]+")){list.add("Cette quantite est incorrect");}
         
         if(codeFourn.getText().equals("")){list.add("Code Fournisseur est absent");}
         
         return list;
-    
-        
     }
     
     private void initFilters(){
@@ -1002,32 +1007,32 @@ else {
     
     @FXML
     public void setFactories(){
-         System.out.print("sorting...");
+        System.out.print("sorting...");
         photo.setCellFactory(param -> {
-            //Set up the ImageView
-            final ImageView imageview = new ImageView();
-            imageview.setFitHeight(100);
-            imageview.setFitWidth(100);
+        //Set up the ImageView
+        final ImageView imageview = new ImageView();
+        imageview.setFitHeight(100);
+        imageview.setFitWidth(100);
 
-            //Set up the Table
-            TableCell<Produit, List<Photo>> cell = new TableCell<Produit, List<Photo>>() {
-                @Override
-                public void updateItem(List<Photo> item, boolean empty) {
-                    FileInputStream input=null;
-                    if (item != null && !item.isEmpty()) {
-                       
-                        System.out.println(item.get(0).getLien());
-                        try {
-                            input = new FileInputStream(item.get(0).getLien());
-                            Image image = new Image(input);
-                            imageview.setImage(image);
-                        } catch (FileNotFoundException ex) {
-                            Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                    
+        //Set up the Table
+        TableCell<Produit, List<Photo>> cell = new TableCell<Produit, List<Photo>>() {
+            @Override
+            public void updateItem(List<Photo> item, boolean empty) {
+            FileInputStream input=null;
+            if (item != null && !item.isEmpty()) {
+
+                System.out.println(item.get(0).getLien());
+                try {
+                    input = new FileInputStream(item.get(0).getLien());
+                    Image image = new Image(input);
+                    imageview.setImage(image);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Main_finalController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-             };
+            }
+
+            }
+         };
              // Attach the imageview to the cell
              cell.setGraphic(imageview);
              return cell;
@@ -1038,31 +1043,23 @@ else {
             //Set up the Table
             TableCell<Gestionnaire, Boolean> cell = new TableCell<Gestionnaire, Boolean>() {
                 public void updateItem(Boolean item, boolean empty) {
-                    
                     if (item != null) {
-                       if (item){ 
-                        status.setText("Actif");
-                        status.setFill(Color.GREEN);
-                       }
-                       else{
+                       if (item){
+                            status.setText("Actif");
+                            status.setFill(Color.GREEN);
+                       } else {
                            status.setText("Passif");
-                        status.setFill(Color.RED);
+                           status.setFill(Color.RED);
                        }
                     }
-                    
-                    
                 }
-             };
-             // Attach the imageview to the cell
-             cell.setGraphic(status);
-             return cell;
+            };
+            // Attach the imageview to the cell
+            cell.setGraphic(status);
+            return cell;
         });
 
 
     
     }
-    
-    
-
-    
 }
