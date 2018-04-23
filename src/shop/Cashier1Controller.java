@@ -5,20 +5,11 @@
  */
 package shop;
 
-import Modele.Facture;
-import Modele.GestionStock;
-import Modele.Gestionnaire;
-import Modele.ListeFacture;
-import Modele.PersistenceManager;
-import Modele.Photo;
-import Modele.Produit;
+import Modele.*;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPRow;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.jfoenix.controls.JFXButton;
@@ -27,6 +18,7 @@ import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -36,22 +28,21 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.print.Printer;
-import javafx.print.PrinterJob;
-import javafx.scene.control.*;
+import javafx.geometry.Pos;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -59,14 +50,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.geometry.Pos;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Window;
-
-import org.controlsfx.control.Notifications;
 
 import static shop.Shop.pm;
 
@@ -319,7 +302,6 @@ public class Cashier1Controller implements Initializable {
 
         Facture f = new Facture(gest, parseCalendar(Calendar.getInstance()), Double.parseDouble(remise.getText()), Double.parseDouble(montant2.getText()), true);
         f = pm.insert(f);
-        pm.em().refresh(f);
         for (ListeFacture lf : panier) {
             lf.setIdFacture(f.getIdFacture());
             pm.insert(lf);
@@ -332,6 +314,7 @@ public class Cashier1Controller implements Initializable {
             lf.getProduit().setQuantite(lf.getProduit().getQuantite() - lf.getQuantite());
             pm.insert(lf.getProduit());
         }
+        pm.em().refresh(f);
 
         // et on imprime la facture
         if (imprimeFacture(f)) {
@@ -341,6 +324,74 @@ public class Cashier1Controller implements Initializable {
         } else errorMessage("Erreur", "Echec d'impression de la facture");
         panier.clear();
         fillTableP();
+    }
+
+    private boolean imprimeFacture(Facture facture) {
+        Gestionnaire gest = facture.getGestionnaire();
+
+        /** TODO
+         Structure du pdf:
+         - logo
+         - date heure
+         - no facture
+         - nom caissière
+         - liste produits(codeP, nomP, qté, prixU, prixT)
+         - montant total
+         - remise
+         - net à payer
+         - footer
+         */
+        File logo = new File("le logo ici");
+        String date = "Date: " + invertDate(facture.getDateFacture());
+        String noFact = "Facture no." + facture.getIdFacture();
+        String caisse = "Caissier(ère): " + gest.getNom();
+        String total = "Montant total: " + montant2.getText() + " XAF";
+        double r = Double.parseDouble(this.remise.getText());
+        String remise = r > 0 ? "Remise: " + r + "%\n" : "";
+        String net = "Net à payer: " + this.total.getText() + " XAF";
+        String miscListe = "****************** Liste des produits *******************";
+        String miscFoot = "Les marchandises vendues et livrées ne sont ni reprises, ni échangées.";
+        String miscLine = "---------------------------------------------------------------------";
+
+        PdfPTable table = new PdfPTable(4);
+        table.setWidthPercentage(100);
+        table.addCell("Code P.");
+        //table.addCell("nom Produit");
+        table.addCell("quantité");
+        table.addCell("Prix U");
+        table.addCell("Prix T");
+        for (ListeFacture lf : facture.getListeFactures()) {
+            table.addCell(lf.getCodeProduit() + "");
+            //table.addCell(lf.getNomProduit());
+            table.addCell(lf.getQuantite() + "");
+            table.addCell(lf.getPrix() + "");
+            table.addCell(lf.getPrixTotal() + "");
+        }
+        table.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+        // Ecriture du document
+        //Document document = new Document(/*new Rectangle(111, 146)*/);
+        Document document = new Document(PageSize.A6,10,10,10,10);
+        System.out.println(document.getPageSize());
+        //PrinterJob pj = PrinterJob.createPrinterJob(Printer.getDefaultPrinter());
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream("../Factures/Facture" + facture.getIdFacture() + ".pdf"));
+            document.open();
+            Paragraph header = new Paragraph(noFact + "\n" + date + "\n" + caisse + "\n\n" + miscListe + "\n\n"),
+                    footer = new Paragraph("\n" + total + "\n" + remise + net + "\n\n" + miscLine + "\n" + miscFoot + "\n" + miscLine);
+
+            document.add(header);
+            document.add(table);
+            document.add(footer);
+            document.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // penser a supprimer les entrées de la bd
+            if (document.isOpen()) document.close();
+            return false;
+        }
+
+        return true;
     }
 
     private void initMenu(){
@@ -372,10 +423,17 @@ public class Cashier1Controller implements Initializable {
 
     private void updateMontantView() {
         montant2.setText(calculeMontant() + "");
-        try {
-            Double t = calculeMontant() - calculeMontant() * Double.parseDouble(remise.getText()) / 100;
-            total.setText(t > 0 ? t + "" : "0.0");
-        } catch (NumberFormatException ingnored) {}
+        if (remise.getText().isEmpty()) {
+            total.setText(calculeMontant() + "");
+        } else {
+            try {
+                Double remiseD = Double.parseDouble(remise.getText());
+                if (remiseD >= 0) {
+                    Double t = calculeMontant() - calculeMontant() * remiseD / 100;
+                    total.setText(t > 0 ? t + "" : "0.0");
+                }
+            } catch (NumberFormatException ignored) {}
+        }
     }
 
     private double calculeMontant() {
@@ -386,66 +444,30 @@ public class Cashier1Controller implements Initializable {
         return montant;
     }
 
-    private void initFilter(){
+    private void initFilter() {
         //date filter
-        
-        
-        
-        
         afterDate.setOnAction(new EventHandler<ActionEvent>(){
-          @Override
-	 public void handle(ActionEvent event) 
-	 {
-             fillTableH();
-             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                 ObservableList<Facture> subentries = FXCollections.observableArrayList();
-		 LocalDate date = afterDate.getValue();
-		 long count = tableHist.getColumns().stream().count();
-            for (int i = 0; i < tableHist.getItems().size(); i++) {
-                for (int j = 0; j < count; j++) {
-                    String entry = "" + tableHist.getColumns().get(2).getCellData(i);
-                    LocalDate nowDate =  LocalDate.parse(entry.substring(0, entry.length() - 2), formatter);
-                    if (!beforeDate.getValue().isAfter(nowDate) && !afterDate.getValue().isBefore(nowDate)) 
-                    {
-                        subentries.add(tableHist.getItems().get(i));
-                        break;
+            @Override
+            public void handle(ActionEvent event) {
+                fillTableH();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                ObservableList<Facture> subentries = FXCollections.observableArrayList();
+                LocalDate date = afterDate.getValue();
+                long count = tableHist.getColumns().stream().count();
+                for (int i = 0; i < tableHist.getItems().size(); i++) {
+                    for (int j = 0; j < count; j++) {
+                        String entry = "" + tableHist.getColumns().get(2).getCellData(i);
+                        LocalDate nowDate =  LocalDate.parse(entry.substring(0, entry.length() - 2), formatter);
+                        if (!beforeDate.getValue().isAfter(nowDate) && !afterDate.getValue().isBefore(nowDate)) {
+                            subentries.add(tableHist.getItems().get(i));
+                            break;
+                        }
                     }
                 }
+                tableHist.setItems(subentries);
+                setFactories();
             }
-            tableHist.setItems(subentries);
-            paginationHist(subentries);
-            setFactories();
-	 }
         });
-
-        beforeDate.setOnAction(new EventHandler<ActionEvent>(){
-          @Override
-	 public void handle(ActionEvent event) 
-	 {
-             fillTableH();
-             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                 ObservableList<Facture> subentries = FXCollections.observableArrayList();
-		 LocalDate date = afterDate.getValue();
-		 long count = tableHist.getColumns().stream().count();
-            for (int i = 0; i < tableHist.getItems().size(); i++) {
-                for (int j = 0; j < count; j++) {
-                    String entry = "" + tableHist.getColumns().get(2).getCellData(i);
-                    LocalDate nowDate =  LocalDate.parse(entry.substring(0, entry.length() - 2), formatter);
-                    if (!beforeDate.getValue().isAfter(nowDate) && !afterDate.getValue().isBefore(nowDate)) 
-                    {
-                        subentries.add(tableHist.getItems().get(i));
-                        break;
-                    }
-                }
-            }
-            tableHist.setItems(subentries);
-            paginationHist(subentries);
-            setFactories();
-	 }
-        });
-
-        
-        
         
         //search ID
         filtIdProd.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -531,76 +553,6 @@ public class Cashier1Controller implements Initializable {
         }
         pagProd.getChildren().addAll(buttons);
 
-    }
-
-    private boolean imprimeFacture(Facture facture) {
-        Gestionnaire gest = facture.getGestionnaire();
-
-        List<ListeFacture> listeFactures = facture.getListeFacture();
-
-
-        /** TODO
-          Structure du pdf:
-          - logo
-          - date heure
-          - no facture
-          - nom caissière
-          - liste produits(codeP, nomP, qté, prixU, prixT)
-          - montant total
-          - remise
-          - net à payer
-          - footer
-         */
-        File logo = new File("le logo ici");
-        String date = "Date: " + invertDate(facture.getDateFacture());
-        String noFact = "Facture no." + facture.getIdFacture();
-        String caisse = "Caissier(ère): " + gest.getNom();
-        String total = "Montant total: " + montant2.getText() + " XAF";
-        double r = Double.parseDouble(this.remise.getText());
-        String remise = r > 0 ? "Remise: " + r + "%\n" : "";
-        String net = "Net à payer: " + this.total.getText() + " XAF";
-        String miscListe = "****************** Liste des produits *******************";
-        String miscFoot = "Les marchandises vendues et livrées ne sont ni reprises, ni échangées.";
-        String miscLine = "---------------------------------------------------------------------";
-
-        PdfPTable table = new PdfPTable(4);
-        table.setWidthPercentage(100);
-        table.addCell("Code P.");
-        //table.addCell("nom Produit");
-        table.addCell("quantité");
-        table.addCell("Prix U");
-        table.addCell("Prix T");
-        for (ListeFacture lf : facture.getListeFacture()) {
-            table.addCell(lf.getCodeProduit() + "");
-            //table.addCell(lf.getNomProduit());
-            table.addCell(lf.getQuantite() + "");
-            table.addCell(lf.getPrix() + "");
-            table.addCell(lf.getPrixTotal() + "");
-        }
-        table.setHorizontalAlignment(Element.ALIGN_LEFT);
-
-        // Ecriture du document
-        //Document document = new Document(/*new Rectangle(111, 146)*/);
-        Document document = new Document(PageSize.A6,10,10,10,10);
-        System.out.println(document.getPageSize());
-        //PrinterJob pj = PrinterJob.createPrinterJob(Printer.getDefaultPrinter());
-        try {
-            PdfWriter.getInstance(document, new FileOutputStream("../Factures/Facture" + facture.getIdFacture() + ".pdf"));
-            document.open();
-            Paragraph header = new Paragraph(noFact + "\n" + date + "\n" + caisse + "\n\n" + miscListe + "\n\n"),
-                      footer = new Paragraph("\n" + total + "\n" + remise + net + "\n\n" + miscLine + "\n" + miscFoot + "\n" + miscLine);
-
-            document.add(header);
-            document.add(table);
-            document.add(footer);
-            document.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (document.isOpen()) document.close();
-            return false;
-        }
-
-        return true;
     }
 
     void setCassier(Gestionnaire gest) {

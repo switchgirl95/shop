@@ -93,11 +93,11 @@ public class Facture {
     }
 
 
-    public List<ListeFacture> getListeFacture() {
+    public List<ListeFacture> getListeFactures() {
         return listeFactures;
     }
+
     public String getReal(){
-        if (this.typeFact){return "ajout";}
-        else {return "retrait";}
+        return this.typeFact ? "ajout" : "retrait";
     }
 }

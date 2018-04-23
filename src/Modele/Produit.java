@@ -7,8 +7,7 @@ import java.util.Random;
 import static shop.Shop.pm;
 
 @Entity(name = "PRODUIT")
-public class Produit
-{
+public class Produit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CODEPRODUIT") private int codeProduit;

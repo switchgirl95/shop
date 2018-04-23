@@ -87,7 +87,7 @@ public class LoginController implements Initializable {
         
         FileInputStream input = null;
         try {
-            input = new FileInputStream("resources/logo.png");
+            input = new FileInputStream("../resources/logo.png");
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -95,7 +95,7 @@ public class LoginController implements Initializable {
         logo.setImage(image);
         
         try {
-            input = new FileInputStream("resources/back.png");
+            input = new FileInputStream("../resources/back.png");
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -103,7 +103,7 @@ public class LoginController implements Initializable {
         background2.setImage(image2);
         System.out.println("lol");
         try {
-            input = new FileInputStream("resources/back1.jpg");
+            input = new FileInputStream("../resources/back1.jpg");
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         
@@ -195,7 +195,7 @@ public class LoginController implements Initializable {
     
     try {
 
-        File fXmlFile = new File("session.xml");
+        File fXmlFile = new File("../session.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);

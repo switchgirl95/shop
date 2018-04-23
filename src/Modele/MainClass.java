@@ -22,33 +22,26 @@ public class MainClass {
         Connection connection = null;
         final String PERSISTENCE_UNIT_NAME = "ShopDBPU";
         PersistenceManager pm = null;
-/*
-        // step 1
-        Document document = new Document();
-// step 2
-        PdfWriter.getInstance(document, new FileOutputStream("essai.pdf"));
-// step 3
-        document.open();
-// step 4
-        document.add(new Paragraph("Hello World!"));
-// step 5
-        document.close();
-*/   
-        /*try {
+
+        try {
             //Facture f = new Facture(1, 2, "2017-03-03", 0, 500, true);
             //Gestionnaire g = new Gestionnaire(2, "Antoine", true, "antoine", "password", true, "691898298", "antoine@yahoo.fr");
            
             pm = new PersistenceManager(PERSISTENCE_UNIT_NAME);
 
-            Categorie c = pm.get(Categorie.class, 200000);
+            Facture f = pm.get(Facture.class, 13);
+            for (ListeFacture lf : f.getListeFactures())
+                System.out.println(lf.getProduit());
+
+            /*Categorie c = pm.get(Categorie.class, 200000);
             Produit p = new Produit(c, 250, 50, "all", "nom", "Auchan", true);
             p = pm.insert(p);
-            System.out.println(p.getCodeProduit());
+            System.out.println(p.getCodeProduit());*/
 
             pm.stop();
         } catch (Exception e) {
             e.printStackTrace();
             if(pm != null) pm.stop();
-        }*/
+        }
     }
 }
