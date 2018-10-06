@@ -588,7 +588,7 @@ public class Main_finalController implements Initializable {
         String cfo = codeFourn.getText();
         System.out.println("??");
         Produit prod = new Produit(cat, ppd, qpd, des, npd, cfo, active.isSelected());//new Produit(cat,ppd,qpd,des,npd,cfo,actif);
-        prod.setCodeProduit();
+        //prod.setCodeProduit();
         prod = pm.insert(prod);
         System.out.println("pr = " + prod.getCodeProduit());
         savePhotos(prod.getCodeProduit());

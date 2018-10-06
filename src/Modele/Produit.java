@@ -49,7 +49,7 @@ public class Produit {
     //Getters et Setters
     //***********************************
     
-    public void setCodeProduit(){
+   /*public void setCodeProduit(){
         Boolean flag = true;
         int id = 1000;
         while(flag){
@@ -63,7 +63,7 @@ public class Produit {
         }
         this.codeProduit = id;
     
-    }
+    }*/
 
     public int getCodeProduit() {
         return codeProduit;
