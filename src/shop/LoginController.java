@@ -136,41 +136,41 @@ public class LoginController implements Initializable {
      ft3.play();
 
     }   
-   
 
     @FXML
-    private void checkId(ActionEvent event) throws IOException {
+    private void checkId(ActionEvent event) {
         con_nom.getParent().requestFocus();
-        Gestionnaire gest = null;
-        
-        if(isRoot(con_nom.getText(), con_mdp.getText())){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("gestionnaires.fxml"));
-            Pane stack = loader.load();
-            ((GestionnairesController) loader.getController()).setNomAdmin(con_nom.getText());
-            Shop.addStack(base, stack);
-        }
-        
-        else {
-            try {
-                
-                gest = pm.getByAttributes(Gestionnaire.class, new PersistenceManager.KeyValue("username",con_nom.getText()),new PersistenceManager.KeyValue("password",con_mdp.getText()));
-                if (gest.isActif()){
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                            gest.isTypeGest() ? "main_final.fxml" : "cashier1.fxml"));
-                    stack = loader.load();
-                    if (gest.isTypeGest()) ((Main_finalController) loader.getController()).setGestionnaire(gest);
-                    else ((Cashier1Controller) loader.getController()).setCassier(gest);
-                    Shop.addStack(base, stack);
+        /*new Thread(new Runnable() {
+            @Override
+            public void run() {*/
+                Gestionnaire gest = null;
+
+                try {
+                    if(isRoot(con_nom.getText(), con_mdp.getText())){
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("gestionnaires.fxml"));
+                        Pane stack = loader.load();
+                        ((GestionnairesController) loader.getController()).setNomAdmin(con_nom.getText());
+                        Shop.addStack(base, stack);
+                    } else {
+                        gest = pm.getByAttributes(Gestionnaire.class, new PersistenceManager.KeyValue("username",con_nom.getText()),new PersistenceManager.KeyValue("password",con_mdp.getText()));
+                        if (gest.isActif()){
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                                    gest.isTypeGest() ? "main_final.fxml" : "cashier1.fxml"));
+                            stack = loader.load();
+                            if (gest.isTypeGest()) ((Main_finalController) loader.getController()).setGestionnaire(gest);
+                            else ((Cashier1Controller) loader.getController()).setCassier(gest);
+                            Shop.addStack(base, stack);
+                        }
+                        else{
+                            errorMessage("Ce compte n'est pas actif","Veuillez voir l'admin.");
+                        }
+                    }
+                } catch (Exception e) {
+                    Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, e);
+                    errorMessage("Erreur!","Nom d'utilisateur ou mot de passe incorrecte");
                 }
-                else{
-                    errorMessage("Ce compte n'est pas actif","Veuillez voir l'admin.");
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-                errorMessage("Erreur!","Nom d'utilisateur ou mot de passe incorrecte");
-            }
-        }       
-           
+            /*}
+        }).start();*/
     }
     
     private void errorMessage(String title, String content) {
